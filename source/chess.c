@@ -496,113 +496,101 @@ void change( int r1 , int c1 , int r2 , int c2 , int player_id)
 
 void pawn( int r1 , int c1) // paido
 {
+    possible_moves_index = 0;
 
-    possible_moves_index=0;
-   if( r1 == 1 )
+    if (r1 == 1)
     {
-        if( board[r1+1][c1] == ' ' )
+        if (board[r1+1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+1 , c1 );
-            if( r1+1 <= 7 && c1 <= 7 )
+            if ((r1+1 <= 7) && (c1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1;
                 possible_moves_index++;
             }
-            
-            //possible_moves[possible_moves_index]=(r1+1)*10+c1; 
-            //board_possible_moves[r1+1][c1]='x';
-            //possible_moves_index++;  
-        }
-        
 
-        if( board[r1+2][c1] == ' ' )
+            //possible_moves[possible_moves_index]=(r1+1)*10+c1;
+            //board_possible_moves[r1+1][c1]='x';
+            //possible_moves_index++;
+        }
+
+        if (board[r1+2][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+2 , c1 );
-            if( r1+2 <= 7 && c1 <= 7 )
+            if ((r1+2 <= 7) && (c1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+2)*10+c1;
                 possible_moves_index++;
             }
             //board_possible_moves[r1+2][c1]='x';
-            //possible_moves[possible_moves_index]=(r1+2)*10+c1; 
-            //possible_moves_index++;  
+            //possible_moves[possible_moves_index]=(r1+2)*10+c1;
+            //possible_moves_index++;
         }
-        
-        
-        if( check(r1+1 , c1+1) == 1 )
+
+        if (check(r1+1 , c1+1) == 1)
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
-             if( r1+1 <= 7 && c1+1 <= 7 )
+             if ((r1+1 <= 7) && (c1+1 <= 7))
              {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
                 possible_moves_index++;
              }
-             
-             //board_possible_moves[r1+1][c1+1]='x';
-             //possible_moves[possible_moves_index]=(r1+1)*10+c1+1; 
-             //possible_moves_index++;  
-        }
-       
 
-        if( check(r1+1 , c1-1) == 1 )
+             //board_possible_moves[r1+1][c1+1]='x';
+             //possible_moves[possible_moves_index]=(r1+1)*10+c1+1;
+             //possible_moves_index++;
+        }
+
+        if (check(r1+1 , c1-1) == 1)
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
-            if( r1+1 <= 7 && c1-1 <= 7 && c1-1 >=0)
+            if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
                 possible_moves_index++;
             }
-            
-            //board_possible_moves[r1+1][c1-1]='x';
-            //possible_moves[possible_moves_index]=(r1+1)*10+c1-1; 
-            //possible_moves_index++;  
-        }
-        
 
+            //board_possible_moves[r1+1][c1-1]='x';
+            //possible_moves[possible_moves_index]=(r1+1)*10+c1-1;
+            //possible_moves_index++;
+        }
     }
     else
     {
-        if(board[r1+1][c1] == ' ' )
+        if (board[r1+1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+1 , c1 ) ;
-            if( r1+1 <= 7 && c1 <= 7 )
+            if ((r1+1 <= 7) && (c1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1;
                 possible_moves_index++;
             }
-            
-            
         }
-        
-        
 
-        if( check(r1+1 , c1+1) == 1 )
+        if (check(r1+1 , c1+1) == 1)
         {
             //wprintf(L"%d%d* , " , r1+1 , c1+1 ) ;
-            if( r1+1 <= 7 && c1+1 <= 7 )
+            if ((r1+1 <= 7) && (c1+1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
                 possible_moves_index++;
             }
-            
         }
-        
 
-        if( check(r1+1 , c1-1) == 1 )
+        if (check(r1+1 , c1-1) == 1)
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 ) ;
-            if( r1+1 <= 7 && c1-1 <= 7  && c1-1 >=0)
+            if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
                 possible_moves_index++;
             }
-            
         }
-        
     }
+
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (possible_moves_index >= 1)
     {
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -613,9 +601,6 @@ void pawn( int r1 , int c1) // paido
     {
         wprintf(L"No possible moves -> ");
     }
-    
-    
-
 }
 
 void rook( int r1 , int c1, int player_id)
