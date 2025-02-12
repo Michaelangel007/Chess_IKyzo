@@ -1168,7 +1168,7 @@ void pawnb ( int r1 , int c1 )
 }
 
 // ----------------------------------------
-void player_black ()
+void player_white ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
@@ -1231,7 +1231,7 @@ again2:
 }
 
 // ----------------------------------------
-void player_white ()
+void player_black ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
     wprintf(L"\n\x26AA Black to move ..." ) ;
@@ -1903,7 +1903,6 @@ void main (int argc, char *argv[])
     {
         do
         {
-            moves++;
             remove_possible_moves();
             clear_screen();
             display();
@@ -1916,6 +1915,7 @@ void main (int argc, char *argv[])
             {
                 player_black();
             }
+            moves++;
 
             // For somereason board 0 0 got corrupted
             //wprintf(L"%c", board[0][0]);
