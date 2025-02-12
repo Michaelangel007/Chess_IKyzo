@@ -249,13 +249,12 @@ void main(int argc, char *argv[])
             wprintf( L"%lc", glyph );
         }
         wprintf( L"\n" );
-        wprintf( L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd\n");
         return;
     }
 
     clear_screen();
     intro();
-    wprintf(L" \nPress Any Key To Continue...  \n  " ) ;
+    wprintf(L" \nPress Any Key To Continue...\nOr press SPACE to replay chess_game_notes.txt\n" );
     showcase_option = getch();
     clear_screen();
 
