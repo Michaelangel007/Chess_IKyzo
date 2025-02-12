@@ -51,22 +51,22 @@ char board[8][8] = // array 8x8 representing the board.
 };
 
 // Prototypes
-    void bishop( int , int, int ) ;
-    void change( int , int , int , int, int) ;
-    int  check(int , int ) ; // Check if there is a piece at (x,y) => 1 else 0
-    int  check2(int , int ) ;
+    void bishop( int , int, int );
+    void change( int , int , int , int, int);
+    int  check(int , int ); // Check if there is a piece at (x,y) => 1 else 0
+    int  check2(int , int );
     int  display_convert(char ); // convert array to Unicode
     void delay(int);
     void display();
-    void king( int , int , int) ;
-    void knight(int , int, int ) ;
-    void pawn(int , int ) ;
-    void pawnb( int , int ) ;
+    void king( int , int , int);
+    void knight(int , int, int );
+    void pawn(int , int );
+    void pawnb( int , int );
     void player_black();
     void player_white();
-    void queen( int , int , int ) ;
+    void queen( int , int , int );
     void remove_possible_moves();
-    void rook(int , int, int) ;
+    void rook(int , int, int);
     void showcase_board(char, char, char, char, int);
     void showcase_game();
 
