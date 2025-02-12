@@ -1867,7 +1867,7 @@ void main (int argc, char *argv[])
     // For somereason board 0 0 got corrupted
     board[0][0] = 'R';
 
-    int  x = 0 ; // Sets Turns
+    int  moves = 0;
     char ch;
     char showcase_option;
 
@@ -1903,12 +1903,12 @@ void main (int argc, char *argv[])
     {
         do
         {
-            x++;
+            moves++;
             remove_possible_moves();
             clear_screen();
-            display(); // Displays the Board
+            display();
 
-            if ((x%2) == 0)
+            if ((moves % 2) == PLAYER_WHITE)
             {
                 player_white();
             }
