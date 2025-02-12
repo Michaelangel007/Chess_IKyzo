@@ -938,36 +938,42 @@ void bishop( int r1 , int c1, int player_id)
     if (player_id == 1)
     {
         a = 1 , b = 1 ;
-        while( board[r1-a][c1+b] == ' ' || check(r1-a, c1+b)==1)
+        while ((board[r1-a][c1+b] == ' ') || (check(r1-a, c1+b) == 1))
         {
-            if( (r1-a) == -1 || (c1+b) == 8 ) break ;
+            if (((r1-a) == -1) || ((c1+b) == 8) )
+                break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
             possible_moves_index++;
-            if(check(r1-a, c1+b)==1) {break;}
+            if (check(r1-a, c1+b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
             a++ ;
             b++ ;
         }
 
         a = 1 , b = 1 ;
-        while( board[r1+a][c1-b] == ' ' || check(r1+a, c1-b)==1)
+        while ((board[r1+a][c1-b] == ' ') || (check(r1+a, c1-b) == 1))
         {
-            if( (r1+a) == 8 || (c1-b) == -1 ) break ;
+            if (((r1+a) == 8) || ((c1-b) == -1))
+                break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
             possible_moves_index++;
-            if(check(r1+a, c1-b)==1) {break;}
+            if (check(r1+a, c1-b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
             a++ ;
             b++ ;
         }
 
         a = 1 , b = 1 ;
-        while( board[r1+a][c1+b] == ' ' || check(r1+a, c1+b)==1 )
+        while ((board[r1+a][c1+b] == ' ') || (check(r1+a, c1+b) == 1))
         {
-            if( (r1+a) == 8 || (c1+b) == 8 ) break ;
+            if (((r1+a) == 8) || ((c1+b) == 8))
+                break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
             possible_moves_index++;
-            if(check(r1+a, c1+b)==1) {break;}
+            if (check(r1+a, c1+b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
             a++ ;
             b++ ;
@@ -975,39 +981,45 @@ void bishop( int r1 , int c1, int player_id)
 
         a = 1 ;
         b = 1 ;
-        while( board[r1-a][c1-b] == ' ' || check(r1-a, c1-b)==1 )
+        while ((board[r1-a][c1-b] == ' ') || (check(r1-a, c1-b) == 1))
         {
-            if( (r1-a) == -1 || (c1-b) == -1 ) break ;
+            if (((r1-a) == -1) || ((c1-b) == -1))
+                break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
             possible_moves_index++;
-            if(check(r1-a, c1-b)==1) {break;}
+            if (check(r1-a, c1-b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
             a++ ;
             b++ ;
         }
     }
     else
-    if (player_id==2)
+    if (player_id == 2)
     {
         a = 1 , b = 1 ;
-        while( board[r1-a][c1+b] == ' ' || check2(r1-a, c1+b)==1)
+        while ((board[r1-a][c1+b] == ' ') || (check2(r1-a, c1+b)==1))
         {
-            if( (r1-a) == -1 || (c1+b) == 8 ) break ;
+            if (((r1-a) == -1) || ((c1+b) == 8))
+                break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
             possible_moves_index++;
-            if(check2(r1-a, c1+b)==1) {break;}
+            if (check2(r1-a, c1+b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
             a++ ;
             b++ ;
         }
 
         a = 1 , b = 1 ;
-        while( board[r1+a][c1-b] == ' ' || check2(r1+a, c1-b)==1)
+        while ((board[r1+a][c1-b] == ' ') || (check2(r1+a, c1-b) == 1))
         {
-            if( (r1+a) == 8 || (c1-b) == -1 ) break ;
+            if (((r1+a) == 8) || ((c1-b) == -1))
+                break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
             possible_moves_index++;
-            if(check2(r1+a, c1-b)==1) {break;}
+            if (check2(r1+a, c1-b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
             a++ ;
             b++ ;
@@ -1016,10 +1028,12 @@ void bishop( int r1 , int c1, int player_id)
         a = 1 , b = 1 ;
         while( board[r1+a][c1+b] == ' ' || check2(r1+a, c1+b)==1 )
         {
-            if( (r1+a) == 8 || (c1+b) == 8 ) break ;
+            if (((r1+a) == 8) || ((c1+b) == 8))
+                break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
             possible_moves_index++;
-            if(check2(r1+a, c1+b)==1) {break;}
+            if (check2(r1+a, c1+b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
             a++ ;
             b++ ;
@@ -1027,12 +1041,14 @@ void bishop( int r1 , int c1, int player_id)
 
         a = 1 ;
         b = 1 ;
-            while( board[r1-a][c1-b] == ' ' || check2(r1-a, c1-b)==1 )
+        while ((board[r1-a][c1-b] == ' ') || (check2(r1-a, c1-b) == 1))
         {
-            if( (r1-a) == -1 || (c1-b) == -1 ) break ;
+            if (((r1-a) == -1) || ((c1-b) == -1))
+                break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
             possible_moves_index++;
-            if(check2(r1-a, c1-b)==1) {break;}
+            if (check2(r1-a, c1-b) == 1)
+                break ;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
             a++ ;
             b++ ;
