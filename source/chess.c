@@ -13,25 +13,63 @@
     #include <unistd.h>
 #endif
 
-int possible_moves[100];
-int possible_moves_index;
-int previous_position;
-int new_position = -99;
-int display_convert(char ); // Converts the Matrix elements to Unicode representations.
+// Types
+    // Eliminated pieces
+    typedef struct eliminated_pieces
+    {
+        char                      piece_type;
+        struct eliminated_pieces *next;
+    } eliminated_piece;
 
-// Eliminated pieces :
-typedef struct eliminated_pieces
+    // Generating lists
+    typedef struct eliminated_pieces_lists
+    {
+        eliminated_piece *start;
+    } eliminated_pieces_list;
+
+// Globals
+    int possible_moves[100];
+    int possible_moves_index;
+    int previous_position;
+    int new_position = -99;
+
+    eliminated_pieces_list eliminated_pieces_white;
+    eliminated_pieces_list eliminated_pieces_black;
+    char *piece;
+
+char board[8][8] = // array 8x8 representing the board.
 {
-    char piece_type;
-    struct eliminated_pieces *next;
+    { 'R' , 'H' , 'C' , 'Q' , 'K' , 'C' , 'H' , 'R' },
+    { 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' },
+    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
+    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
+    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
+    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
+    { 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' },
+    { 'r' , 'h' , 'c' , 'q' , 'k' , 'c' , 'h' , 'r' }
+};
 
-} eliminated_piece;
+// Prototypes
+    int display_convert(char ); // convert array to Unicode
+    void showcase_game();
+    void remove_possible_moves();
+    void showcase_board(char, char, char, char, int);
+    void delay(int);
+    void display();
+    void change( int , int , int , int, int) ;
+    void pawn(int , int ) ;
+    void rook(int , int, int) ;
+    void knight(int , int, int ) ;
+    void bishop( int , int, int ) ;
+    void king( int , int , int) ;
+    void queen( int , int , int ) ;
+    void pawnb( int , int ) ;
+    void player_white(); //player 1
+    void player_black(); //player 2
+    int check(int , int ) ; // Check if there is a piece at (x,y) => 1 else 0
+    int check2(int , int ) ;
 
-// Generating lists
-typedef struct eliminated_pieces_lists
-{
-    eliminated_piece *start;
-} eliminated_pieces_list;
+// Implementation
 
 #ifdef _WIN32
 #else
@@ -125,55 +163,17 @@ void insert_eliminated_list(char value, eliminated_pieces_list *l)
 
 void display_eliminated_list(eliminated_pieces_list l)
 {
-  eliminated_piece* temp = l.start;
-  int converted_value;
-  while (temp != NULL)
-  {
-    converted_value = display_convert(temp->piece_type);
-    wprintf(L"%lc ", (wchar_t)converted_value);
-    temp = temp->next;
-  }
-   wprintf(L"\n");
-  
+    eliminated_piece* temp = l.start;
+    int converted_value;
+
+    while (temp != NULL)
+    {
+        converted_value = display_convert(temp->piece_type);
+        wprintf(L"%lc ", (wchar_t)converted_value);
+        temp = temp->next;
+    }
+    wprintf(L"\n");
 }
-
-
-eliminated_pieces_list eliminated_pieces_white; 
-eliminated_pieces_list eliminated_pieces_black;
-char *piece;
-// Functions implementations : 
-void showcase_game();
-void remove_possible_moves();
-void showcase_board(char, char, char, char, int);
-void delay(int);
-
-
-char board[8][8] = { // Matrix 8x8 representing the board.
-                    { 'R' , 'H' , 'C' , 'Q' , 'K' , 'C' , 'H' , 'R' },
-                    { 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' },
-                    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-                    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-                    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-                    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-                    { 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' },
-                    { 'r' , 'h' , 'c' , 'q' , 'k' , 'c' , 'h' , 'r' }
-                  };
-
-void display();
-
-void change( int , int , int , int, int) ;
-void pawn(int , int ) ;
-void rook(int , int, int) ;
-void knight(int , int, int ) ;
-void bishop( int , int, int ) ;
-void king( int , int , int) ;
-void queen( int , int , int ) ;
-void pawnb( int , int ) ;
-void player_white(); //player1
-void player_black(); //player2
-int check(int , int ) ; // Check if there is a piece at (x,y) => 1 else 0
-int check2(int , int ) ;
-
 
 int display_convert(char symbol)
 {
