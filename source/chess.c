@@ -758,172 +758,166 @@ void rook( int r1 , int c1, int player_id)
 
 void knight( int r1 , int c1, int player_id )
 {
-    possible_moves_index=0;
+    possible_moves_index = 0;
 
-    if(player_id==1)
+    if (player_id == 1)
     {
-        if( board[r1+2][c1+1] == ' ' || check(r1+2, c1+1)==1 )
+        if ((board[r1+2][c1+1] == ' ') || check(r1+2, c1+1) == 1)
         {
-            if(r1+2 <= 7 && r1+2 >= 0 && c1+1 >= 0 && c1+1 <=7)
+            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+2)*10+c1+1;
                 possible_moves_index++;
             }
-            
+
             //wprintf(L"%d%d, " , r1+2 ,c1+1) ;
         }
-         
-        if( board[r1+2][c1-1] == ' ' || check(r1+2, c1-1)==1) 
-        { 
-            if(r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <=7)
+
+        if ((board[r1+2][c1-1] == ' ') || (check(r1+2, c1-1) == 1))
+        {
+            if (r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <= 7)
             {
                 possible_moves[possible_moves_index] = (r1+2)*10+c1-1;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1+1][c1+2] == ' ' || check(r1+1, c1+2)==1) 
-        {  
-            if(r1+1 <= 7 && r1+1 >= 0 && c1+2 >= 0 && c1+2 <=7)
+        if ((board[r1+1][c1+2] == ' ') || (check(r1+1, c1+2) == 1))
+        {
+            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1+2;
                 possible_moves_index++;
             }
         }
-        if( board[r1-1][c1+2] == ' ' || check(r1-1, c1+2)==1) 
-        {  
-            if(r1-1 <= 7 && r1-1 >= 0 && c1+2 >= 0 && c1+2 <=7)
+        if ((board[r1-1][c1+2] == ' ') || (check(r1-1, c1+2) == 1))
+        {
+            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1+2;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1-2][c1-1] == ' ' || check(r1-2, c1-1)==1 )
+        if ((board[r1-2][c1-1] == ' ') || (check(r1-2, c1-1) == 1))
         {
-            if(r1-2 <= 7 && r1-2 >= 0 && c1-1 >= 0 && c1-1 <=7)
+            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-2)*10+c1-1;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1-2][c1+1] == ' ' || check(r1-2, c1+1)==1) 
+        if ((board[r1-2][c1+1] == ' ') || (check(r1-2, c1+1) == 1))
         {
-            if(r1-2 <= 7 && r1-2 >= 0 && c1+1 >= 0 && c1+1 <=7)
+            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-2)*10+c1+1;
                 possible_moves_index++;
             }
         }
-        
 
-        if( board[r1+1][c1-2] == ' ' || check(r1+1, c1-2)==1) 
+        if ((board[r1+1][c1-2] == ' ') || (check(r1+1, c1-2) == 1))
         {
-            if(r1+1 <= 7 && r1+1 >= 0 && c1-2 >= 0 && c1-2 <=7)
+            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <=7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1-2;
                 possible_moves_index++;
             }
         }
-    
 
-        if( board[r1-1][c1-2] == ' ' || check(r1-1, c1-2)==1 )
+        if ((board[r1-1][c1-2] == ' ') || (check(r1-1, c1-2) == 1))
         {
-            if(r1-1 <= 7 && r1-1 >= 0 && c1-2 >= 0 && c1-2 <=7)
+            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1-2;
                 possible_moves_index++;
             }
-                
         }
     }
-    else if(player_id==2)
+    else
+    if (player_id == 2)
     {
-        if( board[r1+2][c1+1] == ' ' || check2(r1+2, c1+1)==1 )
+        if ((board[r1+2][c1+1] == ' ') || (check2(r1+2, c1+1) == 1))
         {
-            if(r1+2 <= 7 && r1+2 >= 0 && c1+1 >= 0 && c1+1 <=7)
+            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+2)*10+c1+1;
                 possible_moves_index++;
             }
-            
-            //wprintf(L"%d%d, " , r1+2 ,c1+1) ;
+
+            //wprintf(L"%d%d, " , r1+2 ,c1+1);
         }
-         
-        if( board[r1+2][c1-1] == ' ' || check2(r1+2, c1-1)==1) 
-        { 
-            if(r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <=7)
+
+        if ((board[r1+2][c1-1] == ' ') || (check2(r1+2, c1-1) == 1))
+        {
+            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+2)*10+c1-1;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1+1][c1+2] == ' ' || check2(r1+1, c1+2)==1) 
-        {  
-            if(r1+1 <= 7 && r1+1 >= 0 && c1+2 >= 0 && c1+2 <=7)
+        if ((board[r1+1][c1+2] == ' ') || (check2(r1+1, c1+2) == 1))
+        {
+            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1+2;
                 possible_moves_index++;
             }
         }
-        if( board[r1-1][c1+2] == ' ' || check2(r1-1, c1+2)==1) 
-        {  
-            if(r1-1 <= 7 && r1-1 >= 0 && c1+2 >= 0 && c1+2 <=7)
+        if ((board[r1-1][c1+2] == ' ') || (check2(r1-1, c1+2) == 1))
+        {
+            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1+2;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1-2][c1-1] == ' ' || check2(r1-2, c1-1)==1 )
+        if ((board[r1-2][c1-1] == ' ') || (check2(r1-2, c1-1) == 1))
         {
-            if(r1-2 <= 7 && r1-2 >= 0 && c1-1 >= 0 && c1-1 <=7)
+            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-2)*10+c1-1;
                 possible_moves_index++;
             }
         }
 
-        if( board[r1-2][c1+1] == ' ' || check2(r1-2, c1+1)==1) 
+        if ((board[r1-2][c1+1] == ' ') || (check2(r1-2, c1+1) == 1))
         {
-            if(r1-2 <= 7 && r1-2 >= 0 && c1+1 >= 0 && c1+1 <=7)
+            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-2)*10+c1+1;
                 possible_moves_index++;
             }
         }
-        
 
-        if( board[r1+1][c1-2] == ' ' || check2(r1+1, c1-2)==1) 
+        if ((board[r1+1][c1-2] == ' ') || (check2(r1+1, c1-2) == 1))
         {
-            if(r1+1 <= 7 && r1+1 >= 0 && c1-2 >= 0 && c1-2 <=7)
+            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1-2;
                 possible_moves_index++;
             }
         }
-    
 
-        if( board[r1-1][c1-2] == ' ' || check2(r1-1, c1-2)==1 )
+        if ((board[r1-1][c1-2] == ' ') || (check2(r1-1, c1-2) == 1))
         {
-            if(r1-1 <= 7 && r1-1 >= 0 && c1-2 >= 0 && c1-2 <=7)
+            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1-2;
                 possible_moves_index++;
             }
-                
         }
     }
     else{
         wprintf(L"Error : Knight");
     }
-    
 
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (possible_moves_index >= 1)
     {
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -936,134 +930,118 @@ void knight( int r1 , int c1, int player_id )
     }
 }
 
-
 void bishop( int r1 , int c1, int player_id)
 {
     int a , b , c , d ;
-    possible_moves_index=0;
+    possible_moves_index = 0;
 
-    
-    if(player_id==1)
+    if (player_id == 1)
     {
         a = 1 , b = 1 ;
+        while( board[r1-a][c1+b] == ' ' || check(r1-a, c1+b)==1)
+        {
+            if( (r1-a) == -1 || (c1+b) == 8 ) break ;
+            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
+            possible_moves_index++;
+            if(check(r1-a, c1+b)==1) {break;}
+            //wprintf(L"%d%d , " , r1-a , c1+b ) ;
+            a++ ;
+            b++ ;
+        }
 
-    while( board[r1-a][c1+b] == ' ' || check(r1-a, c1+b)==1)
-    {
-        if( (r1-a) == -1 || (c1+b) == 8 ) break ;
-        possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-        possible_moves_index++;
-        if(check(r1-a, c1+b)==1) {break;}
-        //wprintf(L"%d%d , " , r1-a , c1+b ) ;
-        a++ ;
-        b++ ;
+        a = 1 , b = 1 ;
+        while( board[r1+a][c1-b] == ' ' || check(r1+a, c1-b)==1)
+        {
+            if( (r1+a) == 8 || (c1-b) == -1 ) break ;
+            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
+            possible_moves_index++;
+            if(check(r1+a, c1-b)==1) {break;}
+            //wprintf(L"%d%d , " , r1+a , c1-b ) ;
+            a++ ;
+            b++ ;
+        }
+
+        a = 1 , b = 1 ;
+        while( board[r1+a][c1+b] == ' ' || check(r1+a, c1+b)==1 )
+        {
+            if( (r1+a) == 8 || (c1+b) == 8 ) break ;
+            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
+            possible_moves_index++;
+            if(check(r1+a, c1+b)==1) {break;}
+            //wprintf(L"%d%d , " , r1+a , c1+b ) ;
+            a++ ;
+            b++ ;
+        }
+
+        a = 1 ;
+        b = 1 ;
+        while( board[r1-a][c1-b] == ' ' || check(r1-a, c1-b)==1 )
+        {
+            if( (r1-a) == -1 || (c1-b) == -1 ) break ;
+            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
+            possible_moves_index++;
+            if(check(r1-a, c1-b)==1) {break;}
+            //wprintf(L"%d%d , " , r1-a , c1-b ) ;
+            a++ ;
+            b++ ;
+        }
     }
-
-
-    a = 1 , b = 1 ;
-
-    while( board[r1+a][c1-b] == ' ' || check(r1+a, c1-b)==1)
+    else
+    if (player_id==2)
     {
-        if( (r1+a) == 8 || (c1-b) == -1 ) break ;
-        possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-        possible_moves_index++;
-        if(check(r1+a, c1-b)==1) {break;}
-        //wprintf(L"%d%d , " , r1+a , c1-b ) ;
-        a++ ;
-        b++ ;
+        a = 1 , b = 1 ;
+        while( board[r1-a][c1+b] == ' ' || check2(r1-a, c1+b)==1)
+        {
+            if( (r1-a) == -1 || (c1+b) == 8 ) break ;
+            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
+            possible_moves_index++;
+            if(check2(r1-a, c1+b)==1) {break;}
+            //wprintf(L"%d%d , " , r1-a , c1+b ) ;
+            a++ ;
+            b++ ;
+        }
+
+        a = 1 , b = 1 ;
+        while( board[r1+a][c1-b] == ' ' || check2(r1+a, c1-b)==1)
+        {
+            if( (r1+a) == 8 || (c1-b) == -1 ) break ;
+            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
+            possible_moves_index++;
+            if(check2(r1+a, c1-b)==1) {break;}
+            //wprintf(L"%d%d , " , r1+a , c1-b ) ;
+            a++ ;
+            b++ ;
+        }
+
+        a = 1 , b = 1 ;
+        while( board[r1+a][c1+b] == ' ' || check2(r1+a, c1+b)==1 )
+        {
+            if( (r1+a) == 8 || (c1+b) == 8 ) break ;
+            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
+            possible_moves_index++;
+            if(check2(r1+a, c1+b)==1) {break;}
+            //wprintf(L"%d%d , " , r1+a , c1+b ) ;
+            a++ ;
+            b++ ;
+        }
+
+        a = 1 ;
+        b = 1 ;
+            while( board[r1-a][c1-b] == ' ' || check2(r1-a, c1-b)==1 )
+        {
+            if( (r1-a) == -1 || (c1-b) == -1 ) break ;
+            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
+            possible_moves_index++;
+            if(check2(r1-a, c1-b)==1) {break;}
+            //wprintf(L"%d%d , " , r1-a , c1-b ) ;
+            a++ ;
+            b++ ;
+        }
     }
-
-    a = 1 , b = 1 ;
-
-
-    while( board[r1+a][c1+b] == ' ' || check(r1+a, c1+b)==1 )
-    {
-        if( (r1+a) == 8 || (c1+b) == 8 ) break ;
-        possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-        possible_moves_index++;
-        if(check(r1+a, c1+b)==1) {break;}
-        //wprintf(L"%d%d , " , r1+a , c1+b ) ;
-        a++ ;
-        b++ ;
-    }
-
-    a = 1 ;
-    b = 1 ;
-
-    while( board[r1-a][c1-b] == ' ' || check(r1-a, c1-b)==1 )
-    {
-        if( (r1-a) == -1 || (c1-b) == -1 ) break ;
-        possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-        possible_moves_index++;
-        if(check(r1-a, c1-b)==1) {break;}
-        //wprintf(L"%d%d , " , r1-a , c1-b ) ;
-        a++ ;
-        b++ ;
-    }
-    }else if(player_id==2)
-    {
-           a = 1 , b = 1 ;
-
-    while( board[r1-a][c1+b] == ' ' || check2(r1-a, c1+b)==1)
-    {
-        if( (r1-a) == -1 || (c1+b) == 8 ) break ;
-        possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-        possible_moves_index++;
-        if(check2(r1-a, c1+b)==1) {break;}
-        //wprintf(L"%d%d , " , r1-a , c1+b ) ;
-        a++ ;
-        b++ ;
-    }
-
-
-    a = 1 , b = 1 ;
-
-    while( board[r1+a][c1-b] == ' ' || check2(r1+a, c1-b)==1)
-    {
-        if( (r1+a) == 8 || (c1-b) == -1 ) break ;
-        possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-        possible_moves_index++;
-        if(check2(r1+a, c1-b)==1) {break;}
-        //wprintf(L"%d%d , " , r1+a , c1-b ) ;
-        a++ ;
-        b++ ;
-    }
-
-    a = 1 , b = 1 ;
-
-
-    while( board[r1+a][c1+b] == ' ' || check2(r1+a, c1+b)==1 )
-    {
-        if( (r1+a) == 8 || (c1+b) == 8 ) break ;
-        possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-        possible_moves_index++;
-        if(check2(r1+a, c1+b)==1) {break;}
-        //wprintf(L"%d%d , " , r1+a , c1+b ) ;
-        a++ ;
-        b++ ;
-    }
-
-    a = 1 ;
-    b = 1 ;
-
-    while( board[r1-a][c1-b] == ' ' || check2(r1-a, c1-b)==1 )
-    {
-        if( (r1-a) == -1 || (c1-b) == -1 ) break ;
-        possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-        possible_moves_index++;
-        if(check2(r1-a, c1-b)==1) {break;}
-        //wprintf(L"%d%d , " , r1-a , c1-b ) ;
-        a++ ;
-        b++ ;
-    }
-
-    }
-    else 
+    else
     {
         wprintf(L"Error : Bishop ");
     }
-    
-
-
 
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
