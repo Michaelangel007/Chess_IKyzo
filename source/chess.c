@@ -137,28 +137,26 @@ eliminated_piece* create_piece(char value)
 
 void insert_eliminated_list(char value, eliminated_pieces_list *l)
 {
-  eliminated_piece *temp;
-  eliminated_piece *piece;
-  piece = create_piece(value);
-  // Empty list :
-  if(l->start==NULL)
-  {
-    
-    l->start=piece;
-    piece->next=NULL;
-  }
-  else // list not Empty
-  {
-    temp = l->start;
-    while (temp->next!=NULL)
-    {
-      temp = temp->next;
-    }
-    temp->next=piece;
-    piece->next=NULL;
-    
-  }
+    eliminated_piece *temp;
+    eliminated_piece *piece;
+    piece = create_piece(value);
 
+    // Empty list
+    if (l->start == NULL)
+    {
+        l->start    = piece;
+        piece->next = NULL;
+    }
+    else // list not Empty
+    {
+        temp = l->start;
+        while (temp->next!=NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next=piece;
+        piece->next=NULL;
+    }
 }
 
 void display_eliminated_list(eliminated_pieces_list l)
