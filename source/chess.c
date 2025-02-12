@@ -51,22 +51,30 @@ char getch()
     // Read the first character
     read(STDIN_FILENO, &ch, 1);
 
-    if (ch == '\033') { // Escape sequence
+    if (ch == '\033') // Escape sequence
+    {
         // Read the next two characters
-        if (read(STDIN_FILENO, &seq[0], 1) == 0 || read(STDIN_FILENO, &seq[1], 1) == 0) {
+        if (read(STDIN_FILENO, &seq[0], 1) == 0 || read(STDIN_FILENO, &seq[1], 1) == 0)
+        {
             ch = '\033'; // Treat as ESC if sequence is incomplete
-        } else if (seq[0] == '[') {
-            // Interpret arrow keys
-            switch (seq[1]) {
-                case 'A': ch = -1; break; // Up arrow
-                case 'B': ch = -2; break; // Down arrow
-                case 'C': ch = -3; break; // Right arrow
-                case 'D': ch = -4; break; // Left arrow
-                default: ch = '\033'; // Unknown sequence
-            }
-        } else {
-            ch = '\033'; // Unknown sequence
         }
+        else
+            if (seq[0] == '[')
+            {
+                // Interpret arrow keys
+                switch (seq[1])
+                {
+                    case 'A': ch =     -1; break; // Up arrow
+                    case 'B': ch =     -2; break; // Down arrow
+                    case 'C': ch =     -3; break; // Right arrow
+                    case 'D': ch =     -4; break; // Left arrow
+                    default : ch = '\033'; break; // Unknown sequence
+                }
+            }
+            else
+            {
+                ch = '\033'; // Unknown sequence
+            }
     }
 
     // Restore original terminal settings
