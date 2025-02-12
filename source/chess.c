@@ -170,49 +170,21 @@ int display_convert(char symbol)
 {
     switch (symbol)
     {
-    case 'p':
-        return 0x265F;
-        break;
-    case 'r':
-        return 0x265C;
-        break;
-    case 'h':
-        return 0x265E;
-        break;
-    case 'c':
-        return 0x265D;
-        break;
-    case 'k':
-        return 0x265A;
-        break;
-    case 'q':
-        return 0x265B;
-        break;
-    case 'P':
-        return 0x2659;
-        break;
-    case 'R':
-        return 0x2656;
-        break;
-    case 'H':
-        return 0x2658;
-        break;
-    case 'C':
-        return 0x2657;
-        break;
-    case 'K':
-        return 0x2654;
-        break;
-    case 'Q':
-        return 0x2655;
-        break;
-    case 'x':
-        return 0x2716;
-        break;
-    default:
-        return 0x0020; // space unicode
-        break;
-    }   
+        case 'p': return 0x265F; // White
+        case 'r': return 0x265C;
+        case 'h': return 0x265E;
+        case 'c': return 0x265D;
+        case 'k': return 0x265A;
+        case 'q': return 0x265B;
+        case 'P': return 0x2659; // Black
+        case 'R': return 0x2656;
+        case 'H': return 0x2658;
+        case 'C': return 0x2657;
+        case 'K': return 0x2654;
+        case 'Q': return 0x2655;
+        case 'x': return 0x2716;
+        default : return 0x0020; // Empty
+    }
 }
 
 
