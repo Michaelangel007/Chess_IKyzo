@@ -1502,13 +1502,10 @@ void queen( int r1 , int c1, int player_id)
     {
         wprintf(L"Error : Bishop ");
     }
-    
-
-
 
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (possible_moves_index >= 1)
     {
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1519,8 +1516,6 @@ void queen( int r1 , int c1, int player_id)
     {
         wprintf(L"No possible moves -> ");
     }
-
-
 }
 
 void pawnb( int r1 , int c1 ) // paido black
