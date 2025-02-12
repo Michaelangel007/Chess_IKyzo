@@ -362,7 +362,7 @@ void main(int argc, char *argv[])
 /*
    File Format for chess_game_notes.txt
 
-      ?##.##-##.##
+      #Comment that will be displayed
       ?##.##-##.##
 
     That is,
@@ -398,6 +398,20 @@ void showcase_game()
 
     while(fgets(chunk, sizeof(chunk)-1, fp) != NULL)
     {
+        chunk[MAX_LINE-1] = 0;
+        if (chunk[0] == '#') // Add support for line comments
+        {
+           for( int i = 1; i < MAX_LINE; i++ )
+           {
+               if( chunk[i] )
+                   wprintf( L"%c", (wchar_t) chunk[i] );
+               else
+                   break;
+           }
+           fflush(stdout);
+           continue;
+        }
+
         white_input[0] = chunk[1];
         white_input[1] = chunk[2];
         white_output[0] = chunk[4];
@@ -417,6 +431,7 @@ void showcase_game()
 
         // marker string used to show where the content of the chunk array has ended
     }
+
     fclose(fp);
 }
 
