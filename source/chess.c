@@ -1615,11 +1615,10 @@ bool verify_possible_move(int position)
 {
     for (int i = 0; i < possible_moves_index; i++)
     {
-        if(position==possible_moves[i])
-        return false;
+        if (position == possible_moves[i])
+            return false;
     }
     return true;
-    
 }
 void player_white()
 {
