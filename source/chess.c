@@ -283,7 +283,7 @@ void main(int argc, char *argv[])
             // For somereason board 0 0 got corrupted
             //wprintf(L"%c", board[0][0]);
             //wprintf(L"Board[0][7] symbol: %lc\n", display_convert(board[0][0]));
-            wprintf(L" \nPress Any Key To Continue... -> \n " ) ;
+            wprintf(L" \nPress Any Key To Continue... or ESC to quit -> \n " ) ;
 
             ch = getch();
         } while (ch != 27);
