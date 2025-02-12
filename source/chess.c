@@ -8,6 +8,7 @@
     #include <time.h>
 #ifdef _WIN32
     #include <conio.h>
+    #include <fcntl.h> // _O_U16TEXT = 0x00020000
 #else
     #include <termios.h>
     #include <unistd.h>
@@ -234,7 +235,7 @@ void main()
     char showcase_option;
 
 #ifdef _WIN32
-    _setmode(_fileno(stdout), 0x00020000); // SET ENCODING TO UNICODE
+    _setmode(_fileno(stdout), _O_U16TEXT); // Unicode encoding
 #else
     setlocale(LC_ALL,"");
 #endif
