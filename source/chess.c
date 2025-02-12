@@ -1620,40 +1620,40 @@ bool verify_possible_move(int position)
     }
     return true;
 }
+
 void player_white()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
     wprintf(L"\n\x26AB Black to move ..." ) ;
-    again1:
+
+again1:
     do
     {
         fflush(stdin);
         wprintf(L"\nEnter Position of Piece : [row.index column.index] : " ) ;
         input_control = scanf( "%d" , &p1 );
-        if(input_control==0 || (p1!=0 && p1>7 && p1 < 10) || p1 > 77 || p1%10 > 7) wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
-        
-    } while ( input_control==0 ||  (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
-    c1 = p1 % 10 ;
-    r1 = p1 / 10 ;
+        if ((input_control == 0) || (p1!=0 && p1>7 && p1 < 10) || p1 > 77 || p1%10 > 7)
+            wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
+    } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
+
+    c1 = p1 % 10;
+    r1 = p1 / 10;
 
     switch( board[r1][c1] ) // Select only player's pieces.
     {
-        case 'P': pawn( r1 , c1);
-                  break ;
-        case 'R': rook( r1 , c1, 1);
-                  break ;
-        case 'H': knight( r1 , c1, 1);
-                  break ;
-        case 'C': bishop( r1 , c1, 1 );
-                  break ;
-        case 'K': king( r1 , c1, 1 ) ;
-                  break ;
-        case 'Q': queen( r1 , c1, 1 ) ;
-                  break ;
-        default: wprintf(L"\x26A0 Invalid Position ! ") ; goto again1 ;
+        case 'P': pawn  ( r1 , c1    );  break;
+        case 'R': rook  ( r1 , c1, 1 );  break;
+        case 'H': knight( r1 , c1, 1 );  break;
+        case 'C': bishop( r1 , c1, 1 );  break;
+        case 'K': king  ( r1 , c1, 1 );  break;
+        case 'Q': queen ( r1 , c1, 1 );  break;
+        default:
+            wprintf(L"\x26A0 Invalid Position ! ");
+            goto again1 ;
     }
-    if(possible_moves_index>=1)
+
+    if (possible_moves_index >= 1)
     {
         clear_screen();
         append_possible_moves();
@@ -1663,7 +1663,8 @@ void player_white()
         {
             wprintf(L" %d :", possible_moves[i]);
         }
-    do
+
+        do
         {
             wprintf(L"\nEnter New Position of Piece : [row.index column.index] : " ) ;
             scanf( "%d" , &p2 ) ;
@@ -1673,7 +1674,6 @@ void player_white()
     {
         goto again1;
     }
-    
 
     c2 = p2 % 10 ;
     r2 = p2 / 10  ;
@@ -1688,38 +1688,32 @@ void player_black()
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
     wprintf(L"\n\x26AA White to move ...\n") ;
-    again2:
+
+again2:
     do
     {
         fflush(stdin);
         wprintf(L"\nEnter Position of Piece : [row.index column.index] : " ) ;
         input_control = scanf( "%d" , &p1 );
-        if(input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7) 
+        if(input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7)
         wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
-        
     } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
-    
 
     c1 = p1 % 10 ;
     r1 = p1 / 10 ;
 
     switch( board[r1][c1] )
     {
-        case 'p': pawnb( r1 , c1 ) ;
-                  break ;
-        case 'r': rook( r1 , c1, 2) ;
-                  break ;
-        case 'h': knight( r1 , c1, 2) ;
-                  break ;
-        case 'c': bishop( r1 , c1, 2) ;
-                  break ;
-        case 'k': king( r1 , c1, 2 ) ;
-                  break ;
-        case 'q': queen( r1 , c1, 2 ) ;
-                  break ;
+        case 'p': pawnb ( r1 , c1    ); break ;
+        case 'r': rook  ( r1 , c1, 2 ); break ;
+        case 'h': knight( r1 , c1, 2 ); break ;
+        case 'c': bishop( r1 , c1, 2 ); break ;
+        case 'k': king  ( r1 , c1, 2 ); break ;
+        case 'q': queen ( r1 , c1, 2 ); break ;
         default: wprintf(L"\x26A0 Invalid Position ! " ) ; goto again2 ;
     }
-    if(possible_moves_index>=1)
+
+    if (possible_moves_index >= 1)
     {
         clear_screen();
         append_possible_moves();
@@ -1731,7 +1725,7 @@ void player_black()
             wprintf(L" %d :", possible_moves[i]);
         }
 
-    do
+        do
         {
             wprintf(L"\nEnter New Position of Piece : [row.index column.index] : " ) ;
             scanf( "%d" , &p2 ) ;
@@ -1779,6 +1773,3 @@ int check2(int x , int y )
     default: return 0 ;
     }
 }
-
-
-
