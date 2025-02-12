@@ -1520,12 +1520,11 @@ void queen( int r1 , int c1, int player_id)
 
 void pawnb( int r1 , int c1 ) // paido black
 {
-    possible_moves_index=0;
+    possible_moves_index = 0;
 
-
-    if( r1 == 6 )
+    if (r1 == 6)
     {
-        if( board[r1-1][c1] == ' ' )
+        if (board[r1-1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
@@ -1534,8 +1533,8 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves_index++;
             }
         }
-        
-        if( board[r1-2][c1] == ' ' )
+
+        if (board[r1-2][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-2 >= 0 && c1 >= 0 )
@@ -1544,7 +1543,7 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves_index++;
             }
         }
-        if( check2(r1-1 , c1+1) == 1 )
+        if (check2(r1-1 , c1+1) == 1)
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
@@ -1552,11 +1551,9 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
                 possible_moves_index++;
              }
-             
         }
-       
 
-        if( check2(r1-1 , c1-1) == 1 )
+        if (check2(r1-1 , c1-1) == 1)
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
@@ -1564,13 +1561,11 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
                 possible_moves_index++;
             }
-            
         }
-        
     }
     else
     {
-        if( board[r1-1][c1] == ' ' )
+        if (board[r1-1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-1 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
@@ -1579,9 +1574,8 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves_index++;
             }
         }
-         
-        
-        if( check2(r1-1 , c1+1) == 1 )
+
+        if (check2(r1-1 , c1+1) == 1)
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
@@ -1589,26 +1583,22 @@ void pawnb( int r1 , int c1 ) // paido black
                 possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
                 possible_moves_index++;
              }
-             
         }
-       
 
-        if( check2(r1-1 , c1-1) == 1 )
+        if (check2(r1-1 , c1-1) == 1)
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
-            if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
+            if ((r1-1 >= 0) && (c1-1 <= 7) && (c1-1 >=0)) // check for outside board
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
                 possible_moves_index++;
             }
-            
         }
     }
 
-
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (possible_moves_index >= 1)
     {
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1619,9 +1609,7 @@ void pawnb( int r1 , int c1 ) // paido black
     {
         wprintf(L"No possible moves -> ");
     }
-
 }
-
 
 bool verify_possible_move(int position)
 {
