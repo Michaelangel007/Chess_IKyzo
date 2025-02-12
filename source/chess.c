@@ -376,26 +376,26 @@ void append_possible_moves()
         }
     }
 }
+
 void remove_possible_moves()
 {
     int x,y;
-    for(int i=0; i<possible_moves_index; i++)
+    for (int i=0; i < possible_moves_index; i++)
     {
-
         x = possible_moves[i]/10; // row
         y = possible_moves[i]%10; // column
-        if((x*10+y)!=new_position || new_position==-1)
+        if (((x*10+y) != new_position) || (new_position == -1))
         {
             board[x][y] = ' ';
         }
-        
     }
-    if(x!=0) 
+
+    if (x != 0)
     {
         board[previous_position/10][previous_position%10]=' ';
     }
-    
 }
+
 void display_possible_moves(char board[8][8])
 {
       int i , j , k ;
