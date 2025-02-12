@@ -66,7 +66,7 @@ char board[8][8] = // array 8x8 representing the board.
     void clear_screen();
     eliminated_piece* create_piece(char value);
     void delay(int);
-    void display();
+    void display_board();
     int  display_convert(char ); // convert array to Unicode
     void display_eliminated_list(eliminated_pieces_list l);
     void display_possible_moves(char board[8][8]);
@@ -424,7 +424,7 @@ void delay (int number_of_seconds)
 }
 
 // ----------------------------------------
-void display ()
+void display_board ()
 {
     int i , j , k ;
 
@@ -1202,8 +1202,7 @@ again2:
     {
         clear_screen();
         append_possible_moves();
-        display(); // Displays the Board
-        //display_possible_moves(board_possible_moves);
+        display_board();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1267,7 +1266,7 @@ again1:
     {
         clear_screen();
         append_possible_moves();
-        display(); // Displays the Board
+        display_board();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1760,10 +1759,7 @@ void showcase_board (char old_row, char old_col, char new_row, char new_col, int
     else
     {
         change(r1,c1,r2,c2, player);
-        // clear_screen();
-        // wprintf(L"Hikaru Nakamura -\n\n");
-        display(); // Displays the Board
-        // wprintf(L"Magnus Carlsen -\n");
+        display_board();
     }
 }
 
@@ -1905,7 +1901,7 @@ void main (int argc, char *argv[])
         {
             remove_possible_moves();
             clear_screen();
-            display();
+            display_board();
 
             if ((moves % 2) == PLAYER_WHITE)
             {
