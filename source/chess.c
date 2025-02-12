@@ -359,6 +359,25 @@ void main(int argc, char *argv[])
     }
 }
 
+/*
+   File Format for chess_game_notes.txt
+
+      ?##.##-##.##
+      ?##.##-##.##
+
+    That is,
+
+      <any> <WhiteOldRow><WhiteOldCol> '.' <WhiteNewRow><WhiteNewCol> <any> <BlackOldRow><BlackOldCol> '.' <BlackNewRow><BlackNewCol>
+
+   1. Where # is 0..7
+   2. Where ## is RowCol. 64 is Row 6, Col 4.
+   3. Format is OldRC.NewRC
+   4. There must be a pair of white / black moves on a single line.
+
+   i.e.
+
+      ?64.44-14.34
+*/
 void showcase_game()
 {
     const char *filename = "chess_game_notes.txt";
