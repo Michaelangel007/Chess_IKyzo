@@ -419,36 +419,38 @@ void display_possible_moves(char board[8][8])
     wprintf(L"  " ) ;
     for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
 }
+
 void display()
 {
     int i , j , k ;
-    
+
     //Corruption Problem ? board[0][0] = 'R';
-    if(new_position==-99){ board[0][0]='R';}
-    
+    if (new_position==-99)
+    {
+        board[0][0] = 'R';
+    }
+
     display_eliminated_list(eliminated_pieces_white);
     wprintf(L" ") ;
-    for( i=0 ; i<8 ; i++ )
+    for (i = 0 ; i < 8; i++)
     {
         wprintf(L"   %d" , i );
-       
-    } 
+    }
     wprintf(L"\n" ) ;
 
-    for( k=0 ; k<8 ; k++ )
+    for (k = 0; k < 8; k++)
     {
-    wprintf(L"  " ) ;
-    for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
+        wprintf(L"  " ) ;
+        for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
 
-    for( j=0 ; j<8 ; j++ ) { wprintf(L"||%lc " , display_convert(board[k][j]) ) ; }
-    wprintf(L"|| \n" ) ;
+        for( j=0 ; j<8 ; j++ ) { wprintf(L"||%lc " , display_convert(board[k][j]) ) ; }
+        wprintf(L"|| \n" ) ;
     }
 
     wprintf(L"  " ) ;
     for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
     display_eliminated_list(eliminated_pieces_black);
     wprintf(L"\n");
-
 }
 
 
