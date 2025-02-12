@@ -453,20 +453,18 @@ void display()
     wprintf(L"\n");
 }
 
-
 void change( int r1 , int c1 , int r2 , int c2 , int player_id)
 {
     char temp ;
     temp = board[r1][c1] ;
-    if(player_id==1)
+    if (player_id == 1)
     {
-        if(check(r2, c2)==1)
+        if (check(r2, c2) == 1)
         {
             insert_eliminated_list(board[r2][c2], &eliminated_pieces_white);
             board[r1][c1] = ' ';
-            board[r2][c2] = temp; 
+            board[r2][c2] = temp;
             // Add Elimination action
-            
         }
         else
         {
@@ -474,15 +472,15 @@ void change( int r1 , int c1 , int r2 , int c2 , int player_id)
             board[r2][c2] = temp ;
         }
     }
-    else if(player_id==2)
+    else
+    if (player_id == 2)
     {
-        if(check2(r2, c2) == 1)
+        if (check2(r2, c2) == 1)
         {
             insert_eliminated_list(board[r2][c2], &eliminated_pieces_black);
             board[r1][c1] = ' ';
             board[r2][c2] = temp;
             // Add Elimination action
-
         }
         else
         {
