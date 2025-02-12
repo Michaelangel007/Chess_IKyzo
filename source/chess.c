@@ -82,7 +82,7 @@ char board[8][8] = // array 8x8 representing the board.
 #ifdef _WIN32
 #else
 // Reads a single character, including arrow keys
-char getch()
+char getch ()
 {
     struct termios oldt, newt;
     char ch, seq[3];
@@ -133,7 +133,7 @@ char getch()
 
 // Generating piece node
 // ----------------------------------------
-eliminated_piece* create_piece(char value)
+eliminated_piece* create_piece (char value)
 {
     eliminated_piece *piece;
     if ((piece = (eliminated_piece *)malloc(sizeof(eliminated_piece))) != NULL)
@@ -145,7 +145,7 @@ eliminated_piece* create_piece(char value)
 }
 
 // ----------------------------------------
-void insert_eliminated_list(char value, eliminated_pieces_list *l)
+void insert_eliminated_list (char value, eliminated_pieces_list *l)
 {
     eliminated_piece *temp;
     eliminated_piece *piece;
@@ -170,7 +170,7 @@ void insert_eliminated_list(char value, eliminated_pieces_list *l)
 }
 
 // ----------------------------------------
-void display_eliminated_list(eliminated_pieces_list l)
+void display_eliminated_list (eliminated_pieces_list l)
 {
     eliminated_piece* temp = l.start;
     int converted_value;
@@ -185,7 +185,7 @@ void display_eliminated_list(eliminated_pieces_list l)
 }
 
 // ----------------------------------------
-int display_convert(char symbol)
+int display_convert (char symbol)
 {
     switch (symbol)
     {
@@ -207,7 +207,7 @@ int display_convert(char symbol)
 }
 
 // ----------------------------------------
-void intro()
+void intro ()
 {
     wprintf(
 L"\n"
@@ -224,7 +224,7 @@ L"\n"
 
 #ifdef _WIN32
 // ----------------------------------------
-void cls(HANDLE hConsole)
+void cls (HANDLE hConsole)
 {
     COORD coordScreen = { 0, 0 };    // home for the cursor
     DWORD cCharsWritten;
@@ -270,7 +270,7 @@ void cls(HANDLE hConsole)
 }
 
 // ----------------------------------------
-void clear_screen()
+void clear_screen ()
 {
 
     // This is a security nightmare. DON'T DO THIS
@@ -289,7 +289,7 @@ void clear_screen()
 }
 #else
 // ----------------------------------------
-void clear_screen()
+void clear_screen ()
 {
     // TODO: Fixme *nix
     system( "clear" );
@@ -297,7 +297,7 @@ void clear_screen()
 #endif
 
 // ----------------------------------------
-void main(int argc, char *argv[])
+void main (int argc, char *argv[])
 {
     // Init lists
     eliminated_pieces_white.start = NULL;
@@ -388,7 +388,7 @@ void main(int argc, char *argv[])
       ?64.44-14.34
 */
 // ----------------------------------------
-void showcase_game()
+void showcase_game ()
 {
     const char *filename = "chess_game_notes.txt";
     FILE *fp = fopen(filename, "r");
@@ -446,7 +446,7 @@ void showcase_game()
 }
 
 // ----------------------------------------
-void showcase_board(char old_row, char old_col, char new_row, char new_col, int player)
+void showcase_board (char old_row, char old_col, char new_row, char new_col, int player)
 {
     int c1 , r1 , c2 , r2;
 
@@ -477,7 +477,7 @@ void showcase_board(char old_row, char old_col, char new_row, char new_col, int 
 }
 
 // ----------------------------------------
-void delay(int number_of_seconds)
+void delay (int number_of_seconds)
 {
     // Converting time into milli_seconds
     int milli_seconds = 1000 * number_of_seconds;
@@ -491,7 +491,7 @@ void delay(int number_of_seconds)
 }
 
 // ----------------------------------------
-void append_possible_moves()
+void append_possible_moves ()
 {
     int x,y;
 
@@ -507,7 +507,7 @@ void append_possible_moves()
 }
 
 // ----------------------------------------
-void remove_possible_moves()
+void remove_possible_moves ()
 {
     int x,y;
     for (int i=0; i < possible_moves_index; i++)
@@ -527,7 +527,7 @@ void remove_possible_moves()
 }
 
 // ----------------------------------------
-void display_possible_moves(char board[8][8])
+void display_possible_moves (char board[8][8])
 {
     int i , j , k;
 
@@ -552,7 +552,7 @@ void display_possible_moves(char board[8][8])
 }
 
 // ----------------------------------------
-void display()
+void display ()
 {
     int i , j , k ;
 
@@ -586,7 +586,7 @@ void display()
 }
 
 // ----------------------------------------
-void change( int r1 , int c1 , int r2 , int c2 , int player )
+void change ( int r1 , int c1 , int r2 , int c2 , int player )
 {
     char temp ;
     temp = board[r1][c1] ;
@@ -623,15 +623,12 @@ void change( int r1 , int c1 , int r2 , int c2 , int player )
     }
     else
     {
-wprintf( L"Player: %d\n", player );
-perror( "Invalid player! " );
-exit(1);
-        wprintf(L"Error : Take action !");
+        wprintf(L"Error: Invalid player %d!", player);
     }
 }
 
 // ----------------------------------------
-void pawn( int r1 , int c1 )
+void pawn ( int r1 , int c1 )
 {
     possible_moves_index = 0;
 
@@ -741,7 +738,7 @@ void pawn( int r1 , int c1 )
 }
 
 // ----------------------------------------
-void rook( int r1 , int c1, int player)
+void rook ( int r1 , int c1, int player)
 {
     possible_moves_index = 0;
     int i , j , n ;
@@ -895,7 +892,7 @@ void rook( int r1 , int c1, int player)
 }
 
 // ----------------------------------------
-void knight( int r1 , int c1, int player )
+void knight ( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
@@ -1070,7 +1067,7 @@ void knight( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
-void bishop( int r1 , int c1, int player)
+void bishop ( int r1 , int c1, int player)
 {
     int a , b , c , d ;
     possible_moves_index = 0;
@@ -1216,7 +1213,7 @@ void bishop( int r1 , int c1, int player)
 }
 
 // ----------------------------------------
-void king( int r1 , int c1, int player )
+void king ( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
@@ -1392,7 +1389,7 @@ void king( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
-void queen( int r1 , int c1, int player )
+void queen ( int r1 , int c1, int player )
 {
     int a , b , c , d ;
     int i , j , n ;
@@ -1661,7 +1658,7 @@ void queen( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
-void pawnb( int r1 , int c1 )
+void pawnb ( int r1 , int c1 )
 {
     possible_moves_index = 0;
 
@@ -1755,7 +1752,7 @@ void pawnb( int r1 , int c1 )
 }
 
 // ----------------------------------------
-bool verify_possible_move(int position)
+bool verify_possible_move (int position)
 {
     for (int i = 0; i < possible_moves_index; i++)
     {
@@ -1766,7 +1763,7 @@ bool verify_possible_move(int position)
 }
 
 // ----------------------------------------
-void player_white()
+void player_white ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
     wprintf(L"\n\x26AB Black to move ..." ) ;
@@ -1829,7 +1826,7 @@ again1:
 }
 
 // ----------------------------------------
-void player_black()
+void player_black ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
@@ -1893,7 +1890,7 @@ again2:
 
 // Check if there is a piece at x,y
 // ----------------------------------------
-int check(int x , int y )
+int check (int x , int y )
 {
     switch( board[x][y] )
     {
@@ -1908,7 +1905,7 @@ int check(int x , int y )
 }
 
 // ----------------------------------------
-int check2(int x , int y )
+int check2 (int x , int y )
 {
     switch( board[x][y] )
     {
