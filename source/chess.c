@@ -29,6 +29,12 @@
         eliminated_piece *start;
     } eliminated_pieces_list;
 
+    enum
+    {
+        PLAYER_WHITE,
+        PLAYER_BLACK
+    };
+
 // Globals
     int possible_moves[100];
     int possible_moves_index;
@@ -364,29 +370,30 @@ void showcase_game()
          exit(1);
     }
 
-    char chunk[128];
+    #define MAX_LINE 128
+    char chunk[MAX_LINE];
     char white_input[2];
     char white_output[2];
     char black_input[2];
     char black_output[2];
 
-    while(fgets(chunk, sizeof(chunk), fp) != NULL)
+    while(fgets(chunk, sizeof(chunk)-1, fp) != NULL)
     {
-        //fputs(chunk, stdout);
         white_input[0] = chunk[1];
         white_input[1] = chunk[2];
         white_output[0] = chunk[4];
         white_output[1] = chunk[5];
         wprintf(L"%c%c.%c%c\n", white_input[0], white_input[1],white_output[0], white_output[1]);
 
-        showcase_board(white_input[0], white_input[1], white_output[0], white_output[1], 2);
+        showcase_board(white_input[0], white_input[1], white_output[0], white_output[1], PLAYER_BLACK);
         delay(2);
+
         black_input[0] = chunk[7];
         black_input[1] = chunk[8];
         black_output[0] = chunk[10];
         black_output[1] = chunk[11];
         wprintf(L"%c%c.%c%c\n", black_input[0], black_input[1], black_output[0], black_output[1]);
-        showcase_board(black_input[0], black_input[1], black_output[0], black_output[1], 1);
+        showcase_board(black_input[0], black_input[1], black_output[0], black_output[1], PLAYER_WHITE);
         delay(2);
 
         // marker string used to show where the content of the chunk array has ended
@@ -394,7 +401,7 @@ void showcase_game()
     fclose(fp);
 }
 
-void showcase_board(char old_row, char old_col, char new_row, char new_col, int id)
+void showcase_board(char old_row, char old_col, char new_row, char new_col, int player)
 {
     int c1 , r1 , c2 , r2;
 
@@ -403,20 +410,20 @@ void showcase_board(char old_row, char old_col, char new_row, char new_col, int 
     r2 = (int)(new_row - '0');
     c2 = (int)(new_col - '0');
 
-    if ((r1 == 0) && (c1 ==0) && (r2 == 0) && (c2 == 0) && (id == 2))
+    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_BLACK))
     {
-        change(7,4,7,6,2);
-        change(7,7,7,5,2);
+        change(7,4,7,6, PLAYER_BLACK);
+        change(7,7,7,5, PLAYER_BLACK);
     }
     else
-    if (r1==0 && c1==0 && r2==0 && c2==0 && id==1)
+    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_WHITE))
     {
-        change(0,4,0,2,1);
-        change(0,0,0,3,1);
+        change(0,4,0,2, PLAYER_WHITE);
+        change(0,0,0,3, PLAYER_WHITE);
     }
     else
     {
-        change(r1,c1,r2,c2,id);
+        change(r1,c1,r2,c2, player);
         // clear_screen();
         // wprintf(L"Hikaru Nakamura -\n\n");
         display(); // Displays the Board
@@ -528,11 +535,11 @@ void display()
     wprintf(L"\n");
 }
 
-void change( int r1 , int c1 , int r2 , int c2 , int player_id)
+void change( int r1 , int c1 , int r2 , int c2 , int player )
 {
     char temp ;
     temp = board[r1][c1] ;
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         if (check(r2, c2) == 1)
         {
@@ -548,7 +555,7 @@ void change( int r1 , int c1 , int r2 , int c2 , int player_id)
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         if (check2(r2, c2) == 1)
         {
@@ -565,11 +572,14 @@ void change( int r1 , int c1 , int r2 , int c2 , int player_id)
     }
     else
     {
+wprintf( L"Player: %d\n", player );
+perror( "Invalid player! " );
+exit(1);
         wprintf(L"Error : Take action !");
     }
 }
 
-void pawn( int r1 , int c1) // paido
+void pawn( int r1 , int c1 ) // paido
 {
     possible_moves_index = 0;
 
@@ -678,13 +688,13 @@ void pawn( int r1 , int c1) // paido
     }
 }
 
-void rook( int r1 , int c1, int player_id)
+void rook( int r1 , int c1, int player)
 {
     possible_moves_index = 0;
     int i , j , n ;
 
     n = c1;
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         if (n != 0)
         {
@@ -748,7 +758,7 @@ void rook( int r1 , int c1, int player_id)
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         if (n != 0)
         {
@@ -831,11 +841,11 @@ void rook( int r1 , int c1, int player_id)
     }
 }
 
-void knight( int r1 , int c1, int player_id )
+void knight( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         if ((board[r1+2][c1+1] == ' ') || check(r1+2, c1+1) == 1)
         {
@@ -911,7 +921,7 @@ void knight( int r1 , int c1, int player_id )
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         if ((board[r1+2][c1+1] == ' ') || (check2(r1+2, c1+1) == 1))
         {
@@ -1005,12 +1015,12 @@ void knight( int r1 , int c1, int player_id )
     }
 }
 
-void bishop( int r1 , int c1, int player_id)
+void bishop( int r1 , int c1, int player)
 {
     int a , b , c , d ;
     possible_moves_index = 0;
 
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || (check(r1-a, c1+b) == 1))
@@ -1070,7 +1080,7 @@ void bishop( int r1 , int c1, int player_id)
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || (check2(r1-a, c1+b)==1))
@@ -1150,11 +1160,11 @@ void bishop( int r1 , int c1, int player_id)
 
 }
 
-void king( int r1 , int c1, int player_id )
+void king( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         if ((board[r1][c1+1] == ' ') || (check(r1, c1+1) == 1))
         {
@@ -1236,7 +1246,7 @@ void king( int r1 , int c1, int player_id )
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
@@ -1325,7 +1335,7 @@ void king( int r1 , int c1, int player_id )
     }
 }
 
-void queen( int r1 , int c1, int player_id)
+void queen( int r1 , int c1, int player )
 {
     int a , b , c , d ;
     int i , j , n ;
@@ -1333,7 +1343,7 @@ void queen( int r1 , int c1, int player_id)
     n = c1;
     possible_moves_index = 0;
 
-    if (player_id == 1)
+    if (player == PLAYER_WHITE)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || (check(r1-a, c1+b)==1))
@@ -1453,7 +1463,7 @@ void queen( int r1 , int c1, int player_id)
         }
     }
     else
-    if (player_id == 2)
+    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || (check2(r1-a, c1+b) == 1))
@@ -1717,12 +1727,12 @@ again1:
 
     switch( board[r1][c1] ) // Select only player's pieces.
     {
-        case 'P': pawn  ( r1 , c1    );  break;
-        case 'R': rook  ( r1 , c1, 1 );  break;
-        case 'H': knight( r1 , c1, 1 );  break;
-        case 'C': bishop( r1 , c1, 1 );  break;
-        case 'K': king  ( r1 , c1, 1 );  break;
-        case 'Q': queen ( r1 , c1, 1 );  break;
+        case 'P': pawn  ( r1 , c1               );  break;
+        case 'R': rook  ( r1 , c1, PLAYER_WHITE );  break;
+        case 'H': knight( r1 , c1, PLAYER_WHITE );  break;
+        case 'C': bishop( r1 , c1, PLAYER_WHITE );  break;
+        case 'K': king  ( r1 , c1, PLAYER_WHITE );  break;
+        case 'Q': queen ( r1 , c1, PLAYER_WHITE );  break;
         default:
             wprintf(L"\x26A0 Invalid Position ! ");
             goto again1 ;
@@ -1755,7 +1765,7 @@ again1:
     previous_position = r1*10+c1;
     new_position = r2*10+c2;
 
-    change(r1,c1,r2,c2,1) ;
+    change(r1,c1,r2,c2, PLAYER_WHITE);
 }
 
 void player_black()
@@ -1779,12 +1789,12 @@ again2:
 
     switch( board[r1][c1] )
     {
-        case 'p': pawnb ( r1 , c1    ); break ;
-        case 'r': rook  ( r1 , c1, 2 ); break ;
-        case 'h': knight( r1 , c1, 2 ); break ;
-        case 'c': bishop( r1 , c1, 2 ); break ;
-        case 'k': king  ( r1 , c1, 2 ); break ;
-        case 'q': queen ( r1 , c1, 2 ); break ;
+        case 'p': pawnb ( r1 , c1               ); break ;
+        case 'r': rook  ( r1 , c1, PLAYER_BLACK ); break ;
+        case 'h': knight( r1 , c1, PLAYER_BLACK ); break ;
+        case 'c': bishop( r1 , c1, PLAYER_BLACK ); break ;
+        case 'k': king  ( r1 , c1, PLAYER_BLACK ); break ;
+        case 'q': queen ( r1 , c1, PLAYER_BLACK ); break ;
         default: wprintf(L"\x26A0 Invalid Position ! " ) ; goto again2 ;
     }
 
@@ -1817,7 +1827,7 @@ again2:
     previous_position = r1*10+c1;
     new_position = r2*10+c2;
 
-    change(r1,c1,r2,c2,2) ;
+    change(r1,c1,r2,c2, PLAYER_BLACK);
 }
 
 // Check if there is a piece at x,y
