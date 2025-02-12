@@ -223,15 +223,17 @@ void clear_screen()
 void main()
 {
     // Init lists
-    eliminated_pieces_white.start=NULL;
-    eliminated_pieces_black.start=NULL;
+    eliminated_pieces_white.start = NULL;
+    eliminated_pieces_black.start = NULL;
+
     piece = (char *)malloc(sizeof(char));
+
     // For somereason board 0 0 got corrupted
     board[0][0] = 'R';
 
-int  x = 0 ; // Sets Turns
-char ch ;
-char showcase_option;
+    int  x = 0 ; // Sets Turns
+    char ch;
+    char showcase_option;
 
 #ifdef _WIN32
     _setmode(_fileno(stdout), 0x00020000); // SET ENCODING TO UNICODE
@@ -243,40 +245,37 @@ char showcase_option;
     wprintf(L" \nPress Any Key To Continue...  \n  " ) ;
     showcase_option = getch();
     clear_screen();
-    if(showcase_option==32)
+
+    if (showcase_option == ' ') // Space is Showcase game
     {
         showcase_game();
     }
     else
     {
-        
         do
         {
-        x++ ;
-        remove_possible_moves();
-        clear_screen();
-        display(); // Displays the Board
+            x++;
+            remove_possible_moves();
+            clear_screen();
+            display(); // Displays the Board
 
-        if( (x%2) == 0 )
-        {
-            player_white();
-            
-        }
-        else
-        {
-            player_black();
-        }
-        // For somereason board 0 0 got corrupted
-        //wprintf(L"%c", board[0][0]);
-        //wprintf(L"Board[0][7] symbol: %lc\n", display_convert(board[0][0]));
-        wprintf(L" \nPress Any Key To Continue... -> \n " ) ;
+            if ((x%2) == 0)
+            {
+                player_white();
+            }
+            else
+            {
+                player_black();
+            }
 
-        ch = getch();
-        }while( ch != 27 ) ;
+            // For somereason board 0 0 got corrupted
+            //wprintf(L"%c", board[0][0]);
+            //wprintf(L"Board[0][7] symbol: %lc\n", display_convert(board[0][0]));
+            wprintf(L" \nPress Any Key To Continue... -> \n " ) ;
+
+            ch = getch();
+        } while (ch != 27);
     }
-
-
-
 }
 
 void showcase_game()
