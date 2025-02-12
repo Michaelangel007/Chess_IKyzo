@@ -398,23 +398,22 @@ void remove_possible_moves()
 
 void display_possible_moves(char board[8][8])
 {
-      int i , j , k ;
+    int i , j , k;
 
-    wprintf(L" ") ;
-    for( i=0 ; i<8 ; i++ )
+    wprintf(L" ");
+    for (i = 0; i < 8 ; i++)
     {
         wprintf(L"   %d" , i );
-       
-    } 
+    }
     wprintf(L"\n" ) ;
 
-    for( k=0 ; k<8 ; k++ )
+    for (k = 0 ; k < 8 ; k++)
     {
-    wprintf(L"  " ) ;
-    for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
+        wprintf(L"  " ) ;
+        for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
 
-    for( j=0 ; j<8 ; j++ ) { wprintf(L"||%c " , display_convert(board[k][j]) ) ; }
-    wprintf(L"|| \n" ) ;
+        for( j=0 ; j<8 ; j++ ) { wprintf(L"||%c " , display_convert(board[k][j]) ) ; }
+        wprintf(L"|| \n" ) ;
     }
 
     wprintf(L"  " ) ;
