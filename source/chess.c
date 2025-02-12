@@ -1,15 +1,16 @@
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <locale.h>
-	#include <wchar.h>
-	#include <string.h>  // memcpy()
-	#include <stdbool.h> // bool
-	#include <time.h>
+// Includes
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <locale.h>
+    #include <wchar.h>
+    #include <string.h>  // memcpy()
+    #include <stdbool.h> // bool
+    #include <time.h>
 #ifdef _WIN32
-	#include <conio.h>
+    #include <conio.h>
 #else
-	#include <termios.h>
-	#include <unistd.h>
+    #include <termios.h>
+    #include <unistd.h>
 #endif
 
 int possible_moves[100];
