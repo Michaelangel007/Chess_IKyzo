@@ -605,139 +605,142 @@ void pawn( int r1 , int c1) // paido
 
 void rook( int r1 , int c1, int player_id)
 {
-
-    possible_moves_index=0;
-    
+    possible_moves_index = 0;
     int i , j , n ;
 
-    n=c1;
-
-    if(player_id==1)
+    n = c1;
+    if (player_id == 1)
     {
-        if(n!=0)
-    {
-        while( board[r1][n-1] == ' ' || check(r1, n-1)==1)
+        if (n != 0)
         {
-            if( n == 0 ) { break ; }
-            possible_moves[possible_moves_index] = (r1)*10+n-1;
-            possible_moves_index++;
-            if(check(r1, n-1)==1) { break ; }
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n-- ;
+            while ((board[r1][n-1] == ' ') || (check(r1, n-1) == 1))
+            {
+                if (n == 0)
+                     break;
+                possible_moves[possible_moves_index] = (r1)*10+n-1;
+                possible_moves_index++;
+                if (check(r1, n-1) == 1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n-- ;
+            }
+        }
+
+        n = c1;
+        if (n != 7)
+        {
+            while ((board[r1][n+1] == ' ')|| (check(r1, n+1) == 1))
+            {
+                possible_moves[possible_moves_index] = (r1)*10+n+1;
+                possible_moves_index++;
+                if (check(r1, n+1)==1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n+1 ) ;
+                n++;
+            }
+        }
+
+        n = r1;
+        if (n != 0)
+        {
+            while ((board[n-1][c1] == ' ') || (check(n-1, c1)==1))
+            {
+                if (n == 0)
+                    break;
+                possible_moves[possible_moves_index] = (n-1)*10+c1;
+                possible_moves_index++;
+                if (check(n-1, c1) == 1)
+                     break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n-- ;
+            }
+        }
+
+        n = r1;
+        if (n != 7)
+        {
+            while ((board[n+1][c1] == ' ') || (check(n+1, c1) == 1))
+            {
+                if (n == 7)
+                    break;
+                possible_moves[possible_moves_index] = (n+1)*10+c1;
+                possible_moves_index++;
+                if (check(n+1, c1)==1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n++ ;
+            }
         }
     }
-    
-    
-    
-
-    n=c1 ;
-    if(n!=7)
+    else
+    if (player_id == 2)
     {
-        while( board[r1][n+1] == ' '|| check(r1, n+1)==1)
+        if (n != 0)
         {
-            possible_moves[possible_moves_index] = (r1)*10+n+1;
-            possible_moves_index++;
-            if(check(r1, n+1)==1) {break;}
-            //wprintf(L"%d%d , " , r1 , n+1 ) ;
-            n++;
+            while ((board[r1][n-1] == ' ') || (check2(r1, n-1) == 1))
+            {
+                if (n == 0)
+                    break;
+                possible_moves[possible_moves_index] = (r1)*10+n-1;
+                possible_moves_index++;
+                if (check2(r1, n-1) == 1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n-- ;
+            }
+        }
+
+        n = c1;
+        if (n != 7)
+        {
+            while ((board[r1][n+1] == ' ') || (check2(r1, n+1) == 1))
+            {
+                possible_moves[possible_moves_index] = (r1)*10+n+1;
+                possible_moves_index++;
+                if (check2(r1, n+1) == 1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n+1 ) ;
+                n++;
+            }
+        }
+
+        n = r1;
+        if (n != 0)
+        {
+            while ((board[n-1][c1] == ' ') || (check2(n-1, c1) == 1))
+            {
+                if (n == 0)
+                    break;
+                possible_moves[possible_moves_index] = (n-1)*10+c1;
+                possible_moves_index++;
+                if (check2(n-1, c1) == 1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n-- ;
+            }
+        }
+
+        n = r1;
+        if (n != 7)
+        {
+            while ((board[n+1][c1] == ' ') || (check2(n+1, c1) == 1))
+            {
+                if (n == 7)
+                    break;
+                possible_moves[possible_moves_index] = (n+1)*10+c1;
+                possible_moves_index++;
+                if (check2(n+1, c1) == 1)
+                    break;
+                //wprintf(L"%d%d , " , r1 , n-1 ) ;
+                n++ ;
+            }
         }
     }
-    
-
-
-    n = r1 ;
-    if(n!=0)
-    {
-        while( board[n-1][c1] == ' ' || check(n-1, c1)==1)
-        {
-            if( n == 0 ) { break ; }
-            possible_moves[possible_moves_index] = (n-1)*10+c1;
-            possible_moves_index++;
-            if( check(n-1, c1)==1 ) { break; }
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n-- ;
-        }
-    }
-
-    n = r1 ;
-    if(n!=7)
-    {
-        while( board[n+1][c1] == ' ' || check(n+1, c1)==1)
-        {
-            if( n == 7 ) { break ; }
-            possible_moves[possible_moves_index] = (n+1)*10+c1;
-            possible_moves_index++;
-            if(check(n+1, c1)==1) {break;}
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n++ ;
-        }
-    }
-    }
-    else if(player_id==2)
-    {
-        if(n!=0)
-    {
-        while( board[r1][n-1] == ' ' || check2(r1, n-1)==1)
-        {
-            if( n == 0 ) { break ; }
-            possible_moves[possible_moves_index] = (r1)*10+n-1;
-            possible_moves_index++;
-            if(check2(r1, n-1)==1) { break ; }
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n-- ;
-        }
-    }
-    
-    
-    
-
-    n=c1 ;
-    if(n!=7)
-    {
-        while( board[r1][n+1] == ' '|| check2(r1, n+1)==1)
-        {
-            possible_moves[possible_moves_index] = (r1)*10+n+1;
-            possible_moves_index++;
-            if(check2(r1, n+1)==1) {break;}
-            //wprintf(L"%d%d , " , r1 , n+1 ) ;
-            n++;
-        }
-    }
-    
-
-
-
-    n = r1 ;
-    if(n!=0)
-    {
-        while( board[n-1][c1] == ' ' || check2(n-1, c1)==1)
-        {
-            if( n == 0 ) { break ; }
-            possible_moves[possible_moves_index] = (n-1)*10+c1;
-            possible_moves_index++;
-            if( check2(n-1, c1)==1 ) { break; }
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n-- ;
-        }
-    }
-
-    n = r1 ;
-    if(n!=7)
-    {
-        while( board[n+1][c1] == ' ' || check2(n+1, c1)==1)
-        {
-            if( n == 7 ) { break ; }
-            possible_moves[possible_moves_index] = (n+1)*10+c1;
-            possible_moves_index++;
-            if(check2(n+1, c1)==1) {break;}
-            //wprintf(L"%d%d , " , r1 , n-1 ) ;
-            n++ ;
-        }
-    }
-    }else
+    else
     {
         wprintf(L"\nError : Rook ");
     }
+
     //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if(possible_moves_index >= 1)
@@ -751,7 +754,6 @@ void rook( int r1 , int c1, int player_id)
     {
         wprintf(L"No possible moves -> ");
     }
-
 }
 
 void knight( int r1 , int c1, int player_id )
