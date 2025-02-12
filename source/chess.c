@@ -365,15 +365,15 @@ void delay(int number_of_seconds)
 void append_possible_moves()
 {
     int x,y;
-    for(int i=0; i<possible_moves_index; i++)
+
+    for (int i=0; i < possible_moves_index; i++)
     {
         x = possible_moves[i]/10; // row
         y = possible_moves[i]%10; // column
-        if(board[x][y] == ' ')
+        if (board[x][y] == ' ')
         {
             board[x][y] = 'x';
         }
-        
     }
 }
 void remove_possible_moves()
