@@ -177,19 +177,19 @@ int display_convert(char symbol)
 {
     switch (symbol)
     {
-        case 'p': return 0x265F; // White
-        case 'r': return 0x265C;
-        case 'h': return 0x265E;
-        case 'c': return 0x265D;
-        case 'k': return 0x265A;
-        case 'q': return 0x265B;
-        case 'P': return 0x2659; // Black
-        case 'R': return 0x2656;
-        case 'H': return 0x2658;
-        case 'C': return 0x2657;
-        case 'K': return 0x2654;
-        case 'Q': return 0x2655;
-        case 'x': return 0x2716;
+        case 'p': return 0x265F; // White pawn
+        case 'r': return 0x265C; //       rook
+        case 'h': return 0x265E; //       knight
+        case 'c': return 0x265D; //       bishop
+        case 'k': return 0x265A; //       king
+        case 'q': return 0x265B; //       queen
+        case 'P': return 0x2659; // Black pawn
+        case 'R': return 0x2656; //       rook
+        case 'H': return 0x2658; //       knight
+        case 'C': return 0x2657; //       bishop
+        case 'K': return 0x2654; //       king
+        case 'Q': return 0x2655; //       queen
+        case 'x': return 0x2716; // Possible move
         default : return 0x0020; // Empty
     }
 }
