@@ -435,6 +435,7 @@ void display_board ()
     }
 
     display_eliminated_list(eliminated_pieces_white);
+
     wprintf(L" ") ;
     for (i = 0 ; i < 8; i++)
     {
@@ -442,17 +443,18 @@ void display_board ()
     }
     wprintf(L"\n" ) ;
 
+    const wchar_t *separator = L"  ----------------------------------\n";
+
     for (k = 0; k < 8; k++)
     {
-        wprintf(L"  " ) ;
-        for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
+        wprintf( separator );
+        wprintf(L"%d " , k ) ;
 
         for( j=0 ; j<8 ; j++ ) { wprintf(L"||%lc " , display_convert(board[k][j]) ) ; }
         wprintf(L"|| \n" ) ;
     }
+    wprintf( separator );
 
-    wprintf(L"  " ) ;
-    for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
     display_eliminated_list(eliminated_pieces_black);
     wprintf(L"\n");
 }
