@@ -1,22 +1,23 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<conio.h>
-// ADDED FOR ENCODING
-#include <fcntl.h>
-#include <io.h>
-// For Matrix Copy memcpy
-#include <string.h>
-// Boolean
-#include <stdbool.h>
-#include <time.h>
-
-
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <locale.h>
+	#include <wchar.h>
+	#include <string.h>  // memcpy()
+	#include <stdbool.h> // bool
+	#include <time.h>
+#ifdef _WIN32
+	#include <conio.h>
+#else
+	#include <termios.h>
+	#include <unistd.h>
+#endif
 
 int possible_moves[100];
 int possible_moves_index;
 int previous_position;
 int new_position = -99;
 int display_convert(char ); // Converts the Matrix elements to Unicode representations.
+
 // Eliminated pieces :
 typedef struct eliminated_pieces
 {
@@ -30,6 +31,50 @@ typedef struct eliminated_pieces_lists
 {
     eliminated_piece *start;
 } eliminated_pieces_list;
+
+#ifdef _WIN32
+#else
+// Reads a single character, including arrow keys
+char getch()
+{
+    struct termios oldt, newt;
+    char ch, seq[3];
+
+    // Save current terminal settings
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+
+    // Disable canonical mode and echo
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // Read the first character
+    read(STDIN_FILENO, &ch, 1);
+
+    if (ch == '\033') { // Escape sequence
+        // Read the next two characters
+        if (read(STDIN_FILENO, &seq[0], 1) == 0 || read(STDIN_FILENO, &seq[1], 1) == 0) {
+            ch = '\033'; // Treat as ESC if sequence is incomplete
+        } else if (seq[0] == '[') {
+            // Interpret arrow keys
+            switch (seq[1]) {
+                case 'A': ch = -1; break; // Up arrow
+                case 'B': ch = -2; break; // Down arrow
+                case 'C': ch = -3; break; // Right arrow
+                case 'D': ch = -4; break; // Left arrow
+                default: ch = '\033'; // Unknown sequence
+            }
+        } else {
+            ch = '\033'; // Unknown sequence
+        }
+    }
+
+    // Restore original terminal settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+    return ch;
+}
+#endif // _WIN32
 
 // Generating piece node
 eliminated_piece* create_piece(char value)
@@ -184,7 +229,14 @@ void intro()
     wprintf(L"  (________) \n");
 }
 
-
+void clear_screen()
+{
+#ifdef _WIN32
+    system( "cls" );
+#else
+    system( "clear" );
+#endif
+}
 
 void main()
 {
@@ -199,12 +251,16 @@ int  x = 0 ; // Sets Turns
 char ch ;
 char showcase_option;
 
+#ifdef _WIN32
     _setmode(_fileno(stdout), 0x00020000); // SET ENCODING TO UNICODE
-    system( "cls" ) ;
+#else
+    setlocale(LC_ALL,"");
+#endif
+    clear_screen();
     intro();
     wprintf(L" \nPress Any Key To Continue...  \n  " ) ;
     showcase_option = getch();
-    system( "cls" ) ;
+    clear_screen();
     if(showcase_option==32)
     {
         showcase_game();
@@ -216,7 +272,7 @@ char showcase_option;
         {
         x++ ;
         remove_possible_moves();
-        system( "cls" ) ;
+        clear_screen();
         display(); // Displays the Board
 
         if( (x%2) == 0 )
@@ -300,7 +356,7 @@ void showcase_board(char row, char col, char new_row, char new_col, int id)
     else
     {
         change(r1,c1,r2,c2,id);
-       // system( "cls" );
+       // clear_screen();
        // wprintf(L"Hikaru Nakamura -\n\n");
         display(); // Displays the Board
        // wprintf(L"Magnus Carlsen -\n");
@@ -1659,7 +1715,7 @@ void player_white()
     }
     if(possible_moves_index>=1)
     {
-        system( "cls" );
+        clear_screen();
         append_possible_moves();
         display(); // Displays the Board
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
@@ -1725,7 +1781,7 @@ void player_black()
     }
     if(possible_moves_index>=1)
     {
-        system( "cls" );
+        clear_screen();
         append_possible_moves();
         display(); // Displays the Board
         //display_possible_moves(board_possible_moves);
