@@ -1172,7 +1172,7 @@ void player_black ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-    wprintf(L"\n\x26AA White to move ...\n") ;
+    wprintf(L"\n\x26AB White to move ...\n") ;
 
 again2:
     do
@@ -1234,7 +1234,7 @@ again2:
 void player_white ()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
-    wprintf(L"\n\x26AB Black to move ..." ) ;
+    wprintf(L"\n\x26AA Black to move ..." ) ;
 
 again1:
     do
