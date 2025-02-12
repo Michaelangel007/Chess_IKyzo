@@ -321,17 +321,19 @@ void showcase_game()
 void showcase_board(char row, char col, char new_row, char new_col, int id)
 {
     int c1 , r1 , c2 , r2;
-    
+
     r1 = (int)(row - '0');
     c1 = (int)(col - '0');
     r2 = (int)(new_row - '0');
     c2 = (int)(new_col - '0');
-    if(r1==0 && c1==0 && r2==0 && c2==0 && id==2)
+
+    if ((r1 == 0) && (c1 ==0) && (r2 == 0) && (c2 == 0) && (id == 2))
     {
         change(7,4,7,6,2);
         change(7,7,7,5,2);
     }
-    else if(r1==0 && c1==0 && r2==0 && c2==0 && id==1)
+    else
+    if (r1==0 && c1==0 && r2==0 && c2==0 && id==1)
     {
         change(0,4,0,2,1);
         change(0,0,0,3,1);
@@ -339,14 +341,11 @@ void showcase_board(char row, char col, char new_row, char new_col, int id)
     else
     {
         change(r1,c1,r2,c2,id);
-       // clear_screen();
-       // wprintf(L"Hikaru Nakamura -\n\n");
+        // clear_screen();
+        // wprintf(L"Hikaru Nakamura -\n\n");
         display(); // Displays the Board
-       // wprintf(L"Magnus Carlsen -\n");
+        // wprintf(L"Magnus Carlsen -\n");
     }
-    
-
-
 }
 void delay(int number_of_seconds)
 {
