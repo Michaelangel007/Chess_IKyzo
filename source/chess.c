@@ -319,12 +319,12 @@ void showcase_game()
     fclose(fp);
 }
 
-void showcase_board(char row, char col, char new_row, char new_col, int id)
+void showcase_board(char old_row, char old_col, char new_row, char new_col, int id)
 {
     int c1 , r1 , c2 , r2;
 
-    r1 = (int)(row - '0');
-    c1 = (int)(col - '0');
+    r1 = (int)(old_row - '0');
+    c1 = (int)(old_col - '0');
     r2 = (int)(new_row - '0');
     c2 = (int)(new_col - '0');
 
