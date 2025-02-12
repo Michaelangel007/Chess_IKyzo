@@ -219,7 +219,7 @@ void clear_screen()
 #endif
 }
 
-void main()
+void main(int argc, char *argv[])
 {
     // Init lists
     eliminated_pieces_white.start = NULL;
@@ -239,6 +239,20 @@ void main()
 #else
     setlocale(LC_ALL,"");
 #endif
+    if ((argc > 1) && (strcmp(argv[1], "-test") == 0))
+    {
+        const char *pieces = "prhcqk\nPRHCQK\nx";
+        size_t len = strlen( pieces );
+        for (size_t i = 0; i < len; i++ )
+        {
+            wchar_t glyph = (wchar_t) display_convert( pieces[ i ] );
+            wprintf( L"%lc", glyph );
+        }
+        wprintf( L"\n" );
+        wprintf( L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd\n");
+        return;
+    }
+
     clear_screen();
     intro();
     wprintf(L" \nPress Any Key To Continue...  \n  " ) ;
