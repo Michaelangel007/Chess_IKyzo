@@ -284,7 +284,8 @@ void showcase_game()
     FILE *fp = fopen(filename, "r");
     if (!fp)
     {
-         perror("Unable to open file! %s\n", filename);
+         perror("Unable to open file!\n");
+         perror( filename );
          exit(1);
     }
 
