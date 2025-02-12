@@ -9,6 +9,7 @@
 #ifdef _WIN32
     #include <conio.h>
     #include <fcntl.h> // _O_U16TEXT = 0x00020000
+    #include <windows.h>
 #else
     #include <termios.h>
     #include <unistd.h>
@@ -210,14 +211,76 @@ L"\n"
     );
 }
 
+#ifdef _WIN32
+void cls(HANDLE hConsole)
+{
+    COORD coordScreen = { 0, 0 };    // home for the cursor
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Get the number of character cells in the current buffer.
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    {
+        return;
+    }
+
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    // Fill the entire screen with blanks.
+    if (!FillConsoleOutputCharacter(hConsole,        // Handle to console screen buffer
+                                    (TCHAR)' ',      // Character to write to the buffer
+                                    dwConSize,       // Number of cells to write
+                                    coordScreen,     // Coordinates of first cell
+                                    &cCharsWritten)) // Receive number of characters written
+    {
+        return;
+    }
+
+    // Get the current text attribute.
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    {
+        return;
+    }
+
+    // Set the buffer's attributes accordingly.
+    if (!FillConsoleOutputAttribute(hConsole,         // Handle to console screen buffer
+                                    csbi.wAttributes, // Character attributes to use
+                                    dwConSize,        // Number of cells to set attribute
+                                    coordScreen,      // Coordinates of first cell
+                                    &cCharsWritten))  // Receive number of characters written
+    {
+        return;
+    }
+
+    // Put the cursor at its home coordinates.
+    SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
 void clear_screen()
 {
-#ifdef _WIN32
-    system( "cls" );
-#else
-    system( "clear" );
-#endif
+
+    // This is a security nightmare. DON'T DO THIS
+    //     system( "cls" );
+    // See:. :-/
+    // * https://learn.microsoft.com/en-us/windows/console/clearing-the-screen. :-/
+    //. :-/
+    // Not everyone has a smart terminal with ANSI support. :-/
+    //     HANDLE hStdOut  = GetStdHandle(STD_OUTPUT_HANDLE);
+    //     DWORD  written  = 0;
+    //     PCWSTR sequence = L"\x1b[2J"; // ANSI codes: ESC [ 2J
+    //     WriteConsoleW(hStdOut, sequence, (DWORD)wcslen(sequence), &written, NULL);
+    HANDLE hStdout;
+    hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    cls(hStdout);
 }
+#else
+void clear_screen()
+{
+    // TODO: Fixme *nix
+    system( "clear" );
+}
+#endif
 
 void main(int argc, char *argv[])
 {
