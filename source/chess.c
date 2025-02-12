@@ -280,11 +280,13 @@ void main()
 
 void showcase_game()
 {
-    FILE *fp = fopen("chess_game_notes.txt", "r");
-     if(fp == NULL) {
-         perror("Unable to open file!");
+    const char *filename = "chess_game_notes.txt";
+    FILE *fp = fopen(filename, "r");
+    if (!fp)
+    {
+         perror("Unable to open file! %s\n", filename);
          exit(1);
-     }
+    }
 
     char chunk[128];
     char white_input[2];
@@ -292,7 +294,8 @@ void showcase_game()
     char black_input[2];
     char black_output[2];
 
-   while(fgets(chunk, sizeof(chunk), fp) != NULL) {
+    while(fgets(chunk, sizeof(chunk), fp) != NULL)
+    {
         //fputs(chunk, stdout);
         white_input[0] = chunk[1];
         white_input[1] = chunk[2];
@@ -309,10 +312,9 @@ void showcase_game()
         wprintf(L"%c%c.%c%c\n", black_input[0], black_input[1], black_output[0], black_output[1]);
         showcase_board(black_input[0], black_input[1], black_output[0], black_output[1], 1);
         delay(2);
-        
-         // marker string used to show where the content of the chunk array has ended
-     }
- 
+
+        // marker string used to show where the content of the chunk array has ended
+    }
     fclose(fp);
 }
 
