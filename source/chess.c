@@ -132,6 +132,7 @@ char getch()
 #endif // _WIN32
 
 // Generating piece node
+// ----------------------------------------
 eliminated_piece* create_piece(char value)
 {
     eliminated_piece *piece;
@@ -143,6 +144,7 @@ eliminated_piece* create_piece(char value)
     return piece;
 }
 
+// ----------------------------------------
 void insert_eliminated_list(char value, eliminated_pieces_list *l)
 {
     eliminated_piece *temp;
@@ -167,6 +169,7 @@ void insert_eliminated_list(char value, eliminated_pieces_list *l)
     }
 }
 
+// ----------------------------------------
 void display_eliminated_list(eliminated_pieces_list l)
 {
     eliminated_piece* temp = l.start;
@@ -181,6 +184,7 @@ void display_eliminated_list(eliminated_pieces_list l)
     wprintf(L"\n");
 }
 
+// ----------------------------------------
 int display_convert(char symbol)
 {
     switch (symbol)
@@ -202,6 +206,7 @@ int display_convert(char symbol)
     }
 }
 
+// ----------------------------------------
 void intro()
 {
     wprintf(
@@ -218,6 +223,7 @@ L"\n"
 }
 
 #ifdef _WIN32
+// ----------------------------------------
 void cls(HANDLE hConsole)
 {
     COORD coordScreen = { 0, 0 };    // home for the cursor
@@ -263,6 +269,7 @@ void cls(HANDLE hConsole)
     SetConsoleCursorPosition(hConsole, coordScreen);
 }
 
+// ----------------------------------------
 void clear_screen()
 {
 
@@ -281,6 +288,7 @@ void clear_screen()
     cls(hStdout);
 }
 #else
+// ----------------------------------------
 void clear_screen()
 {
     // TODO: Fixme *nix
@@ -288,6 +296,7 @@ void clear_screen()
 }
 #endif
 
+// ----------------------------------------
 void main(int argc, char *argv[])
 {
     // Init lists
@@ -378,6 +387,7 @@ void main(int argc, char *argv[])
 
       ?64.44-14.34
 */
+// ----------------------------------------
 void showcase_game()
 {
     const char *filename = "chess_game_notes.txt";
@@ -435,6 +445,7 @@ void showcase_game()
     fclose(fp);
 }
 
+// ----------------------------------------
 void showcase_board(char old_row, char old_col, char new_row, char new_col, int player)
 {
     int c1 , r1 , c2 , r2;
@@ -465,6 +476,7 @@ void showcase_board(char old_row, char old_col, char new_row, char new_col, int 
     }
 }
 
+// ----------------------------------------
 void delay(int number_of_seconds)
 {
     // Converting time into milli_seconds
@@ -478,6 +490,7 @@ void delay(int number_of_seconds)
         ; // intentional busy-waiting
 }
 
+// ----------------------------------------
 void append_possible_moves()
 {
     int x,y;
@@ -493,6 +506,7 @@ void append_possible_moves()
     }
 }
 
+// ----------------------------------------
 void remove_possible_moves()
 {
     int x,y;
@@ -512,6 +526,7 @@ void remove_possible_moves()
     }
 }
 
+// ----------------------------------------
 void display_possible_moves(char board[8][8])
 {
     int i , j , k;
@@ -536,6 +551,7 @@ void display_possible_moves(char board[8][8])
     for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
 }
 
+// ----------------------------------------
 void display()
 {
     int i , j , k ;
@@ -569,6 +585,7 @@ void display()
     wprintf(L"\n");
 }
 
+// ----------------------------------------
 void change( int r1 , int c1 , int r2 , int c2 , int player )
 {
     char temp ;
@@ -613,7 +630,8 @@ exit(1);
     }
 }
 
-void pawn( int r1 , int c1 ) // paido
+// ----------------------------------------
+void pawn( int r1 , int c1 )
 {
     possible_moves_index = 0;
 
@@ -722,6 +740,7 @@ void pawn( int r1 , int c1 ) // paido
     }
 }
 
+// ----------------------------------------
 void rook( int r1 , int c1, int player)
 {
     possible_moves_index = 0;
@@ -875,6 +894,7 @@ void rook( int r1 , int c1, int player)
     }
 }
 
+// ----------------------------------------
 void knight( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
@@ -1049,6 +1069,7 @@ void knight( int r1 , int c1, int player )
     }
 }
 
+// ----------------------------------------
 void bishop( int r1 , int c1, int player)
 {
     int a , b , c , d ;
@@ -1194,6 +1215,7 @@ void bishop( int r1 , int c1, int player)
 
 }
 
+// ----------------------------------------
 void king( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
@@ -1369,6 +1391,7 @@ void king( int r1 , int c1, int player )
     }
 }
 
+// ----------------------------------------
 void queen( int r1 , int c1, int player )
 {
     int a , b , c , d ;
@@ -1637,7 +1660,8 @@ void queen( int r1 , int c1, int player )
     }
 }
 
-void pawnb( int r1 , int c1 ) // paido black
+// ----------------------------------------
+void pawnb( int r1 , int c1 )
 {
     possible_moves_index = 0;
 
@@ -1730,6 +1754,7 @@ void pawnb( int r1 , int c1 ) // paido black
     }
 }
 
+// ----------------------------------------
 bool verify_possible_move(int position)
 {
     for (int i = 0; i < possible_moves_index; i++)
@@ -1740,6 +1765,7 @@ bool verify_possible_move(int position)
     return true;
 }
 
+// ----------------------------------------
 void player_white()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
@@ -1802,6 +1828,7 @@ again1:
     change(r1,c1,r2,c2, PLAYER_WHITE);
 }
 
+// ----------------------------------------
 void player_black()
 {
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
@@ -1865,6 +1892,7 @@ again2:
 }
 
 // Check if there is a piece at x,y
+// ----------------------------------------
 int check(int x , int y )
 {
     switch( board[x][y] )
@@ -1879,6 +1907,7 @@ int check(int x , int y )
     }
 }
 
+// ----------------------------------------
 int check2(int x , int y )
 {
     switch( board[x][y] )
