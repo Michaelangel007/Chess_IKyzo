@@ -126,13 +126,13 @@ char getch()
 // Generating piece node
 eliminated_piece* create_piece(char value)
 {
-  eliminated_piece *piece;
-  if((piece = (eliminated_piece *)malloc(sizeof(eliminated_piece))) != NULL)
-  {
-    piece->piece_type = value;
-    piece->next = NULL;
-  }
-  return piece;
+    eliminated_piece *piece;
+    if ((piece = (eliminated_piece *)malloc(sizeof(eliminated_piece))) != NULL)
+    {
+        piece->piece_type = value;
+        piece->next = NULL;
+    }
+    return piece;
 }
 
 void insert_eliminated_list(char value, eliminated_pieces_list *l)
