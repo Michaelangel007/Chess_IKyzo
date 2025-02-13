@@ -43,7 +43,7 @@ Also see:
 #endif
 
 // Types
-    enum
+    enum players_t
     {
         PLAYER_WHITE,
         PLAYER_BLACK,
