@@ -1,11 +1,18 @@
 /*
-You can download a .ttf Unicode chess font from
+You can download a .ttf Unicode chess font from:
+
+DejaVuSansMono.ttf
+* https://dejavu-fonts.github.io/
+
+chess_merida_unicode.ttf
 * https://github.com/xeyownt/chess_merida_unicode
 
-Also see
+You may want to use the ConEmu terminal on Windows
+* https://conemu.github.io/
+
+Also see:
 * https://stackoverflow.com/questions/27483800/displaying-unicode-chess-pieces-in-windows-console
 * https://superuser.com/questions/390933/how-to-add-a-font-to-the-cmd-window-choices-in-windows-7-64-bit/956818#956818
-
 */
 
 #define VERIFY_SAFE_BOARD_ARRAY 0
