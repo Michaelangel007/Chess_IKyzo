@@ -275,7 +275,7 @@ void bishop ( int r1 , int c1, int player)
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf( L"Possible moves %lc: \n", display_convert(board[r1][c1]) );
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -533,7 +533,7 @@ void display_eliminated_list (eliminated_pieces_list l)
     while (temp != NULL)
     {
         converted_value = display_convert(temp->piece_type);
-        wprintf(L"%lc ", (wchar_t)converted_value);
+        wprintf( L"%lc ", (wchar_t)converted_value );
         temp = temp->next;
     }
     wprintf(L"\n");
@@ -805,7 +805,7 @@ void king ( int r1 , int c1, int player )
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -960,7 +960,7 @@ void knight ( int r1 , int c1, int player )
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -1047,7 +1047,7 @@ void pawn ( int r1 , int c1 )
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -1134,7 +1134,7 @@ void pawnb ( int r1 , int c1 )
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -1172,9 +1172,9 @@ again2:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf( L"%c Invalid row. Must be 0..7\n", display_convert( '!' ) );
+                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
             else
-                wprintf( L"%c Invalid column. Must be 0..7\n", display_convert( '!' ) );
+                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!' ) );
         }
     } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
 
@@ -1188,7 +1188,7 @@ again2:
         case 'k': king  ( r1 , c1, player ); break ;
         case 'q': queen ( r1 , c1, player ); break ;
         default:
-            wprintf( L"%c Invalid Position! ", display_convert( '!' ) );
+            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
             goto again2 ;
     }
 
@@ -1196,7 +1196,7 @@ again2:
     {
         clear_screen();
         update_possible_moves();
-        wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+        wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
         for (int i = 0; i < gn_possible_moves; i++)
         {
             wprintf(L" %d :", ga_possible_moves[i]);
@@ -1246,9 +1246,9 @@ again1:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf( L"%c Invalid row. Must be 0..7\n", display_convert( '!' ) );
+                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
             else
-                wprintf( L"%c Invalid column. Must be 0..7\n", display_convert( '!') );
+                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!') );
         }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
@@ -1261,7 +1261,7 @@ again1:
         case 'K': king  ( r1 , c1, player ); break;
         case 'Q': queen ( r1 , c1, player ); break;
         default:
-            wprintf( L"%c Invalid Position! ", display_convert( '!' ) );
+            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
             goto again1 ;
     }
 
@@ -1269,7 +1269,7 @@ again1:
     {
         clear_screen();
         update_possible_moves();
-        wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+        wprintf( L"Possible moves %lc: \n", display_convert(board[r1][c1]) );
         for (int i = 0; i < gn_possible_moves; i++)
         {
             wprintf(L" %d :", ga_possible_moves[i]);
@@ -1527,7 +1527,7 @@ void queen ( int r1 , int c1, int player )
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -1666,7 +1666,7 @@ void rook ( int r1 , int c1, int player)
         }
     }
 
-    wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
+    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
