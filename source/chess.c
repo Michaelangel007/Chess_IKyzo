@@ -77,8 +77,8 @@ char board[8][8] = // array 8x8 representing the board.
     void append_possible_moves();
     void bishop( int , int, int );
     void change( int , int , int , int, int);
-    int  check(int , int ); // Check if there is a piece at (x,y) => 1 else 0
-    int  check2(int , int );
+    bool check(int , int ); // Check if there is a piece at (x,y) => 1 else 0
+    bool check2(int , int );
     void clear_screen();
     eliminated_piece* create_piece(char value);
     void delay(int);
@@ -386,32 +386,32 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
 
 // Check if there is a piece at x,y
 // ----------------------------------------
-int check (int x , int y )
+bool check (int x , int y )
 {
     switch( board[x][y] )
     {
-    case 'p':
-    case 'r':
-    case 'h':
-    case 'c':
-    case 'k':
-    case 'q': return 1 ; break ;
-    default: return 0 ;
+        case 'p':              // intentional fall-through
+        case 'r':              // intentional fall-through
+        case 'h':              // intentional fall-through
+        case 'c':              // intentional fall-through
+        case 'k':              // intentional fall-through
+        case 'q': return true; // intentional fall-through
+        default : return false;
     }
 }
 
 // ----------------------------------------
-int check2 (int x , int y )
+bool check2 (int x , int y )
 {
     switch( board[x][y] )
     {
-    case 'P':
-    case 'R':
-    case 'H':
-    case 'C':
-    case 'K':
-    case 'Q': return 1 ; break ;
-    default: return 0 ;
+        case 'P':              // intentional fall-through
+        case 'R':              // intentional fall-through
+        case 'H':              // intentional fall-through
+        case 'C':              // intentional fall-through
+        case 'K':              // intentional fall-through
+        case 'Q': return true; // intentional fall-through
+        default : return false;
     }
 }
 
