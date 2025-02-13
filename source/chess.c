@@ -166,7 +166,7 @@ Also see:
     void moves_pawn_w( int , int );
     void moves_queen( int , int , int player );
     void moves_rook(int , int, int player );
-    int  player_input_row_col( int player, bool is_from );
+    int  player_input_row_col( int player, int from_piece );
     void player_turn( int player );
     void player_turn_algebraic ( int player );
     void player_turn_integer ( int player );
@@ -213,6 +213,17 @@ Also see:
     {
         int position = (row * 10) + col;
         return position;
+    }
+
+    // Convert piece symbol (representation) to enum (piece_e)
+    // ----------------------------------------
+    int type_to_piece( char type )
+    {
+        for( int color = PLAYER_WHITE; color < NUM_PLAYERS; color++ )
+            for( int piece = 0; piece < NUM_PIECES; piece++ )
+                if (ga_pieces[ color ][ piece ] == type)
+                        return piece;
+        return PIECE_NONE;
     }
 
 // Implementation
@@ -1548,7 +1559,7 @@ void moves_rook ( int r1 , int c1, int player)
 }
 
 // ----------------------------------------
-int player_input_row_col(int player, bool is_from )
+int player_input_row_col ( int player, int from_piece )
 {
     int ch, row, col, position;
 
@@ -1558,10 +1569,10 @@ int player_input_row_col(int player, bool is_from )
         fflush(stdin);
         do
         {
-            if (is_from)
+            if (from_piece == PIECE_NONE)
                 wprintf( L"Enter position of %hs piece to move [col row]: ", ga_player_colors[ player ] );
             else
-                wprintf( L"\nEnter new position of %hs piece [col row]: ", ga_player_colors[ player ] );
+                wprintf( L"\nEnter new position of %hs %hs [col row]: ", ga_player_colors[ player ], ga_piece_names[ from_piece ] );
             fflush(stdout);
 
             col = -1;
@@ -1620,7 +1631,7 @@ void player_turn (int player)
 void player_turn_algebraic ( int player )
 {
     int pos1, pos2, row1, col1, row2, col2;
-
+    int attacker;
     bool valid_from = true;
     bool valid_move = true;
 
@@ -1632,13 +1643,15 @@ void player_turn_algebraic ( int player )
             memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
 
             wprintf( L"%lc %hs to move. ", display_convert( player ), ga_player_colors[ player ] );
-            pos1 = player_input_row_col( player, true );
+            pos1 = player_input_row_col( player, PIECE_NONE );
             if (pos1 >= 0)
             {
                 position_to_row_col( pos1, &row1, &col1 );
+                attacker = ga_board_position[row1][col1];
+
                 if (player == PLAYER_WHITE)
                 {
-                    switch( ga_board_position[row1][col1] )
+                    switch( attacker )
                     {
                         case 'p': moves_pawn  ( row1 , col1, player ); break;
                         case 'r': moves_rook  ( row1 , col1, player ); break;
@@ -1653,7 +1666,7 @@ void player_turn_algebraic ( int player )
                 }
                 else
                 {
-                    switch( ga_board_position[row1][col1] ) // Select only player's pieces.
+                    switch( attacker ) // Select only player's pieces.
                     {
                         case 'P': moves_pawn  ( row1 , col1, player ); break;
                         case 'R': moves_rook  ( row1 , col1, player ); break;
@@ -1672,6 +1685,8 @@ void player_turn_algebraic ( int player )
         } while (!valid_from);
 
         valid_move = false;
+        enum piece_e piece = type_to_piece( attacker );
+
         if (gn_possible_moves)
         {
             clear_screen();
@@ -1679,7 +1694,7 @@ void player_turn_algebraic ( int player )
 
             do
             {
-                pos2 = player_input_row_col( player, false );
+                pos2 = player_input_row_col( player, piece );
                 if (pos2 < 0) // allow user to re-start move
                     break;
             } while (verify_possible_move(pos2));
@@ -1698,6 +1713,8 @@ void player_turn_integer ( int player )
 {
     int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
+    char attacker;
+    int  piece;
 
     wprintf( L"%lc %hs to move ...", display_convert( player ), ga_player_colors[ player ] );
 
@@ -1719,9 +1736,10 @@ again1:
         }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
+    attacker = ga_board_position[r1][c1];
     if (player == PLAYER_BLACK)
     {
-        switch( ga_board_position[r1][c1] ) // Select only player's pieces.
+        switch( attacker ) // Select only player's pieces.
         {
             case 'P': moves_pawn  ( r1 , c1, player ); break;
             case 'R': moves_rook  ( r1 , c1, player ); break;
@@ -1736,7 +1754,7 @@ again1:
     }
     else
     {
-        switch( ga_board_position[r1][c1] ) // Select only player's pieces.
+        switch( attacker ) // Select only player's pieces.
         {
             case 'p': moves_pawn  ( r1 , c1, player ); break;
             case 'r': moves_rook  ( r1 , c1, player ); break;
@@ -1750,6 +1768,7 @@ again1:
         }
     }
 
+    piece = type_to_piece( attacker );
     if (gn_possible_moves)
     {
         clear_screen();
@@ -1757,7 +1776,7 @@ again1:
 
         do
         {
-            wprintf( L"\nEnter new position of piece [row column]: " );
+            wprintf( L"\nEnter new position of %hs [row column]: ", ga_piece_names[ piece ] );
             scanf( "%d" , &p2 ) ;
         } while (verify_possible_move(p2));
     }
