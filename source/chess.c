@@ -78,6 +78,17 @@ Also see:
         { ' ', 'P', 'R', 'H', 'C', 'Q', 'K' }  // black
     };
 
+    const char *ga_piece_names[ NUM_PIECES ] =
+    {
+        "piece" , // PIECE_NONE
+        "pawn"  , // PIECE_PAWN
+        "rook"  , // PIECE_ROOK
+        "knight", // PIECE_KNIGHT
+        "bishop", // PIECE_BISHOP
+        "queen" , // PIECE_QUEEN
+        "king"    // PIECE_KING
+    };
+
     // castling support
     bool ga_king_moved  [ NUM_PLAYERS ];
     bool ga_rook_k_moved[ NUM_PLAYERS ];
