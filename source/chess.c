@@ -35,23 +35,11 @@ Also see
 #endif
 
 // Types
-    // Eliminated pieces
-    typedef struct eliminated_pieces
-    {
-        char                      piece_type;
-        struct eliminated_pieces *next;
-    } eliminated_piece;
-
-    // Generating lists
-    typedef struct eliminated_pieces_lists
-    {
-        eliminated_piece *start;
-    } eliminated_pieces_list;
-
     enum
     {
         PLAYER_WHITE,
-        PLAYER_BLACK
+        PLAYER_BLACK,
+        NUM_PLAYERS
     };
 
 // Globals
@@ -68,8 +56,9 @@ Also see
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
     int gn_possible_moves;
 
-    eliminated_pieces_list eliminated_pieces_white;
-    eliminated_pieces_list eliminated_pieces_black;
+    #define MAX_PIECES 32
+    char ga_eliminated_pieces[ NUM_PLAYERS ][ MAX_PIECES ];
+    int  gn_eliminated_pieces[ NUM_PLAYERS ];
 
 #if VERIFY_SAFE_BOARD_ARRAY
     const char BOARD_INIT[9][9] = // array 9x9 representing the board with padding for OOB detection
@@ -104,13 +93,11 @@ Also see
     bool cell_has_white_piece( int row, int col );
     void change( int , int , int , int, int);
     void clear_screen();
-    eliminated_piece* create_piece(char value);
     void delay(int);
     void display_board();
-    int  display_convert(char ); // convert array to Unicode
-    void display_eliminated_list(eliminated_pieces_list l);
+    int  display_convert(char ); // convert char to Unicode
+    void display_eliminated( int player );
     void display_possible_board();
-    void insert_eliminated_list(char value, eliminated_pieces_list *l);
     void intro();
     void king( int , int , int);
     void knight(int , int, int );
@@ -325,14 +312,16 @@ void cls (HANDLE hConsole)
 // ----------------------------------------
 void change ( int r1 , int c1 , int r2 , int c2 , int player )
 {
-    char temp ;
-    temp = board[r1][c1] ;
+    int  opponent   = 1 - player;
+    char temp       = board[r1][c1] ;
+    int  eliminated = gn_eliminated_pieces[ opponent ];
 
     if (player == PLAYER_BLACK)
     {
         if (cell_has_white_piece(r2, c2)) // black captures white
         {
-            insert_eliminated_list(board[r2][c2], &eliminated_pieces_white);
+            ga_eliminated_pieces[ opponent ][ eliminated ] = board[r2][c2];
+            gn_eliminated_pieces[ opponent ]++;
             board[r1][c1] = ' ';
             board[r2][c2] = temp;
         }
@@ -346,7 +335,8 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
     {
         if (cell_has_black_piece(r2, c2)) // white captures black
         {
-            insert_eliminated_list(board[r2][c2], &eliminated_pieces_black);
+            ga_eliminated_pieces[ opponent ][ eliminated ] = board[r2][c2];
+            gn_eliminated_pieces[ opponent ]++;
             board[r1][c1] = ' ';
             board[r2][c2] = temp;
         }
@@ -425,19 +415,6 @@ void clear_screen ()
 #endif // _WIN32
 }
 
-// Generating piece node
-// ----------------------------------------
-eliminated_piece* create_piece (char value)
-{
-    eliminated_piece *piece;
-    if ((piece = (eliminated_piece *)malloc(sizeof(eliminated_piece))) != NULL)
-    {
-        piece->piece_type = value;
-        piece->next = NULL;
-    }
-    return piece;
-}
-
 // ----------------------------------------
 void delay (int number_of_seconds)
 {
@@ -457,7 +434,7 @@ void display_board ()
 {
     int x , y;
 
-    display_eliminated_list(eliminated_pieces_white);
+    display_eliminated( PLAYER_WHITE );
 
     wprintf(L" ") ;
     for (x = 0 ; x < 8; x++)
@@ -481,7 +458,7 @@ void display_board ()
     }
     wprintf( separator );
 
-    display_eliminated_list(eliminated_pieces_black);
+    display_eliminated( PLAYER_BLACK );
     wprintf(L"\n");
 }
 
@@ -520,16 +497,14 @@ int display_convert (char symbol)
 }
 
 // ----------------------------------------
-void display_eliminated_list (eliminated_pieces_list l)
+void display_eliminated( int player )
 {
-    eliminated_piece* temp = l.start;
-    int converted_value;
+    char *eliminated_pieces = &ga_eliminated_pieces[ player ][ 0 ];
+    int   eliminated_count  =  gn_eliminated_pieces[ player ]     ;
 
-    while (temp != NULL)
+    for (int i = 0; i < eliminated_count; i++ )
     {
-        converted_value = display_convert(temp->piece_type);
-        wprintf( L"%lc ", (wchar_t)converted_value );
-        temp = temp->next;
+        wprintf( L"%lc ", display_convert( eliminated_pieces[ i ] ) );
     }
     wprintf( L"\n" );
 }
@@ -538,7 +513,7 @@ void display_possible_board()
 {
     int x , y;
 
-    display_eliminated_list(eliminated_pieces_white);
+    display_eliminated( PLAYER_WHITE );
 
     wprintf(L" ") ;
     for (x = 0 ; x < 8; x++)
@@ -562,7 +537,7 @@ void display_possible_board()
     }
     wprintf( separator );
 
-    display_eliminated_list(eliminated_pieces_black);
+    display_eliminated( PLAYER_BLACK );
     wprintf(L"\n");
 }
 
@@ -619,31 +594,6 @@ char getch ()
     return ch;
 }
 #endif // !_WIN32
-
-// ----------------------------------------
-void insert_eliminated_list (char value, eliminated_pieces_list *l)
-{
-    eliminated_piece *temp;
-    eliminated_piece *piece;
-    piece = create_piece(value);
-
-    // Empty list
-    if (l->start == NULL)
-    {
-        l->start    = piece;
-        piece->next = NULL;
-    }
-    else // list not Empty
-    {
-        temp = l->start;
-        while (temp->next!=NULL)
-        {
-            temp = temp->next;
-        }
-        temp->next=piece;
-        piece->next=NULL;
-    }
-}
 
 // ----------------------------------------
 void intro ()
@@ -1716,10 +1666,6 @@ bool verify_possible_move (int position)
 // ========================================
 void main (int argc, char *argv[])
 {
-    // Init lists
-    eliminated_pieces_white.start = NULL;
-    eliminated_pieces_black.start = NULL;
-
     char ch;
     char showcase_option;
 
@@ -1759,6 +1705,8 @@ void main (int argc, char *argv[])
     {
         int moves = 0;
         memcpy( board, BOARD_INIT, sizeof(BOARD_INIT) );
+        gn_eliminated_pieces[ PLAYER_WHITE ] = 0;
+        gn_eliminated_pieces[ PLAYER_BLACK ] = 0;
 
         do
         {
