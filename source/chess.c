@@ -1225,7 +1225,7 @@ again2:
     do
     {
         fflush(stdin);
-        wprintf(L"\nEnter Position of Piece : [row.index column.index] : " ) ;
+        wprintf(L"Enter position of piece to move [row col]: " );
         input_control = scanf( "%d" , &p1 );
         if(input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7)
         wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
@@ -1257,7 +1257,7 @@ again2:
 
         do
         {
-            wprintf(L"\nEnter New Position of Piece : [row.index column.index] : " ) ;
+            wprintf(L"\nEnter new position of piece [row column]: " );
             scanf( "%d" , &p2 ) ;
         } while (verify_possible_move(p2));
     }
@@ -1285,7 +1285,7 @@ again1:
     do
     {
         fflush(stdin);
-        wprintf(L"\nEnter Position of Piece : [row.index column.index] : " ) ;
+        wprintf(L"\nEnter position of piece to move [row column]: " );
         input_control = scanf( "%d" , &p1 );
 
         if ((input_control == 0) || (p1!=0 && p1>7 && p1 < 10) || p1 > 77 || p1%10 > 7)
@@ -1320,7 +1320,7 @@ again1:
 
         do
         {
-            wprintf(L"\nEnter New Position of Piece : [row.index column.index] : " ) ;
+            wprintf(L"\nEnter new position of piece [row column]: " );
             scanf( "%d" , &p2 ) ;
         } while (verify_possible_move(p2));
     }
