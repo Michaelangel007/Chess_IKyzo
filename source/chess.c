@@ -148,7 +148,6 @@ Also see:
 // Prototypes
     bool cell_has_black_piece( int row, int col );
     bool cell_has_white_piece( int row, int col );
-    void change( int , int , int , int, int);
     void clear_screen();
     void delay(int);
     void display_board( char board[BOARD_DIMENSION][BOARD_DIMENSION] );
@@ -158,6 +157,7 @@ Also see:
     void display_position_board();
     void display_possible_board();
     void intro();
+    void move_piece( int, int, int, int, int );
     void moves_bishop( int , int, int player );
     void moves_king( int , int , int player );
     void moves_knight(int , int, int player );
@@ -275,99 +275,6 @@ void cls (HANDLE hConsole)
     SetConsoleCursorPosition(hConsole, coordScreen);
 }
 #endif
-
-// ----------------------------------------
-void change ( int r1 , int c1 , int r2 , int c2 , int player )
-{
-    int  opponent   = 1 - player;
-    int  eliminated = gn_eliminated_pieces[ opponent ];
-
-    char attacker   = ga_board_position[r1][c1];
-    char defender   = ga_board_position[r2][c2];
-
-    // castling flags -- rook
-    if (attacker == ga_pieces[ player ][ PIECE_ROOK ])
-    {
-        if (player == PLAYER_WHITE)
-        {
-            if (!ga_rook_k_moved[ player ] && (r1 == 7) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
-            if (!ga_rook_q_moved[ player ] && (r1 == 7) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
-        }
-        else
-        {
-            if (!ga_rook_k_moved[ player ] && (r1 == 0) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
-            if (!ga_rook_q_moved[ player ] && (r1 == 0) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
-        }
-    }
-
-    // check for castling -- king "attacks" rook
-    // https://en.wikipedia.org/wiki/Castling
-    if (((attacker == ga_pieces[ player ][ PIECE_KING ]) && (defender == ga_pieces[ player ][ PIECE_ROOK ])))
-    {
-        int castle_row = -1; // +0 = black, +7 = white
-        int king_side  =  0; // +1 = king,  -1 = queen
-
-        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 7)) { castle_row =  0; king_side =  1; } // black king side
-        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 0)) { castle_row = -0; king_side = -1; } // black queen side
-        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 7)) { castle_row =  7; king_side =  1; } // white king side
-        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 0)) { castle_row = -7; king_side = -1; } // white queen side
-
-        if (castle_row >= 0)
-        {
-            if (king_side > 0)
-            {
-                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
-                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
-                ga_board_position[castle_row][5] = ga_pieces[ player ][ PIECE_ROOK ]; // F1 rook
-                ga_board_position[castle_row][6] = ga_pieces[ player ][ PIECE_KING ]; // G1 king (E1 + 2)
-                ga_board_position[castle_row][7] = ga_pieces[ player ][ PIECE_NONE ]; // H1 empty
-                ga_rook_k_moved[ player ] = true;
-                return;
-            }
-            else
-            {
-                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
-                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
-                ga_board_position[castle_row][3] = ga_pieces[ player ][ PIECE_ROOK ]; // D1 rook
-                ga_board_position[castle_row][2] = ga_pieces[ player ][ PIECE_KING ]; // C1 king (E1 - 2)
-                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_ROOK ]; // A1 empty
-                ga_rook_q_moved[ player ] = true;
-                return;
-            }
-        }
-    }
-
-    if (player == PLAYER_BLACK)
-    {
-        if (cell_has_white_piece(r2, c2)) // black captures white
-        {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
-            gn_eliminated_pieces[ opponent ]++;
-            ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = attacker;
-        }
-        else
-        {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2];
-            ga_board_position[r2][c2] = attacker;
-        }
-    }
-    else
-    {
-        if (cell_has_black_piece(r2, c2)) // white captures black
-        {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
-            gn_eliminated_pieces[ opponent ]++;
-            ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = attacker;
-        }
-        else
-        {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2];
-            ga_board_position[r2][c2] = attacker;
-        }
-    }
-}
 
 // Check if there is a white piece at row,col
 // ----------------------------------------
@@ -615,6 +522,101 @@ L"\n"
 "    }===={           \\___|       \\___|_| |_|\\___||___/___/ - Kahouli Wajd. 死\n"
 "  (________)                                         Bugfixes by Michaelangel007\n"
     );
+}
+
+// r1,c1 from
+// r2,c2 to
+// ----------------------------------------
+void move_piece ( int r1, int c1, int r2, int c2, int player )
+{
+    int  opponent   = 1 - player;
+    int  eliminated = gn_eliminated_pieces[ opponent ];
+
+    char attacker   = ga_board_position[r1][c1];
+    char defender   = ga_board_position[r2][c2];
+
+    // castling flags -- rook
+    if (attacker == ga_pieces[ player ][ PIECE_ROOK ])
+    {
+        if (player == PLAYER_WHITE)
+        {
+            if (!ga_rook_k_moved[ player ] && (r1 == 7) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
+            if (!ga_rook_q_moved[ player ] && (r1 == 7) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
+        }
+        else
+        {
+            if (!ga_rook_k_moved[ player ] && (r1 == 0) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
+            if (!ga_rook_q_moved[ player ] && (r1 == 0) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
+        }
+    }
+
+    // check for castling -- king "attacks" rook
+    // https://en.wikipedia.org/wiki/Castling
+    if (((attacker == ga_pieces[ player ][ PIECE_KING ]) && (defender == ga_pieces[ player ][ PIECE_ROOK ])))
+    {
+        int castle_row = -1; // +0 = black, +7 = white
+        int king_side  =  0; // +1 = king,  -1 = queen
+
+        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 7)) { castle_row =  0; king_side =  1; } // black king side
+        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 0)) { castle_row = -0; king_side = -1; } // black queen side
+        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 7)) { castle_row =  7; king_side =  1; } // white king side
+        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 0)) { castle_row = -7; king_side = -1; } // white queen side
+
+        if (castle_row >= 0)
+        {
+            if (king_side > 0)
+            {
+                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
+                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
+                ga_board_position[castle_row][5] = ga_pieces[ player ][ PIECE_ROOK ]; // F1 rook
+                ga_board_position[castle_row][6] = ga_pieces[ player ][ PIECE_KING ]; // G1 king (E1 + 2)
+                ga_board_position[castle_row][7] = ga_pieces[ player ][ PIECE_NONE ]; // H1 empty
+                ga_rook_k_moved[ player ] = true;
+                return;
+            }
+            else
+            {
+                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
+                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
+                ga_board_position[castle_row][3] = ga_pieces[ player ][ PIECE_ROOK ]; // D1 rook
+                ga_board_position[castle_row][2] = ga_pieces[ player ][ PIECE_KING ]; // C1 king (E1 - 2)
+                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_ROOK ]; // A1 empty
+                ga_rook_q_moved[ player ] = true;
+                return;
+            }
+        }
+    }
+
+    if (player == PLAYER_BLACK)
+    {
+        if (cell_has_white_piece(r2, c2)) // black captures white
+        {
+            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
+            gn_eliminated_pieces[ opponent ]++;
+            ga_board_position[r1][c1] = ' ';
+            ga_board_position[r2][c2] = attacker;
+        }
+        else
+        {
+            ga_board_position[r1][c1] = ga_board_position[r2][c2];
+            ga_board_position[r2][c2] = attacker;
+        }
+    }
+    else
+    {
+        if (cell_has_black_piece(r2, c2)) // white captures black
+        {
+            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
+            gn_eliminated_pieces[ opponent ]++;
+            ga_board_position[r1][c1] = ' ';
+            ga_board_position[r2][c2] = attacker;
+        }
+        else
+        {
+            ga_board_position[r1][c1] = ga_board_position[r2][c2];
+            ga_board_position[r2][c2] = attacker;
+        }
+    }
 }
 
 // ----------------------------------------
@@ -1706,7 +1708,7 @@ void player_turn_algebraic ( int player )
     } while (!valid_move);
 
     position_to_row_col( pos2, &row2, &col2 );
-    change(row1, col1, row2, col2, player);
+    move_piece(row1, col1, row2, col2, player);
 }
 
 // ----------------------------------------
@@ -1787,7 +1789,7 @@ again1:
     }
 
     position_to_row_col( p2, &r2, &c2 );
-    change(r1,c1,r2,c2, player);
+    move_piece(r1,c1,r2,c2, player);
 }
 
 // ----------------------------------------
@@ -1802,18 +1804,18 @@ void showcase_board (char old_row, char old_col, char new_row, char new_col, int
 
     if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_WHITE)) // castle
     {
-        change(7,4,7,6, PLAYER_WHITE); // king
-        change(7,7,7,5, PLAYER_WHITE); // rook
+        move_piece(7,4,7,6, PLAYER_WHITE); // king
+        move_piece(7,7,7,5, PLAYER_WHITE); // rook
     }
     else
     if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_BLACK)) // castle
     {
-        change(0,4,0,2, PLAYER_BLACK); // king
-        change(0,0,0,3, PLAYER_BLACK); // rook
+        move_piece(0,4,0,2, PLAYER_BLACK); // king
+        move_piece(0,0,0,3, PLAYER_BLACK); // rook
     }
     else
     {
-        change(r1,c1,r2,c2, player);
+        move_piece(r1,c1,r2,c2, player);
         display_position_board();
     }
 }
