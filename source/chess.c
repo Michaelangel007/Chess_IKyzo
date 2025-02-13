@@ -504,6 +504,15 @@ void display_board ()
 // ----------------------------------------
 int display_convert (char symbol)
 {
+    static const wchar_t turn[2] =
+    {
+#ifdef _WIN32
+        0x26AB, 0x26AA
+#else
+        0x26AA, 0x26AB
+#endif
+    };
+
     switch (symbol)
     {
         case 'p': return 0x265F; // White pawn
@@ -520,6 +529,8 @@ int display_convert (char symbol)
         case 'Q': return 0x2655; //       queen
         case 'x': return 0x2716; // Possible move
         case '!': return 0x26A0; // /!\ Warning Sign
+        case 'W': return turn[0]; // White's Turn
+        case 'B': return turn[1]; // Black's Turn
         default : return 0x0020; // Empty
     }
 }
@@ -1154,12 +1165,7 @@ void player_white ()
     int player = PLAYER_WHITE;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-#ifdef _WIN32
-    wprintf(L"\n\x26AB");
-#else
-    wprintf(L"\n\x26AA");
-#endif
-    wprintf(L" White to move ...\n") ;
+    wprintf( L"%lc White to move ...\n", display_convert( 'W' ) ) ;
 
 again2:
     do
@@ -1228,12 +1234,7 @@ void player_black ()
     int player = PLAYER_BLACK;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-#ifdef _WIN32
-    wprintf(L"\n\x26AA" );
-#else
-    wprintf(L"\n\x26AB" );
-#endif
-    wprintf( L" Black to move ..." );
+    wprintf( L"%lc Black to move ...", display_convert( 'B' ) );
 
 again1:
     do
