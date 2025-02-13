@@ -64,9 +64,9 @@ Also see
     char possible_board[8][8];
 #endif
 
-
-    int possible_moves[100];
-    int possible_moves_index;
+    #define MAX_POSSIBLE_MOVES 100
+    int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
+    int gn_possible_moves;
     int previous_position;
     int new_position = -99;
 
@@ -163,7 +163,7 @@ Also see
 void bishop ( int r1 , int c1, int player)
 {
     int a , b;
-    possible_moves_index = 0;
+    gn_possible_moves = 0;
 
     if (player == PLAYER_BLACK)
     {
@@ -172,8 +172,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1-a) == -1) || ((c1+b) == 8) )
                 break;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
             if (cell_has_white_piece(r1-a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1+b );
@@ -186,8 +185,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1+a) == 8) || ((c1-b) == -1))
                 break ;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
             if (cell_has_white_piece(r1+a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
@@ -200,8 +198,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1+a) == 8) || ((c1+b) == 8))
                 break ;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
             if (cell_has_white_piece(r1+a, c1+b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
@@ -215,8 +212,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1-a) == -1) || ((c1-b) == -1))
                 break ;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
             if (cell_has_white_piece(r1-a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
@@ -231,8 +227,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1-a) == -1) || ((c1+b) == 8))
                 break ;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
             if (cell_has_black_piece(r1-a, c1+b))
                 break ;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
@@ -245,8 +240,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1+a) == 8) || ((c1-b) == -1))
                 break ;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
             if (cell_has_black_piece(r1+a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
@@ -259,8 +253,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1+a) == 8) || ((c1+b) == 8))
                 break ;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
             if (cell_has_black_piece(r1+a, c1+b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
@@ -274,8 +267,7 @@ void bishop ( int r1 , int c1, int player)
         {
             if (((r1-a) == -1) || ((c1-b) == -1))
                 break ;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
             if (cell_has_black_piece(r1-a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
@@ -285,11 +277,11 @@ void bishop ( int r1 , int c1, int player)
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -696,7 +688,7 @@ L"\n"
 // ----------------------------------------
 void king ( int r1 , int c1, int player )
 {
-    possible_moves_index = 0;
+    gn_possible_moves  = 0;
 
     if (player == PLAYER_BLACK)
     {
@@ -704,8 +696,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = r1*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1+1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -715,8 +706,7 @@ void king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
             if ((r1 >= 0) && (r1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = r1*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1-1;
             }
         }
 
@@ -724,8 +714,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1 >= 0) && (c1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -734,8 +723,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -743,8 +731,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1-1 >=0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -753,8 +740,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1 >=0) && (c1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -763,8 +749,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1+1 >=0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -773,8 +758,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1-1 >=0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
@@ -785,8 +769,7 @@ void king ( int r1 , int c1, int player )
         {
             if ((board[r1][c1+1] == ' ') || cell_has_black_piece(r1, c1+1))
             {
-                possible_moves[possible_moves_index] = r1*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1+1;
             }
         }
         if ((r1 >= 0) && (r1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
@@ -794,68 +777,59 @@ void king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
             if ((board[r1][c1-1] == ' ') || cell_has_black_piece(r1, c1-1))
             {
-                possible_moves[possible_moves_index] = r1*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1-1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1 >= 0) && (c1 <= 7))
         {
             if ((board[r1-1][c1] == ' ') || cell_has_black_piece(r1-1, c1))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1;
-                possible_moves_index++;
-
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
             if ((board[r1-1][c1+1] == ' ') || cell_has_black_piece(r1-1, c1+1))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
-                possible_moves_index++;
-
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
             if ((board[r1-1][c1-1] == ' ') || cell_has_black_piece(r1-1, c1-1))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1 >=0) && (c1 <= 7))
         {
             if ((board[r1+1][c1] == ' ') || cell_has_black_piece(r1+1, c1))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
             if ((board[r1+1][c1+1] == ' ') || cell_has_black_piece(r1+1, c1+1))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
             if ((board[r1+1][c1-1] == ' ') || cell_has_black_piece(r1+1, c1-1))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
         }
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -867,7 +841,7 @@ void king ( int r1 , int c1, int player )
 // ----------------------------------------
 void knight ( int r1 , int c1, int player )
 {
-    possible_moves_index = 0;
+    gn_possible_moves = 0;
 
     if (player == PLAYER_BLACK)
     {
@@ -875,8 +849,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+2)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1+1;
             }
 
             //wprintf(L"%d%d, " , r1+2 ,c1+1) ;
@@ -886,8 +859,7 @@ void knight ( int r1 , int c1, int player )
         {
             if (r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <= 7)
             {
-                possible_moves[possible_moves_index] = (r1+2)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1-1;
             }
         }
 
@@ -895,16 +867,14 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+2;
             }
         }
         if ((board[r1-1][c1+2] == ' ') || cell_has_white_piece(r1-1, c1+2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+2;
             }
         }
 
@@ -912,8 +882,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-2)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1-1;
             }
         }
 
@@ -921,8 +890,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-2)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1+1;
             }
         }
 
@@ -930,8 +898,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <=7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-2;
             }
         }
 
@@ -939,8 +906,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-2;
             }
         }
     }
@@ -950,8 +916,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+2)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1+1;
             }
 
             //wprintf(L"%d%d, " , r1+2 ,c1+1);
@@ -961,8 +926,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+2)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1-1;
             }
         }
 
@@ -970,16 +934,15 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+2;
             }
         }
+
         if ((board[r1-1][c1+2] == ' ') || cell_has_black_piece(r1-1, c1+2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+2;
             }
         }
 
@@ -987,8 +950,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-2)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1-1;
             }
         }
 
@@ -996,8 +958,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-2)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1+1;
             }
         }
 
@@ -1005,8 +966,7 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-2;
             }
         }
 
@@ -1014,18 +974,17 @@ void knight ( int r1 , int c1, int player )
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-2;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-2;
             }
         }
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -1037,7 +996,7 @@ void knight ( int r1 , int c1, int player )
 // ----------------------------------------
 void pawn ( int r1 , int c1 )
 {
-    possible_moves_index = 0;
+    gn_possible_moves = 0;
 
     if (r1 == 1) // starting black row
     {
@@ -1046,13 +1005,8 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1+1 , c1 );
             if ((r1+1 <= 7) && (c1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
             }
-
-            //possible_moves[possible_moves_index]=(r1+1)*10+c1;
-            //board_possible_moves[r1+1][c1]='x';
-            //possible_moves_index++;
         }
 
         if (board[r1+2][c1] == ' ')
@@ -1060,12 +1014,8 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1+2 , c1 );
             if ((r1+2 <= 7) && (c1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+2)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1;
             }
-            //board_possible_moves[r1+2][c1]='x';
-            //possible_moves[possible_moves_index]=(r1+2)*10+c1;
-            //possible_moves_index++;
         }
 
         if (cell_has_white_piece(r1+1 , c1+1)) // en passant right
@@ -1073,13 +1023,8 @@ void pawn ( int r1 , int c1 )
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if ((r1+1 <= 7) && (c1+1 <= 7))
              {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
              }
-
-             //board_possible_moves[r1+1][c1+1]='x';
-             //possible_moves[possible_moves_index]=(r1+1)*10+c1+1;
-             //possible_moves_index++;
         }
 
         if (cell_has_white_piece(r1+1 , c1-1)) // en passant left
@@ -1087,13 +1032,8 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
-
-            //board_possible_moves[r1+1][c1-1]='x';
-            //possible_moves[possible_moves_index]=(r1+1)*10+c1-1;
-            //possible_moves_index++;
         }
     }
     else
@@ -1103,8 +1043,7 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1+1 , c1 ) ;
             if ((r1+1 <= 7) && (c1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
             }
         }
 
@@ -1113,8 +1052,7 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d* , " , r1+1 , c1+1 ) ;
             if ((r1+1 <= 7) && (c1+1 <= 7))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
             }
         }
 
@@ -1123,18 +1061,17 @@ void pawn ( int r1 , int c1 )
             //wprintf(L"%d%d* , " , r1+1 , c1-1 ) ;
             if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
             {
-                possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
         }
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -1146,7 +1083,7 @@ void pawn ( int r1 , int c1 )
 // ----------------------------------------
 void pawnb ( int r1 , int c1 )
 {
-    possible_moves_index = 0;
+    gn_possible_moves = 0;
 
     if (r1 == 6) // starting white row
     {
@@ -1155,8 +1092,7 @@ void pawnb ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
             }
         }
 
@@ -1165,17 +1101,16 @@ void pawnb ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-2 >= 0 && c1 >= 0 )
             {
-                possible_moves[possible_moves_index] = (r1-2)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1;
             }
         }
+
         if (cell_has_black_piece(r1-1 , c1+1)) // en passant right
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
              {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
              }
         }
 
@@ -1184,8 +1119,7 @@ void pawnb ( int r1 , int c1 )
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
             }
         }
     }
@@ -1196,8 +1130,7 @@ void pawnb ( int r1 , int c1 )
             //wprintf(L"%d%d , " , r1-1 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
             }
         }
 
@@ -1206,8 +1139,7 @@ void pawnb ( int r1 , int c1 )
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
              {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
              }
         }
 
@@ -1216,18 +1148,17 @@ void pawnb ( int r1 , int c1 )
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if ((r1-1 >= 0) && (c1-1 <= 7) && (c1-1 >=0)) // check for outside board
             {
-                possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
             }
         }
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -1280,14 +1211,14 @@ again2:
             goto again2 ;
     }
 
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
         clear_screen();
         update_possible_moves();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
 
         do
@@ -1353,14 +1284,14 @@ again1:
             goto again1 ;
     }
 
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
         clear_screen();
         update_possible_moves();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
 
         do
@@ -1386,10 +1317,9 @@ again1:
 void queen ( int r1 , int c1, int player )
 {
     int a, b;
-    int n;
+    int n = c1;
 
-    n = c1;
-    possible_moves_index = 0;
+    gn_possible_moves = 0;
 
     if (player == PLAYER_BLACK)
     {
@@ -1398,8 +1328,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1-a) == -1 || ((c1+b) == 8))
                 break ;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
             if (cell_has_white_piece(r1-a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
@@ -1412,8 +1341,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1+a) == 8 || (c1-b) == -1)
                 break;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
             if (cell_has_white_piece(r1+a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
@@ -1426,8 +1354,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1+a) == 8 || (c1+b) == 8)
                 break;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
             if (cell_has_white_piece(r1+a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
@@ -1441,8 +1368,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1-a) == -1 || (c1-b) == -1)
                 break;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
             if (cell_has_white_piece(r1-a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
@@ -1456,8 +1382,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (r1)*10+n-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n-1;
                 if (cell_has_white_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1470,8 +1395,7 @@ void queen ( int r1 , int c1, int player )
         {
             while ((board[r1][n+1] == ' ') || cell_has_white_piece(r1, n+1))
             {
-                possible_moves[possible_moves_index] = (r1)*10+n+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_white_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
@@ -1486,8 +1410,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (n-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n-1)*10+c1;
                 if (cell_has_white_piece(n-1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1502,8 +1425,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if (n == 7)
                     break;
-                possible_moves[possible_moves_index] = (n+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n+1)*10+c1;
                 if (cell_has_white_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1518,8 +1440,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1-a) == -1 || (c1+b) == 8)
                 break;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
             if (cell_has_black_piece(r1-a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
@@ -1532,8 +1453,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1+a) == 8 || (c1-b) == -1)
                 break;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
             if (cell_has_black_piece(r1+a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
@@ -1546,8 +1466,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1+a) == 8 || (c1+b) == 8)
                 break;
-            possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
             if (cell_has_black_piece(r1+a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
@@ -1561,8 +1480,7 @@ void queen ( int r1 , int c1, int player )
         {
             if ((r1-a) == -1 || (c1-b) == -1)
                 break;
-            possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
-            possible_moves_index++;
+            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
             if (cell_has_black_piece(r1-a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
@@ -1576,8 +1494,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (r1)*10+n-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n-1;
                 if (cell_has_black_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1590,8 +1507,7 @@ void queen ( int r1 , int c1, int player )
         {
             while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
-                possible_moves[possible_moves_index] = (r1)*10+n+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_black_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
@@ -1606,8 +1522,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (n-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n-1)*10+c1;
                 if (cell_has_black_piece(n-1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1622,8 +1537,7 @@ void queen ( int r1 , int c1, int player )
             {
                 if( n == 7 )
                     break;
-                possible_moves[possible_moves_index] = (n+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n+1)*10+c1;
                 if (cell_has_black_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1633,11 +1547,11 @@ void queen ( int r1 , int c1, int player )
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if (possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -1649,10 +1563,9 @@ void queen ( int r1 , int c1, int player )
 // ----------------------------------------
 void rook ( int r1 , int c1, int player)
 {
-    possible_moves_index = 0;
-    int n;
+    gn_possible_moves = 0;
 
-    n = c1;
+    int n = c1;
     if (player == PLAYER_BLACK)
     {
         if (n != 0)
@@ -1661,8 +1574,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 0)
                      break;
-                possible_moves[possible_moves_index] = (r1)*10+n-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n-1;
                 if (cell_has_white_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1675,8 +1587,7 @@ void rook ( int r1 , int c1, int player)
         {
             while ((board[r1][n+1] == ' ')|| cell_has_white_piece(r1, n+1))
             {
-                possible_moves[possible_moves_index] = (r1)*10+n+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_white_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
@@ -1691,8 +1602,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (n-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n-1)*10+c1;
                 if (cell_has_white_piece(n-1, c1))
                      break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1707,8 +1617,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 7)
                     break;
-                possible_moves[possible_moves_index] = (n+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n+1)*10+c1;
                 if (cell_has_white_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1724,8 +1633,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (r1)*10+n-1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n-1;
                 if (cell_has_black_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1738,8 +1646,7 @@ void rook ( int r1 , int c1, int player)
         {
             while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
-                possible_moves[possible_moves_index] = (r1)*10+n+1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_black_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
@@ -1754,8 +1661,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 0)
                     break;
-                possible_moves[possible_moves_index] = (n-1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n-1)*10+c1;
                 if (cell_has_black_piece(n-1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1770,8 +1676,7 @@ void rook ( int r1 , int c1, int player)
             {
                 if (n == 7)
                     break;
-                possible_moves[possible_moves_index] = (n+1)*10+c1;
-                possible_moves_index++;
+                ga_possible_moves[ gn_possible_moves++ ] = (n+1)*10+c1;
                 if (cell_has_black_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
@@ -1781,11 +1686,11 @@ void rook ( int r1 , int c1, int player)
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (gn_possible_moves)
     {
-        for (int i = 0; i < possible_moves_index; i++)
+        for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", possible_moves[i]);
+            wprintf(L" %d :", ga_possible_moves[i]);
         }
     }
     else
@@ -1904,9 +1809,9 @@ void update_possible_moves ()
 {
     int x,y;
 
-    for (int i=0; i < possible_moves_index; i++)
+    for (int i=0; i < gn_possible_moves; i++)
     {
-        position_to_row_col( possible_moves[i], &y, &x );
+        position_to_row_col( ga_possible_moves[i], &y, &x );
         if (is_empty( y, x ))
             possible_board[y][x] = 'x';
     }
@@ -1916,9 +1821,9 @@ void update_possible_moves ()
 // ----------------------------------------
 bool verify_possible_move (int position)
 {
-    for (int i = 0; i < possible_moves_index; i++)
+    for (int i = 0; i < gn_possible_moves; i++)
     {
-        if (position == possible_moves[i])
+        if (position == ga_possible_moves[i])
             return false;
     }
     return true;
