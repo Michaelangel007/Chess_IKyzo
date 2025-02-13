@@ -68,7 +68,7 @@ Also see
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
     int gn_possible_moves;
     int previous_position;
-    int new_position = -99;
+    int new_position = 0;
 
     eliminated_pieces_list eliminated_pieces_white;
     eliminated_pieces_list eliminated_pieces_black;
@@ -480,12 +480,6 @@ void display_board ()
 {
     int x , y;
 
-    //Corruption Problem ? board[0][0] = 'R';
-    if (new_position==-99)
-    {
-        board[0][0] = 'R';
-    }
-
     display_eliminated_list(eliminated_pieces_white);
 
     wprintf(L" ") ;
@@ -554,12 +548,6 @@ void display_eliminated_list (eliminated_pieces_list l)
 void display_possible_board()
 {
     int x , y;
-
-    //Corruption Problem ? board[0][0] = 'R';
-    if (new_position==-99)
-    {
-        board[0][0] = 'R';
-    }
 
     display_eliminated_list(eliminated_pieces_white);
 
@@ -1835,9 +1823,6 @@ void main (int argc, char *argv[])
     eliminated_pieces_white.start = NULL;
     eliminated_pieces_black.start = NULL;
 
-    // For somereason board 0 0 got corrupted
-    board[0][0] = 'R';
-
     char ch;
     char showcase_option;
 
@@ -1894,11 +1879,7 @@ void main (int argc, char *argv[])
             }
             moves++;
 
-            // For somereason board 0 0 got corrupted
-            //wprintf(L"%c", board[0][0]);
-            //wprintf(L"Board[0][7] symbol: %lc\n", display_convert(board[0][0]));
             wprintf( L"Press Any Key To Continue or ESC to quit... " );
-
             ch = getch();
         } while (ch != 27);
     }
