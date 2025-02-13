@@ -1876,8 +1876,14 @@ void main (int argc, char *argv[])
     {
         int moves = 0;
         memcpy( ga_board_position, BOARD_INIT, sizeof(BOARD_INIT) );
-        gn_eliminated_pieces[ PLAYER_WHITE ] = 0;
-        gn_eliminated_pieces[ PLAYER_BLACK ] = 0;
+
+        for (int player = PLAYER_WHITE; player < NUM_PLAYERS; player++)
+        {
+            gn_eliminated_pieces[ player ] = 0;
+            ga_king_moved       [ player ] = false;
+            ga_rook_k_moved     [ player ] = false;
+            ga_rook_q_moved     [ player ] = false;
+        }
 
         do
         {
