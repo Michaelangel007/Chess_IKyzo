@@ -1247,7 +1247,9 @@ again2:
         case 'c': bishop( r1 , c1, PLAYER_BLACK ); break ;
         case 'k': king  ( r1 , c1, PLAYER_BLACK ); break ;
         case 'q': queen ( r1 , c1, PLAYER_BLACK ); break ;
-        default: wprintf(L"\x26A0 Invalid Position ! " ) ; goto again2 ;
+        default:
+            wprintf(L"\x26A0 Invalid Position! " );
+            goto again2 ;
     }
 
     if (possible_moves_index >= 1)
@@ -1312,7 +1314,7 @@ again1:
         case 'K': king  ( r1 , c1, PLAYER_WHITE );  break;
         case 'Q': queen ( r1 , c1, PLAYER_WHITE );  break;
         default:
-            wprintf(L"\x26A0 Invalid Position ! ");
+            wprintf(L"\x26A0 Invalid Position! ");
             goto again1 ;
     }
 
