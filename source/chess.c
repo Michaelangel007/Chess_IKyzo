@@ -67,8 +67,6 @@ Also see
     #define MAX_POSSIBLE_MOVES 100
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
     int gn_possible_moves;
-    int previous_position;
-    int new_position = 0;
 
     eliminated_pieces_list eliminated_pieces_white;
     eliminated_pieces_list eliminated_pieces_black;
@@ -1148,12 +1146,7 @@ again2:
         goto again2;
     }
 
-    c2 = p2 % 10 ;
-    r2 = p2 / 10  ;
-
-    previous_position = r1*10+c1;
-    new_position = r2*10+c2;
-
+    position_to_row_col( p2, &r2, &c2 );
     change(r1,c1,r2,c2, player);
 }
 
@@ -1211,11 +1204,7 @@ again1:
         goto again1;
     }
 
-    c2 = p2 % 10 ;
-    r2 = p2 / 10  ;
-    previous_position = r1*10+c1;
-    new_position = r2*10+c2;
-
+    position_to_row_col( p2, &r2, &c2 );
     change(r1,c1,r2,c2, player);
 }
 
