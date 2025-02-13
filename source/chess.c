@@ -1944,7 +1944,6 @@ bool verify_possible_move (int position)
 // ========================================
 void main (int argc, char *argv[])
 {
-    char ch;
     char showcase_option;
 
 #ifdef _WIN32
@@ -1998,9 +1997,6 @@ void main (int argc, char *argv[])
             display_position_board();
             player_turn( moves & 1 );
             moves++;
-
-            wprintf( L"Press Any Key To Continue or ESC to quit... " );
-            ch = getch();
-        } while (ch != 27);
+        } while (true);
     }
 }
