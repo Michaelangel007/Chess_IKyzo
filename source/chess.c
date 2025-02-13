@@ -343,14 +343,14 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
 {
     char temp ;
     temp = board[r1][c1] ;
-    if (player == PLAYER_WHITE)
+
+    if (player == PLAYER_BLACK)
     {
-        if (cell_has_white_piece(r2, c2))
+        if (cell_has_white_piece(r2, c2)) // black captures white
         {
             insert_eliminated_list(board[r2][c2], &eliminated_pieces_white);
             board[r1][c1] = ' ';
             board[r2][c2] = temp;
-            // Add Elimination action
         }
         else
         {
@@ -359,25 +359,18 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
-        if (cell_has_black_piece(r2, c2))
+        if (cell_has_black_piece(r2, c2)) // white captures black
         {
             insert_eliminated_list(board[r2][c2], &eliminated_pieces_black);
             board[r1][c1] = ' ';
             board[r2][c2] = temp;
-            // Add Elimination action
         }
         else
         {
             board[r1][c1] = board[r2][c2] ;
             board[r2][c2] = temp ;
         }
-    }
-    else
-    {
-        assert( (player >= PLAYER_WHITE)  && (player <= PLAYER_BLACK) );
-        wprintf(L"Error: Invalid player %d!", player);
     }
 }
 
