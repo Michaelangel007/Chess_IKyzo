@@ -136,9 +136,10 @@ Also see
     }
 
     // ----------------------------------------
-    void row_col_to_position ( int row, int col, int *position )
+    int row_col_to_position ( int row, int col )
     {
-        *position = (row * 10) + col;
+        int position = (row * 10) + col;
+        return position;
     }
 
 // Implementation
