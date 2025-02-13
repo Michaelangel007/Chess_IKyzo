@@ -8,6 +8,8 @@ Also see
 
 */
 
+#define VERIFY_SAFE_BOARD_ARRAY 1
+
 // Shutup stupid MSVC crap
 #ifdef _WIN32
     #define _CRT_SECURE_NO_WARNINGS 1
@@ -53,8 +55,16 @@ Also see
     };
 
 // Globals
+
+#if VERIFY_SAFE_BOARD_ARRAY
+    char board[9][9];
+    char possible_board[9][9];
+#else
     char board[8][8];
     char possible_board[8][8];
+#endif
+
+
     int possible_moves[100];
     int possible_moves_index;
     int previous_position;
@@ -64,17 +74,32 @@ Also see
     eliminated_pieces_list eliminated_pieces_black;
     char *piece;
 
-const char BOARD_INIT[8][8] = // array 8x8 representing the board.
-{
-    { 'R' , 'H' , 'C' , 'Q' , 'K' , 'C' , 'H' , 'R' },
-    { 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' },
-    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-    { ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' , ' ' },
-    { 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' , 'p' },
-    { 'r' , 'h' , 'c' , 'q' , 'k' , 'c' , 'h' , 'r' }
-};
+#if VERIFY_SAFE_BOARD_ARRAY
+    const char BOARD_INIT[9][9] = // array 9x9 representing the board with padding for OOB detection
+    {
+        { 'R', 'H', 'C', 'Q', 'K', 'C', 'H', 'R', '?' },
+        { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', '?' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', '?' },
+        { 'r', 'h', 'c', 'q', 'k', 'c', 'h', 'r', '?' },
+        { '?', '?', '?', '?', '?', '?', '?', '?', '?' }
+    };
+#else
+    const char BOARD_INIT[8][8] = // array 8x8 representing the board.
+    {
+        { 'R', 'H', 'C', 'Q', 'K', 'C', 'H', 'R' },
+        { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+        { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
+        { 'r', 'h', 'c', 'q', 'k', 'c', 'h', 'r' }
+    };
+#endif
 
 // Prototypes
     void bishop( int , int, int );
@@ -371,6 +396,7 @@ bool cell_has_white_piece (int row , int col )
 {
     switch( board[row][col] )
     {
+        case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'p':              // intentional fall-through
         case 'r':              // intentional fall-through
         case 'h':              // intentional fall-through
@@ -387,13 +413,13 @@ bool cell_has_black_piece ( int row , int col )
 {
     switch( board[row][col] )
     {
+        case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'P':              // intentional fall-through
         case 'R':              // intentional fall-through
         case 'H':              // intentional fall-through
         case 'C':              // intentional fall-through
         case 'K':              // intentional fall-through
         case 'Q': return true; // intentional fall-through
-        case '?': int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0);
         default : return false;
     }
 }
