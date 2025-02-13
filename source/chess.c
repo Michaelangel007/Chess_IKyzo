@@ -72,6 +72,17 @@ Also see:
     char ga_board_position[BOARD_DIMENSION][BOARD_DIMENSION];
     char ga_board_possible[BOARD_DIMENSION][BOARD_DIMENSION];
 
+    const char ga_pieces[ NUM_PLAYERS ][ NUM_PIECES ] =
+    {
+        { ' ', 'p', 'r', 'h', 'c', 'q', 'k' }, // white
+        { ' ', 'P', 'R', 'H', 'C', 'Q', 'K' }  // black
+    };
+
+    // castling support
+    bool ga_king_moved  [ NUM_PLAYERS ];
+    bool ga_rook_k_moved[ NUM_PLAYERS ];
+    bool ga_rook_q_moved[ NUM_PLAYERS ];
+
     #define MAX_POSSIBLE_MOVES 100
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
     int gn_possible_moves;
