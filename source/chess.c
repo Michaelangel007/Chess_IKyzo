@@ -45,12 +45,12 @@ Also see
 // Globals
 
 #if VERIFY_SAFE_BOARD_ARRAY
-    char board[9][9];
-    char possible_board[9][9];
+    #define BOARD_DIMENSION 9
 #else
-    char board[8][8];
-    char possible_board[8][8];
+    #define BOARD_DIMENSION 8
 #endif
+    char ga_board_position[BOARD_DIMENSION][BOARD_DIMENSION];
+    char ga_board_possible[BOARD_DIMENSION][BOARD_DIMENSION];
 
     #define MAX_POSSIBLE_MOVES 100
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
@@ -93,10 +93,11 @@ Also see
     void change( int , int , int , int, int);
     void clear_screen();
     void delay(int);
-    void display_board();
+    void display_board( char board[BOARD_DIMENSION][BOARD_DIMENSION] );
     void display_board_header();
     int  display_convert(char ); // convert char to Unicode
     void display_eliminated( int player );
+    void display_position_board();
     void display_possible_board();
     void intro();
     void moves_bishop( int , int, int player );
@@ -107,8 +108,7 @@ Also see
     void moves_pawn_w( int , int );
     void moves_queen( int , int , int player );
     void moves_rook(int , int, int player );
-    void player_black();
-    void player_white();
+    void player_turn( int player );
     void showcase_board(char, char, char, char, int);
     void showcase_game();
     void update_possible_moves( int row, int col );
@@ -119,7 +119,7 @@ Also see
     // ----------------------------------------
     bool is_empty (int row, int col)
     {
-        return (board[row][col] == ' ');
+        return (ga_board_position[row][col] == ' ');
     }
 
     // ----------------------------------------
@@ -198,37 +198,37 @@ void cls (HANDLE hConsole)
 void change ( int r1 , int c1 , int r2 , int c2 , int player )
 {
     int  opponent   = 1 - player;
-    char temp       = board[r1][c1] ;
+    char temp       = ga_board_position[r1][c1] ;
     int  eliminated = gn_eliminated_pieces[ opponent ];
 
     if (player == PLAYER_BLACK)
     {
         if (cell_has_white_piece(r2, c2)) // black captures white
         {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = board[r2][c2];
+            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
             gn_eliminated_pieces[ opponent ]++;
-            board[r1][c1] = ' ';
-            board[r2][c2] = temp;
+            ga_board_position[r1][c1] = ' ';
+            ga_board_position[r2][c2] = temp;
         }
         else
         {
-            board[r1][c1] = board[r2][c2] ;
-            board[r2][c2] = temp ;
+            ga_board_position[r1][c1] = ga_board_position[r2][c2] ;
+            ga_board_position[r2][c2] = temp ;
         }
     }
     else
     {
         if (cell_has_black_piece(r2, c2)) // white captures black
         {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = board[r2][c2];
+            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
             gn_eliminated_pieces[ opponent ]++;
-            board[r1][c1] = ' ';
-            board[r2][c2] = temp;
+            ga_board_position[r1][c1] = ' ';
+            ga_board_position[r2][c2] = temp;
         }
         else
         {
-            board[r1][c1] = board[r2][c2] ;
-            board[r2][c2] = temp ;
+            ga_board_position[r1][c1] = ga_board_position[r2][c2] ;
+            ga_board_position[r2][c2] = temp ;
         }
     }
 }
@@ -237,7 +237,7 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
 // ----------------------------------------
 bool cell_has_white_piece (int row , int col )
 {
-    switch( board[row][col] )
+    switch( ga_board_position[row][col] )
     {
         case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'p':              // intentional fall-through
@@ -254,7 +254,7 @@ bool cell_has_white_piece (int row , int col )
 // ----------------------------------------
 bool cell_has_black_piece ( int row , int col )
 {
-    switch( board[row][col] )
+    switch( ga_board_position[row][col] )
     {
         case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'P':              // intentional fall-through
@@ -325,7 +325,7 @@ void display_board_header ()
 }
 
 // ----------------------------------------
-void display_board ()
+void display_board(char board[BOARD_DIMENSION][BOARD_DIMENSION])
 {
     int x , y;
 
@@ -349,6 +349,12 @@ void display_board ()
     display_board_header();
     display_eliminated( PLAYER_BLACK );
     wprintf(L"\n");
+}
+
+// ----------------------------------------
+void display_position_board ()
+{
+    display_board( ga_board_position );
 }
 
 // ----------------------------------------
@@ -401,34 +407,7 @@ void display_eliminated( int player )
 // ----------------------------------------
 void display_possible_board()
 {
-    int x , y;
-
-    display_eliminated( PLAYER_WHITE );
-
-    wprintf(L" ") ;
-    for (x = 0 ; x < 8; x++)
-    {
-        wprintf(L"   %d" , x );
-    }
-    wprintf(L"\n" ) ;
-
-    const wchar_t *separator = L"  ----------------------------------\n";
-
-    for (y = 0; y < 8; y++)
-    {
-        wprintf( separator );
-        wprintf(L"%d " , y ) ;
-
-        for( x = 0 ; x < 8 ; x++ )
-        {
-            wprintf(L"||%lc " , display_convert( possible_board[y][x]) );
-        }
-        wprintf(L"|| \n" ) ;
-    }
-    wprintf( separator );
-
-    display_eliminated( PLAYER_BLACK );
-    wprintf(L"\n");
+    display_board( ga_board_possible );
 }
 
 #ifdef _WIN32
@@ -510,7 +489,7 @@ void moves_bishop ( int r1 , int c1, int player)
     if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1;
-        while ((board[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
+        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
         {
             if (((r1-a) == -1) || ((c1+b) == 8) )
                 break;
@@ -523,7 +502,7 @@ void moves_bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || cell_has_white_piece(r1+a, c1-b))
+        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_white_piece(r1+a, c1-b))
         {
             if (((r1+a) == 8) || ((c1-b) == -1))
                 break ;
@@ -536,7 +515,7 @@ void moves_bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1+b] == ' ') || cell_has_white_piece(r1+a, c1+b))
+        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_white_piece(r1+a, c1+b))
         {
             if (((r1+a) == 8) || ((c1+b) == 8))
                 break ;
@@ -550,7 +529,7 @@ void moves_bishop ( int r1 , int c1, int player)
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || cell_has_white_piece(r1-a, c1-b))
+        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_white_piece(r1-a, c1-b))
         {
             if (((r1-a) == -1) || ((c1-b) == -1))
                 break ;
@@ -565,7 +544,7 @@ void moves_bishop ( int r1 , int c1, int player)
     else
     {
         a = 1 , b = 1 ;
-        while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
+        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
         {
             if (((r1-a) == -1) || ((c1+b) == 8))
                 break ;
@@ -578,7 +557,7 @@ void moves_bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
+        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
         {
             if (((r1+a) == 8) || ((c1-b) == -1))
                 break ;
@@ -591,7 +570,7 @@ void moves_bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while( board[r1+a][c1+b] == ' ' || cell_has_black_piece(r1+a, c1+b))
+        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_black_piece(r1+a, c1+b))
         {
             if (((r1+a) == 8) || ((c1+b) == 8))
                 break ;
@@ -605,7 +584,7 @@ void moves_bishop ( int r1 , int c1, int player)
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
+        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
         {
             if (((r1-a) == -1) || ((c1-b) == -1))
                 break ;
@@ -626,7 +605,7 @@ void moves_king ( int r1 , int c1, int player )
 
     if (player == PLAYER_BLACK)
     {
-        if ((board[r1][c1+1] == ' ') || cell_has_white_piece(r1, c1+1))
+        if ((ga_board_position[r1][c1+1] == ' ') || cell_has_white_piece(r1, c1+1))
         {
             if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -635,7 +614,7 @@ void moves_king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
 
-        if ((board[r1][c1-1] == ' ') || cell_has_white_piece(r1, c1-1))
+        if ((ga_board_position[r1][c1-1] == ' ') || cell_has_white_piece(r1, c1-1))
         {
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
             if ((r1 >= 0) && (r1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
@@ -644,7 +623,7 @@ void moves_king ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-1][c1] == ' ') || cell_has_white_piece(r1-1, c1))
+        if ((ga_board_position[r1-1][c1] == ' ') || cell_has_white_piece(r1-1, c1))
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1 >= 0) && (c1 <= 7))
             {
@@ -653,7 +632,7 @@ void moves_king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
 
-        if ((board[r1-1][c1+1] == ' ') || cell_has_white_piece(r1-1, c1+1))
+        if ((ga_board_position[r1-1][c1+1] == ' ') || cell_has_white_piece(r1-1, c1+1))
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -661,7 +640,7 @@ void moves_king ( int r1 , int c1, int player )
             }
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
-        if ((board[r1-1][c1-1] == ' ') || cell_has_white_piece(r1-1, c1-1))
+        if ((ga_board_position[r1-1][c1-1] == ' ') || cell_has_white_piece(r1-1, c1-1))
         {
             if ((r1-1 >= 0) && (r1-1 <= 7) && (c1-1 >=0) && (c1-1 <= 7))
             {
@@ -670,7 +649,7 @@ void moves_king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
 
-        if ((board[r1+1][c1] == ' ') || cell_has_white_piece(r1+1, c1))
+        if ((ga_board_position[r1+1][c1] == ' ') || cell_has_white_piece(r1+1, c1))
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1 >=0) && (c1 <= 7))
             {
@@ -679,7 +658,7 @@ void moves_king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
 
-        if ((board[r1+1][c1+1] == ' ') || cell_has_white_piece(r1+1, c1+1))
+        if ((ga_board_position[r1+1][c1+1] == ' ') || cell_has_white_piece(r1+1, c1+1))
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1+1 >=0) && (c1+1 <= 7))
             {
@@ -688,7 +667,7 @@ void moves_king ( int r1 , int c1, int player )
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
         }
 
-        if ((board[r1+1][c1-1] == ' ') || cell_has_white_piece(r1+1, c1-1))
+        if ((ga_board_position[r1+1][c1-1] == ' ') || cell_has_white_piece(r1+1, c1-1))
         {
             if ((r1+1 >= 0) && (r1+1 <= 7) && (c1-1 >=0) && (c1-1 <= 7))
             {
@@ -701,7 +680,7 @@ void moves_king ( int r1 , int c1, int player )
     {
         if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1][c1+1] == ' ') || cell_has_black_piece(r1, c1+1))
+            if ((ga_board_position[r1][c1+1] == ' ') || cell_has_black_piece(r1, c1+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1+1;
             }
@@ -709,49 +688,49 @@ void moves_king ( int r1 , int c1, int player )
         if ((r1 >= 0) && (r1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
-            if ((board[r1][c1-1] == ' ') || cell_has_black_piece(r1, c1-1))
+            if ((ga_board_position[r1][c1-1] == ' ') || cell_has_black_piece(r1, c1-1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = r1*10+c1-1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1 >= 0) && (c1 <= 7))
         {
-            if ((board[r1-1][c1] == ' ') || cell_has_black_piece(r1-1, c1))
+            if ((ga_board_position[r1-1][c1] == ' ') || cell_has_black_piece(r1-1, c1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1-1][c1+1] == ' ') || cell_has_black_piece(r1-1, c1+1))
+            if ((ga_board_position[r1-1][c1+1] == ' ') || cell_has_black_piece(r1-1, c1+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
             }
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
-            if ((board[r1-1][c1-1] == ' ') || cell_has_black_piece(r1-1, c1-1))
+            if ((ga_board_position[r1-1][c1-1] == ' ') || cell_has_black_piece(r1-1, c1-1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1 >=0) && (c1 <= 7))
         {
-            if ((board[r1+1][c1] == ' ') || cell_has_black_piece(r1+1, c1))
+            if ((ga_board_position[r1+1][c1] == ' ') || cell_has_black_piece(r1+1, c1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1+1][c1+1] == ' ') || cell_has_black_piece(r1+1, c1+1))
+            if ((ga_board_position[r1+1][c1+1] == ' ') || cell_has_black_piece(r1+1, c1+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
             }
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
-            if ((board[r1+1][c1-1] == ' ') || cell_has_black_piece(r1+1, c1-1))
+            if ((ga_board_position[r1+1][c1-1] == ' ') || cell_has_black_piece(r1+1, c1-1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
@@ -766,7 +745,7 @@ void moves_knight ( int r1 , int c1, int player )
 
     if (player == PLAYER_BLACK)
     {
-        if ((board[r1+2][c1+1] == ' ') || cell_has_white_piece(r1+2, c1+1))
+        if ((ga_board_position[r1+2][c1+1] == ' ') || cell_has_white_piece(r1+2, c1+1))
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -776,7 +755,7 @@ void moves_knight ( int r1 , int c1, int player )
             //wprintf(L"%d%d, " , r1+2 ,c1+1) ;
         }
 
-        if ((board[r1+2][c1-1] == ' ') || cell_has_white_piece(r1+2, c1-1))
+        if ((ga_board_position[r1+2][c1-1] == ' ') || cell_has_white_piece(r1+2, c1-1))
         {
             if (r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <= 7)
             {
@@ -784,14 +763,14 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1+2] == ' ') || cell_has_white_piece(r1+1, c1+2))
+        if ((ga_board_position[r1+1][c1+2] == ' ') || cell_has_white_piece(r1+1, c1+2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+2;
             }
         }
-        if ((board[r1-1][c1+2] == ' ') || cell_has_white_piece(r1-1, c1+2))
+        if ((ga_board_position[r1-1][c1+2] == ' ') || cell_has_white_piece(r1-1, c1+2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
@@ -799,7 +778,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1-1] == ' ') || cell_has_white_piece(r1-2, c1-1))
+        if ((ga_board_position[r1-2][c1-1] == ' ') || cell_has_white_piece(r1-2, c1-1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
@@ -807,7 +786,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1+1] == ' ') || cell_has_white_piece(r1-2, c1+1))
+        if ((ga_board_position[r1-2][c1+1] == ' ') || cell_has_white_piece(r1-2, c1+1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -815,7 +794,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1-2] == ' ') || cell_has_white_piece(r1+1, c1-2))
+        if ((ga_board_position[r1+1][c1-2] == ' ') || cell_has_white_piece(r1+1, c1-2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <=7))
             {
@@ -823,7 +802,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-1][c1-2] == ' ') || cell_has_white_piece(r1-1, c1-2))
+        if ((ga_board_position[r1-1][c1-2] == ' ') || cell_has_white_piece(r1-1, c1-2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
@@ -833,7 +812,7 @@ void moves_knight ( int r1 , int c1, int player )
     }
     else
     {
-        if ((board[r1+2][c1+1] == ' ') || cell_has_black_piece(r1+2, c1+1))
+        if ((ga_board_position[r1+2][c1+1] == ' ') || cell_has_black_piece(r1+2, c1+1))
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -843,7 +822,7 @@ void moves_knight ( int r1 , int c1, int player )
             //wprintf(L"%d%d, " , r1+2 ,c1+1);
         }
 
-        if ((board[r1+2][c1-1] == ' ') || cell_has_black_piece(r1+2, c1-1))
+        if ((ga_board_position[r1+2][c1-1] == ' ') || cell_has_black_piece(r1+2, c1-1))
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
@@ -851,7 +830,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1+2] == ' ') || cell_has_black_piece(r1+1, c1+2))
+        if ((ga_board_position[r1+1][c1+2] == ' ') || cell_has_black_piece(r1+1, c1+2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
@@ -859,7 +838,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-1][c1+2] == ' ') || cell_has_black_piece(r1-1, c1+2))
+        if ((ga_board_position[r1-1][c1+2] == ' ') || cell_has_black_piece(r1-1, c1+2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
@@ -867,7 +846,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1-1] == ' ') || cell_has_black_piece(r1-2, c1-1))
+        if ((ga_board_position[r1-2][c1-1] == ' ') || cell_has_black_piece(r1-2, c1-1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
@@ -875,7 +854,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1+1] == ' ') || cell_has_black_piece(r1-2, c1+1))
+        if ((ga_board_position[r1-2][c1+1] == ' ') || cell_has_black_piece(r1-2, c1+1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -883,7 +862,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1-2] == ' ') || cell_has_black_piece(r1+1, c1-2))
+        if ((ga_board_position[r1+1][c1-2] == ' ') || cell_has_black_piece(r1+1, c1-2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
@@ -891,7 +870,7 @@ void moves_knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-1][c1-2] == ' ') || cell_has_black_piece(r1-1, c1-2))
+        if ((ga_board_position[r1-1][c1-2] == ' ') || cell_has_black_piece(r1-1, c1-2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
@@ -908,7 +887,7 @@ void moves_pawn_b ( int r1 , int c1 )
 
     if (r1 == 1) // starting black row
     {
-        if (board[r1+1][c1] == ' ')
+        if (ga_board_position[r1+1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+1 , c1 );
             if ((r1+1 <= 7) && (c1 <= 7))
@@ -917,7 +896,7 @@ void moves_pawn_b ( int r1 , int c1 )
             }
         }
 
-        if (board[r1+2][c1] == ' ')
+        if (ga_board_position[r1+2][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+2 , c1 );
             if ((r1+2 <= 7) && (c1 <= 7))
@@ -946,7 +925,7 @@ void moves_pawn_b ( int r1 , int c1 )
     }
     else
     {
-        if (board[r1+1][c1] == ' ')
+        if (ga_board_position[r1+1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1+1 , c1 ) ;
             if ((r1+1 <= 7) && (c1 <= 7))
@@ -989,7 +968,7 @@ void moves_pawn_w ( int r1 , int c1 )
 
     if (r1 == 6) // starting white row
     {
-        if (board[r1-1][c1] == ' ')
+        if (ga_board_position[r1-1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
@@ -998,7 +977,7 @@ void moves_pawn_w ( int r1 , int c1 )
             }
         }
 
-        if (board[r1-2][c1] == ' ')
+        if (ga_board_position[r1-2][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-2 >= 0 && c1 >= 0 )
@@ -1027,7 +1006,7 @@ void moves_pawn_w ( int r1 , int c1 )
     }
     else
     {
-        if (board[r1-1][c1] == ' ')
+        if (ga_board_position[r1-1][c1] == ' ')
         {
             //wprintf(L"%d%d , " , r1-1 , c1 ) ;
             if( r1-1 >= 0 && c1 >= 0 )
@@ -1067,7 +1046,7 @@ void moves_queen ( int r1 , int c1, int player )
     if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
-        while ((board[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
+        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
         {
             if ((r1-a) == -1 || ((c1+b) == 8))
                 break ;
@@ -1080,7 +1059,7 @@ void moves_queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || cell_has_white_piece(r1+a, c1-b))
+        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_white_piece(r1+a, c1-b))
         {
             if ((r1+a) == 8 || (c1-b) == -1)
                 break;
@@ -1093,7 +1072,7 @@ void moves_queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1+b] == ' ') || cell_has_white_piece(r1+a, c1+b))
+        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_white_piece(r1+a, c1+b))
         {
             if ((r1+a) == 8 || (c1+b) == 8)
                 break;
@@ -1107,7 +1086,7 @@ void moves_queen ( int r1 , int c1, int player )
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || cell_has_white_piece(r1-a, c1-b))
+        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_white_piece(r1-a, c1-b))
         {
             if ((r1-a) == -1 || (c1-b) == -1)
                 break;
@@ -1121,7 +1100,7 @@ void moves_queen ( int r1 , int c1, int player )
 
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || cell_has_white_piece(r1, n-1))
+            while ((ga_board_position[r1][n-1] == ' ') || cell_has_white_piece(r1, n-1))
             {
                 if (n == 0)
                     break;
@@ -1136,7 +1115,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ') || cell_has_white_piece(r1, n+1))
+            while ((ga_board_position[r1][n+1] == ' ') || cell_has_white_piece(r1, n+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_white_piece(r1, n+1))
@@ -1149,7 +1128,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = r1 ;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || cell_has_white_piece(n-1, c1))
+            while ((ga_board_position[n-1][c1] == ' ') || cell_has_white_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
@@ -1164,7 +1143,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || cell_has_white_piece(n+1, c1))
+            while ((ga_board_position[n+1][c1] == ' ') || cell_has_white_piece(n+1, c1))
             {
                 if (n == 7)
                     break;
@@ -1179,7 +1158,7 @@ void moves_queen ( int r1 , int c1, int player )
     else
     {
         a = 1 , b = 1 ;
-        while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
+        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
         {
             if ((r1-a) == -1 || (c1+b) == 8)
                 break;
@@ -1192,7 +1171,7 @@ void moves_queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
+        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
         {
             if ((r1+a) == 8 || (c1-b) == -1)
                 break;
@@ -1205,7 +1184,7 @@ void moves_queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1+b] == ' ') || cell_has_black_piece(r1+a, c1+b))
+        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_black_piece(r1+a, c1+b))
         {
             if ((r1+a) == 8 || (c1+b) == 8)
                 break;
@@ -1219,7 +1198,7 @@ void moves_queen ( int r1 , int c1, int player )
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
+        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
         {
             if ((r1-a) == -1 || (c1-b) == -1)
                 break;
@@ -1233,7 +1212,7 @@ void moves_queen ( int r1 , int c1, int player )
 
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
+            while ((ga_board_position[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
             {
                 if (n == 0)
                     break;
@@ -1248,7 +1227,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
+            while ((ga_board_position[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_black_piece(r1, n+1))
@@ -1261,7 +1240,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = r1;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
+            while ((ga_board_position[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
@@ -1276,7 +1255,7 @@ void moves_queen ( int r1 , int c1, int player )
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
+            while ((ga_board_position[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
             {
                 if( n == 7 )
                     break;
@@ -1300,7 +1279,7 @@ void moves_rook ( int r1 , int c1, int player)
     {
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || cell_has_white_piece(r1, n-1))
+            while ((ga_board_position[r1][n-1] == ' ') || cell_has_white_piece(r1, n-1))
             {
                 if (n == 0)
                      break;
@@ -1315,7 +1294,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ')|| cell_has_white_piece(r1, n+1))
+            while ((ga_board_position[r1][n+1] == ' ')|| cell_has_white_piece(r1, n+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_white_piece(r1, n+1))
@@ -1328,7 +1307,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || cell_has_white_piece(n-1, c1))
+            while ((ga_board_position[n-1][c1] == ' ') || cell_has_white_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
@@ -1343,7 +1322,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || cell_has_white_piece(n+1, c1))
+            while ((ga_board_position[n+1][c1] == ' ') || cell_has_white_piece(n+1, c1))
             {
                 if (n == 7)
                     break;
@@ -1359,7 +1338,7 @@ void moves_rook ( int r1 , int c1, int player)
     {
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
+            while ((ga_board_position[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
             {
                 if (n == 0)
                     break;
@@ -1374,7 +1353,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
+            while ((ga_board_position[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1)*10+n+1;
                 if (cell_has_black_piece(r1, n+1))
@@ -1387,7 +1366,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
+            while ((ga_board_position[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
@@ -1402,7 +1381,7 @@ void moves_rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
+            while ((ga_board_position[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
             {
                 if (n == 7)
                     break;
@@ -1417,13 +1396,15 @@ void moves_rook ( int r1 , int c1, int player)
 }
 
 // ----------------------------------------
-void player_black ()
+void player_turn (int player)
 {
-    int player = PLAYER_BLACK;
     int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-    wprintf( L"%lc Black to move ...", display_convert( 'B' ) );
+    if (player == PLAYER_BLACK)
+        wprintf( L"%lc Black to move ...", display_convert( 'B' ) );
+    else
+        wprintf( L"%lc White to move ...", display_convert( 'W' ) );
 
 again1:
     do
@@ -1442,17 +1423,35 @@ again1:
         }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
-    switch( board[r1][c1] ) // Select only player's pieces.
+    if (player == PLAYER_BLACK)
     {
-        case 'P': moves_pawn  ( r1 , c1, player ); break;
-        case 'R': moves_rook  ( r1 , c1, player ); break;
-        case 'H': moves_knight( r1 , c1, player ); break;
-        case 'C': moves_bishop( r1 , c1, player ); break;
-        case 'K': moves_king  ( r1 , c1, player ); break;
-        case 'Q': moves_queen ( r1 , c1, player ); break;
-        default:
-            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
-            goto again1 ;
+        switch( ga_board_position[r1][c1] ) // Select only player's pieces.
+        {
+            case 'P': moves_pawn  ( r1 , c1, player ); break;
+            case 'R': moves_rook  ( r1 , c1, player ); break;
+            case 'H': moves_knight( r1 , c1, player ); break;
+            case 'C': moves_bishop( r1 , c1, player ); break;
+            case 'K': moves_king  ( r1 , c1, player ); break;
+            case 'Q': moves_queen ( r1 , c1, player ); break;
+            default:
+                wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                goto again1 ;
+        }
+    }
+    else
+    {
+        switch( ga_board_position[r1][c1] ) // Select only player's pieces.
+        {
+            case 'p': moves_pawn  ( r1 , c1, player ); break;
+            case 'r': moves_rook  ( r1 , c1, player ); break;
+            case 'h': moves_knight( r1 , c1, player ); break;
+            case 'c': moves_bishop( r1 , c1, player ); break;
+            case 'k': moves_king  ( r1 , c1, player ); break;
+            case 'q': moves_queen ( r1 , c1, player ); break;
+            default:
+                wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                goto again1 ;
+        }
     }
 
     if (gn_possible_moves)
@@ -1469,65 +1468,6 @@ again1:
     else
     {
         goto again1;
-    }
-
-    position_to_row_col( p2, &r2, &c2 );
-    change(r1,c1,r2,c2, player);
-}
-
-// ----------------------------------------
-void player_white ()
-{
-    int player = PLAYER_WHITE;
-    int p1 , p2 , c1 , r1 , c2 , r2, input_control;
-
-    wprintf( L"%lc White to move ...\n", display_convert( 'W' ) ) ;
-
-again2:
-    do
-    {
-        fflush(stdin);
-        wprintf( L"Enter position of piece to move [row col]: " );
-        input_control = scanf( "%d" , &p1 );
-
-        position_to_row_col( p1, &r1, &c1 );
-        if (is_off_board(r1, c1))
-        {
-            if (is_off_board(r1, 0))
-                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
-            else
-                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!' ) );
-        }
-    } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
-
-
-    switch( board[r1][c1] )
-    {
-        case 'p': moves_pawn  ( r1 , c1, player ); break ;
-        case 'r': moves_rook  ( r1 , c1, player ); break ;
-        case 'h': moves_knight( r1 , c1, player ); break ;
-        case 'c': moves_bishop( r1 , c1, player ); break ;
-        case 'k': moves_king  ( r1 , c1, player ); break ;
-        case 'q': moves_queen ( r1 , c1, player ); break ;
-        default:
-            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
-            goto again2 ;
-    }
-
-    if (gn_possible_moves)
-    {
-        clear_screen();
-        update_possible_moves( r1, c1 );
-
-        do
-        {
-            wprintf( L"\nEnter new position of piece [row column]: " );
-            scanf( "%d" , &p2 ) ;
-        } while (verify_possible_move(p2));
-    }
-    else
-    {
-        goto again2;
     }
 
     position_to_row_col( p2, &r2, &c2 );
@@ -1558,7 +1498,7 @@ void showcase_board (char old_row, char old_col, char new_row, char new_col, int
     else
     {
         change(r1,c1,r2,c2, player);
-        display_board();
+        display_position_board();
     }
 }
 
@@ -1648,11 +1588,11 @@ void update_possible_moves ( int row, int col )
     {
         position_to_row_col( ga_possible_moves[i], &y, &x );
         if (is_empty( y, x ))
-            possible_board[y][x] = 'x';
+            ga_board_possible[y][x] = 'x';
     }
-    display_possible_board();
+    display_board( ga_board_possible );
 
-    wprintf( L"Possible moves %lc: \n", display_convert(board[row][col]) );
+    wprintf( L"Possible moves %lc: \n", display_convert( ga_board_position[row][col]) );
     if (gn_possible_moves)
     {
         for (int i = 0; i < gn_possible_moves; i++)
@@ -1664,7 +1604,6 @@ void update_possible_moves ( int row, int col )
     {
         wprintf( L"No possible moves -> " );
     }
-
 }
 
 // is_move_possible()
@@ -1720,24 +1659,16 @@ void main (int argc, char *argv[])
     else
     {
         int moves = 0;
-        memcpy( board, BOARD_INIT, sizeof(BOARD_INIT) );
+        memcpy( ga_board_position, BOARD_INIT, sizeof(BOARD_INIT) );
         gn_eliminated_pieces[ PLAYER_WHITE ] = 0;
         gn_eliminated_pieces[ PLAYER_BLACK ] = 0;
 
         do
         {
-            memcpy( possible_board, board, sizeof(board) );
+            memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
             clear_screen();
-            display_board();
-
-            if ((moves % 2) == PLAYER_WHITE)
-            {
-                player_white();
-            }
-            else
-            {
-                player_black();
-            }
+            display_position_board();
+            player_turn( moves & 1 );
             moves++;
 
             wprintf( L"Press Any Key To Continue or ESC to quit... " );
