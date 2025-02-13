@@ -140,7 +140,7 @@ void bishop ( int r1 , int c1, int player)
     int a , b;
     possible_moves_index = 0;
 
-    if (player == PLAYER_WHITE)
+    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1;
         while ((board[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
@@ -200,7 +200,6 @@ void bishop ( int r1 , int c1, int player)
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
@@ -258,10 +257,6 @@ void bishop ( int r1 , int c1, int player)
             a++ ;
             b++ ;
         }
-    }
-    else
-    {
-        wprintf(L"Error : Bishop ");
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
@@ -667,7 +662,7 @@ void king ( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
-    if (player == PLAYER_WHITE)
+    if (player == PLAYER_BLACK)
     {
         if ((board[r1][c1+1] == ' ') || cell_has_white_piece(r1, c1+1))
         {
@@ -749,7 +744,6 @@ void king ( int r1 , int c1, int player )
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
         if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
@@ -819,10 +813,6 @@ void king ( int r1 , int c1, int player )
             }
         }
     }
-    else
-    {
-        wprintf(L"king : Error");
-    }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
@@ -843,7 +833,7 @@ void knight ( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
-    if (player == PLAYER_WHITE)
+    if (player == PLAYER_BLACK)
     {
         if ((board[r1+2][c1+1] == ' ') || cell_has_white_piece(r1+2, c1+1))
         {
@@ -919,7 +909,6 @@ void knight ( int r1 , int c1, int player )
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
         if ((board[r1+2][c1+1] == ' ') || cell_has_black_piece(r1+2, c1+1))
         {
@@ -993,10 +982,6 @@ void knight ( int r1 , int c1, int player )
                 possible_moves_index++;
             }
         }
-    }
-    else
-    {
-        wprintf(L"Error : Knight");
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
@@ -1218,9 +1203,15 @@ void pawnb ( int r1 , int c1 )
 // ----------------------------------------
 void player_white ()
 {
+    int player = PLAYER_WHITE;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-    wprintf(L"\n\x26AB White to move ...\n") ;
+#ifdef _WIN32
+    wprintf(L"\n\x26AB");
+#else
+    wprintf(L"\n\x26AA");
+#endif
+    wprintf(L" White to move ...\n") ;
 
 again2:
     do
@@ -1242,12 +1233,12 @@ again2:
 
     switch( board[r1][c1] )
     {
-        case 'p': pawnb ( r1 , c1               ); break ;
-        case 'r': rook  ( r1 , c1, PLAYER_BLACK ); break ;
-        case 'h': knight( r1 , c1, PLAYER_BLACK ); break ;
-        case 'c': bishop( r1 , c1, PLAYER_BLACK ); break ;
-        case 'k': king  ( r1 , c1, PLAYER_BLACK ); break ;
-        case 'q': queen ( r1 , c1, PLAYER_BLACK ); break ;
+        case 'p': pawnb ( r1 , c1         ); break ;
+        case 'r': rook  ( r1 , c1, player ); break ;
+        case 'h': knight( r1 , c1, player ); break ;
+        case 'c': bishop( r1 , c1, player ); break ;
+        case 'k': king  ( r1 , c1, player ); break ;
+        case 'q': queen ( r1 , c1, player ); break ;
         default:
             wprintf(L"\x26A0 Invalid Position! " );
             goto again2 ;
@@ -1280,14 +1271,21 @@ again2:
     previous_position = r1*10+c1;
     new_position = r2*10+c2;
 
-    change(r1,c1,r2,c2, PLAYER_BLACK);
+    change(r1,c1,r2,c2, player);
 }
 
 // ----------------------------------------
 void player_black ()
 {
+    int player = PLAYER_BLACK;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
-    wprintf(L"\n\x26AA Black to move ..." ) ;
+
+#ifdef _WIN32
+    wprintf(L"\n\x26AA" );
+#else
+    wprintf(L"\n\x26AB" );
+#endif
+    wprintf( L" Black to move ..." );
 
 again1:
     do
@@ -1308,12 +1306,12 @@ again1:
 
     switch( board[r1][c1] ) // Select only player's pieces.
     {
-        case 'P': pawn  ( r1 , c1               );  break;
-        case 'R': rook  ( r1 , c1, PLAYER_WHITE );  break;
-        case 'H': knight( r1 , c1, PLAYER_WHITE );  break;
-        case 'C': bishop( r1 , c1, PLAYER_WHITE );  break;
-        case 'K': king  ( r1 , c1, PLAYER_WHITE );  break;
-        case 'Q': queen ( r1 , c1, PLAYER_WHITE );  break;
+        case 'P': pawn  ( r1 , c1         ); break;
+        case 'R': rook  ( r1 , c1, player ); break;
+        case 'H': knight( r1 , c1, player ); break;
+        case 'C': bishop( r1 , c1, player ); break;
+        case 'K': king  ( r1 , c1, player ); break;
+        case 'Q': queen ( r1 , c1, player ); break;
         default:
             wprintf(L"\x26A0 Invalid Position! ");
             goto again1 ;
@@ -1345,7 +1343,7 @@ again1:
     previous_position = r1*10+c1;
     new_position = r2*10+c2;
 
-    change(r1,c1,r2,c2, PLAYER_WHITE);
+    change(r1,c1,r2,c2, player);
 }
 
 // ----------------------------------------
@@ -1357,7 +1355,7 @@ void queen ( int r1 , int c1, int player )
     n = c1;
     possible_moves_index = 0;
 
-    if (player == PLAYER_WHITE)
+    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
@@ -1478,7 +1476,6 @@ void queen ( int r1 , int c1, int player )
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
         while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
@@ -1598,10 +1595,6 @@ void queen ( int r1 , int c1, int player )
             }
         }
     }
-    else
-    {
-        wprintf(L"Error : Queen ");
-    }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
@@ -1624,7 +1617,7 @@ void rook ( int r1 , int c1, int player)
     int n;
 
     n = c1;
-    if (player == PLAYER_WHITE)
+    if (player == PLAYER_BLACK)
     {
         if (n != 0)
         {
@@ -1688,7 +1681,6 @@ void rook ( int r1 , int c1, int player)
         }
     }
     else
-    if (player == PLAYER_BLACK)
     {
         if (n != 0)
         {
@@ -1751,10 +1743,6 @@ void rook ( int r1 , int c1, int player)
             }
         }
     }
-    else
-    {
-        wprintf(L"\nError : Rook ");
-    }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if(possible_moves_index >= 1)
@@ -1780,16 +1768,16 @@ void showcase_board (char old_row, char old_col, char new_row, char new_col, int
     r2 = (int)(new_row - '0');
     c2 = (int)(new_col - '0');
 
-    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_BLACK))
+    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_WHITE)) // castle
     {
-        change(7,4,7,6, PLAYER_BLACK);
-        change(7,7,7,5, PLAYER_BLACK);
+        change(7,4,7,6, PLAYER_WHITE); // king
+        change(7,7,7,5, PLAYER_WHITE); // rook
     }
     else
-    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_WHITE))
+    if ((r1 == 0) && (c1 == 0) && (r2 == 0) && (c2 == 0) && (player == PLAYER_BLACK)) // castle
     {
-        change(0,4,0,2, PLAYER_WHITE);
-        change(0,0,0,3, PLAYER_WHITE);
+        change(0,4,0,2, PLAYER_BLACK); // king
+        change(0,0,0,3, PLAYER_BLACK); // rook
     }
     else
     {
