@@ -11,6 +11,16 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * Compiles on Windows and Linux
 * MSVC 2022 Solution and Project
 
+# Chess Fonts
+
+You can download an Unicode chess font from:
+
+DejaVuSansMono.ttf
+* https://dejavu-fonts.github.io/
+
+chess_merida_unicode.ttf
+* https://github.com/xeyownt/chess_merida_unicode
+
 # UNICODE Symbols
 
 * ♔ black-king           : \x2654
