@@ -456,7 +456,7 @@ void delay (int number_of_seconds)
 // ----------------------------------------
 void display_board ()
 {
-    int i , j , k ;
+    int x , y;
 
     //Corruption Problem ? board[0][0] = 'R';
     if (new_position==-99)
@@ -467,20 +467,23 @@ void display_board ()
     display_eliminated_list(eliminated_pieces_white);
 
     wprintf(L" ") ;
-    for (i = 0 ; i < 8; i++)
+    for (x = 0 ; x < 8; x++)
     {
-        wprintf(L"   %d" , i );
+        wprintf(L"   %d" , x );
     }
     wprintf(L"\n" ) ;
 
     const wchar_t *separator = L"  ----------------------------------\n";
 
-    for (k = 0; k < 8; k++)
+    for (y = 0; y < 8; y++)
     {
         wprintf( separator );
-        wprintf(L"%d " , k ) ;
+        wprintf(L"%d " , y ) ;
 
-        for( j=0 ; j<8 ; j++ ) { wprintf(L"||%lc " , display_convert(board[k][j]) ) ; }
+        for( x = 0 ; x < 8 ; x++ )
+        {
+            wprintf(L"||%lc " , display_convert(board[y][x]) ) ;
+        }
         wprintf(L"|| \n" ) ;
     }
     wprintf( separator );
