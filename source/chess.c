@@ -153,7 +153,7 @@ Also see:
     void delay(int);
     void display_board( char board[BOARD_DIMENSION][BOARD_DIMENSION] );
     void display_board_header();
-    int  display_convert(char ); // convert char to Unicode
+    int  get_glyph( char ); // convert char to Unicode
     void display_eliminated( int player );
     void display_position_board();
     void display_possible_board();
@@ -178,6 +178,41 @@ Also see:
     bool verify_possible_move (int position);
 
 // Utility
+
+    // ----------------------------------------
+    int get_glyph (char symbol)
+    {
+        static const wchar_t turn[2] =
+        { // white, black
+    #ifdef _WIN32
+            0x26AB, 0x26AA
+    #else
+            0x26AA, 0x26AB
+    #endif
+        };
+
+        switch (symbol)
+        {
+            case 'p': return 0x265F; // White pawn
+            case 'r': return 0x265C; //       rook
+            case 'h': return 0x265E; //       knight
+            case 'c': return 0x265D; //       bishop
+            case 'k': return 0x265A; //       king
+            case 'q': return 0x265B; //       queen
+            case 'P': return 0x2659; // Black pawn
+            case 'R': return 0x2656; //       rook
+            case 'H': return 0x2658; //       knight
+            case 'C': return 0x2657; //       bishop
+            case 'K': return 0x2654; //       king
+            case 'Q': return 0x2655; //       queen
+            case 'x': return 0x2716; // Possible move
+            case '!': return 0x26A0; // /!\ Warning Sign
+            case PLAYER_WHITE: return turn[0]; // White's Turn
+            case PLAYER_BLACK: return turn[1]; // Black's Turn
+            default : return 0x0020; // Empty
+        }
+    }
+
 
     // ----------------------------------------
     bool is_empty (int row, int col)
@@ -387,7 +422,7 @@ void display_board(char board[BOARD_DIMENSION][BOARD_DIMENSION])
 
         for( x = 0 ; x < 8 ; x++ )
         {
-            wprintf(L"||%lc " , display_convert(board[y][x]) ) ;
+            wprintf(L"||%lc " , get_glyph(board[y][x]) ) ;
         }
         wprintf(L"|| %lc\n", ga_board_rows[ y ] );
     }
@@ -404,40 +439,6 @@ void display_position_board ()
 }
 
 // ----------------------------------------
-int display_convert (char symbol)
-{
-    static const wchar_t turn[2] =
-    { // white, black
-#ifdef _WIN32
-        0x26AB, 0x26AA
-#else
-        0x26AA, 0x26AB
-#endif
-    };
-
-    switch (symbol)
-    {
-        case 'p': return 0x265F; // White pawn
-        case 'r': return 0x265C; //       rook
-        case 'h': return 0x265E; //       knight
-        case 'c': return 0x265D; //       bishop
-        case 'k': return 0x265A; //       king
-        case 'q': return 0x265B; //       queen
-        case 'P': return 0x2659; // Black pawn
-        case 'R': return 0x2656; //       rook
-        case 'H': return 0x2658; //       knight
-        case 'C': return 0x2657; //       bishop
-        case 'K': return 0x2654; //       king
-        case 'Q': return 0x2655; //       queen
-        case 'x': return 0x2716; // Possible move
-        case '!': return 0x26A0; // /!\ Warning Sign
-        case PLAYER_WHITE: return turn[0]; // White's Turn
-        case PLAYER_BLACK: return turn[1]; // Black's Turn
-        default : return 0x0020; // Empty
-    }
-}
-
-// ----------------------------------------
 void display_eliminated( int player )
 {
     char *eliminated_pieces = &ga_eliminated_pieces[ player ][ 0 ];
@@ -445,7 +446,7 @@ void display_eliminated( int player )
 
     for (int i = 0; i < eliminated_count; i++ )
     {
-        wprintf( L"%lc ", display_convert( eliminated_pieces[ i ] ) );
+        wprintf( L"%lc ", get_glyph( eliminated_pieces[ i ] ) );
     }
     wprintf( L"\n" );
 }
@@ -1594,7 +1595,7 @@ int player_input_row_col ( int player, int from_piece )
             if ((ch >= 'a') && (ch <= 'h')) col = (ch - 'a');
             if ((ch >= 'A') && (ch <= 'H')) col = (ch - 'A');
             if (col < 0)
-                wprintf( L"\n%lc Invalid column. Must be A..H\n", display_convert( '!' ) );
+                wprintf( L"\n%lc Invalid column. Must be A..H\n", get_glyph( '!' ) );
         } while (col < 0);
 
         do
@@ -1612,7 +1613,7 @@ int player_input_row_col ( int player, int from_piece )
 
             if ((ch >= '1') && (ch <= '8')) row = (ch - '1');
             if (row < 0)
-                wprintf( L"%lc Invalid row. Must be 1..8\n", display_convert( '!' ) );
+                wprintf( L"%lc Invalid row. Must be 1..8\n", get_glyph( '!' ) );
         } while (row < 0);
         row = (7 - row); // flip y
 
@@ -1647,7 +1648,7 @@ void player_turn_algebraic ( int player )
             valid_from = true;
             memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
 
-            wprintf( L"%lc %hs to move. ", display_convert( player ), ga_player_colors[ player ] );
+            wprintf( L"%lc %hs to move. ", get_glyph( player ), ga_player_colors[ player ] );
             pos1 = player_input_row_col( player, PIECE_NONE );
             if (pos1 >= 0)
             {
@@ -1665,7 +1666,7 @@ void player_turn_algebraic ( int player )
                         case 'k': moves_king  ( row1 , col1, player ); break;
                         case 'q': moves_queen ( row1 , col1, player ); break;
                         default:
-                            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                            wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
                             valid_from = false;
                     }
                 }
@@ -1680,7 +1681,7 @@ void player_turn_algebraic ( int player )
                         case 'K': moves_king  ( row1 , col1, player ); break;
                         case 'Q': moves_queen ( row1 , col1, player ); break;
                         default:
-                            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                            wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
                             valid_from = false;
                     }
                 }
@@ -1721,7 +1722,7 @@ void player_turn_integer ( int player )
     char attacker;
     int  piece;
 
-    wprintf( L"%lc %hs to move ...", display_convert( player ), ga_player_colors[ player ] );
+    wprintf( L"%lc %hs to move ...", get_glyph( player ), ga_player_colors[ player ] );
 
 again1:
     do
@@ -1735,9 +1736,9 @@ again1:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
+                wprintf( L"%lc Invalid row. Must be 0..7\n", get_glyph( '!' ) );
             else
-                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!') );
+                wprintf( L"%lc Invalid column. Must be 0..7\n", get_glyph( '!') );
         }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
@@ -1753,7 +1754,7 @@ again1:
             case 'K': moves_king  ( r1 , c1, player ); break;
             case 'Q': moves_queen ( r1 , c1, player ); break;
             default:
-                wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
                 goto again1 ;
         }
     }
@@ -1768,7 +1769,7 @@ again1:
             case 'k': moves_king  ( r1 , c1, player ); break;
             case 'q': moves_queen ( r1 , c1, player ); break;
             default:
-                wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
                 goto again1 ;
         }
     }
@@ -1912,7 +1913,7 @@ void update_possible_moves ( int row, int col )
     }
     display_board( ga_board_possible );
 
-    wprintf( L"Possible moves %lc: \n", display_convert( ga_board_position[row][col]) );
+    wprintf( L"Possible moves %lc: \n", get_glyph( ga_board_position[row][col]) );
     if (gn_possible_moves)
     {
         char row, col;
@@ -1961,7 +1962,7 @@ void main (int argc, char *argv[])
         size_t len = strlen( pieces );
         for (size_t i = 0; i < len; i++ )
         {
-            wchar_t glyph = (wchar_t) display_convert( pieces[ i ] );
+            wchar_t glyph = (wchar_t) get_glyph( pieces[ i ] );
             wprintf( L"%lc", glyph );
         }
         wprintf( L"\n" );
@@ -1969,8 +1970,8 @@ void main (int argc, char *argv[])
         wprintf( L"\n\x26AA Black (Win32)" );
         wprintf( L"\n\x26AA White (Unix )" );
         wprintf( L"\n\x26AB Black (Unix )" );
-        wprintf( L"\n%lc this platform", display_convert( PLAYER_WHITE ) );
-        wprintf( L"\n%lc this platform", display_convert( PLAYER_BLACK ) );
+        wprintf( L"\n%lc this platform", get_glyph( PLAYER_WHITE ) );
+        wprintf( L"\n%lc this platform", get_glyph( PLAYER_BLACK ) );
         return;
     }
 
