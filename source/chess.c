@@ -103,28 +103,32 @@ char board[8][8] = // array 8x8 representing the board.
 
 // Utility
 
-bool is_empty (int row, int col)
-{
-    return (board[row][col] == ' ');
-}
+    // ----------------------------------------
+    bool is_empty (int row, int col)
+    {
+        return (board[row][col] == ' ');
+    }
 
-int is_off_board( int row, int col )
-{
-    if ((row < 0) || (row > 7)) return true;
-    if ((col < 0) || (col > 7)) return true;
-    return false;
-}
+    // ----------------------------------------
+    int is_off_board ( int row, int col )
+    {
+        if ((row < 0) || (row > 7)) return true;
+        if ((col < 0) || (col > 7)) return true;
+        return false;
+    }
 
-void position_to_row_col ( int position, int *row, int *col )
-{
-   *row = position / 10;
-   *col = position % 10;
-}
+    // ----------------------------------------
+    void position_to_row_col ( int position, int *row, int *col )
+    {
+       *row = position / 10;
+       *col = position % 10;
+    }
 
-void row_col_to_position ( int row, int col, int *position )
-{
-    *position = (row * 10) + col;
-}
+    // ----------------------------------------
+    void row_col_to_position ( int row, int col, int *position )
+    {
+        *position = (row * 10) + col;
+    }
 
 // Implementation
 
