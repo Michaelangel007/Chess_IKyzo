@@ -258,8 +258,10 @@ void cls (HANDLE hConsole)
 void change ( int r1 , int c1 , int r2 , int c2 , int player )
 {
     int  opponent   = 1 - player;
-    char temp       = ga_board_position[r1][c1] ;
     int  eliminated = gn_eliminated_pieces[ opponent ];
+
+    char attacker   = ga_board_position[r1][c1];
+    char defender   = ga_board_position[r2][c2];
 
     if (player == PLAYER_BLACK)
     {
@@ -268,12 +270,12 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
             ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
             gn_eliminated_pieces[ opponent ]++;
             ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = temp;
+            ga_board_position[r2][c2] = attacker;
         }
         else
         {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2] ;
-            ga_board_position[r2][c2] = temp ;
+            ga_board_position[r1][c1] = ga_board_position[r2][c2];
+            ga_board_position[r2][c2] = attacker;
         }
     }
     else
@@ -283,12 +285,12 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
             ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
             gn_eliminated_pieces[ opponent ]++;
             ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = temp;
+            ga_board_position[r2][c2] = attacker;
         }
         else
         {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2] ;
-            ga_board_position[r2][c2] = temp ;
+            ga_board_position[r1][c1] = ga_board_position[r2][c2];
+            ga_board_position[r2][c2] = attacker;
         }
     }
 }
