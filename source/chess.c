@@ -1917,13 +1917,15 @@ void update_possible_moves ( int row, int col )
     if (gn_possible_moves)
     {
         char row, col;
+
+        wprintf( L"  " );
         for (int i = 0; i < gn_possible_moves; i++)
         {
             position_to_labels( ga_possible_moves[i], &row, &col );
 #if INPUT_ALGEBRAIC
-            wprintf( L" %lc%lc :", col, row );
+            wprintf( L"%lc%lc, ", col, row );
 #else
-            wprintf( L" %lc%lc :", row, col );
+            wprintf( L"%lc%lc :", row, col );
 #endif
         }
         wprintf( L"\n" );
