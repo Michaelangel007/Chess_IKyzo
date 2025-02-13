@@ -5,6 +5,7 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 
 * Unicode display of chess pieces.
 * Algebraic notation (input and display.)
+* Selected piece shows possible moves.
 * WIP Castling (doesn't check if King passes through check.)
 * Save game replay.
 * Compiles on Windows and Linux
@@ -51,26 +52,27 @@ piece characteristics :
 
 # Display Design
 
-♟♟♟♝♞  !-> Chained list represents the eliminated white pieces 
-    0   1   2   3   4   5   6   7      !-> Rows and Columns 
-  ----------------------------------   !-> Board Display Matrix[8][8]
-0 ||♖||♘||♗||♔||♕||♗||♘||♖|| 
+♟♟♟♝♞                              Array of of eliminated white pieces
+    A   B   C   D   E   F   G   H      Rows and Columns using Algebraic notation
+  ----------------------------------   Board Display using Unicode
+8 ||♖||♘||♗||♔||♕||♗||♘||♖|| 8
   ----------------------------------
-1 ||♙||♙||♙||♙||♙||♙||♙||♙|| 
+7 ||♙||♙||♙||♙||♙||♙||♙||♙|| 7
+  ----------------------------------
+6 ||  ||  ||  ||  ||  ||  ||  ||  || 6
+  ----------------------------------
+5 ||  ||  ||  ||  ||  ||  ||  ||  || 5
   ---------------------------------- 
-2 ||  ||  ||  ||  ||  ||  ||  ||  || 
-  ---------------------------------- 
-3 ||  ||  ||  ||  ||  ||  ||  ||  || 
-  ---------------------------------- 
-4 ||  ||  ||  ||  ||  ||  ||  ||  ||
+4 ||  ||  ||  ||  ||  ||  ||  ||  || 4
   ----------------------------------
-5 ||  ||  ||  ||  ||  ||  ||  ||  ||
+3 ||  ||  ||  ||  ||  ||  ||  ||  || 3
   ----------------------------------
-6 ||♟||♟||♟||♟||♟||♟||♟||♟||
+2 ||♟||♟||♟||♟||♟||♟||♟||♟|| 2
   ----------------------------------
-7 ||♜||♞||♝||♚||♛||♝||♞||♜||
+1 ||♜||♞||♝||♚||♛||♝||♞||♜|| 1
   ----------------------------------
-♙♙♙♙♙♙♖♖♕ !-> Chained list represents the eliminated black pieces 
+    A   B   C   D   E   F   G   H
+♙♙♙♙♙♙♖♖♕                        Array of eliminated black pieces
 
 # Movement Calculation
 
