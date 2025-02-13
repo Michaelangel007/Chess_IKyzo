@@ -7,6 +7,8 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * Algebraic notation (input and display.)
 * WIP Castling (doesn't check if King passes through check.)
 * Save game replay.
+* Compiles on Windows and Linux
+* MSVC 2022 Solution and Project
 
 # UNICODE Symbols
 
