@@ -94,6 +94,7 @@ Also see
     void clear_screen();
     void delay(int);
     void display_board();
+    void display_board_header();
     int  display_convert(char ); // convert char to Unicode
     void display_eliminated( int player );
     void display_possible_board();
@@ -313,19 +314,23 @@ void delay (int number_of_seconds)
         ; // intentional busy-waiting
 }
 
+void display_board_header ()
+{
+    wprintf(L" ") ;
+    for (int col = 0; col < 8; col++)
+    {
+        wprintf( L"   %lc" , col + '0' );
+    }
+    wprintf(L"\n" );
+}
+
 // ----------------------------------------
 void display_board ()
 {
     int x , y;
 
     display_eliminated( PLAYER_WHITE );
-
-    wprintf(L" ") ;
-    for (x = 0 ; x < 8; x++)
-    {
-        wprintf(L"   %d" , x );
-    }
-    wprintf(L"\n" ) ;
+    display_board_header();
 
     const wchar_t *separator = L"  ----------------------------------\n";
 
@@ -341,7 +346,7 @@ void display_board ()
         wprintf(L"|| \n" ) ;
     }
     wprintf( separator );
-
+    display_board_header();
     display_eliminated( PLAYER_BLACK );
     wprintf(L"\n");
 }
