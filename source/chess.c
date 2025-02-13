@@ -147,6 +147,7 @@ Also see:
 
 // Prototypes
     bool cell_has_black_piece( int row, int col );
+    bool cell_has_player(int row, int col, int player);
     bool cell_has_white_piece( int row, int col );
     void clear_screen();
     void delay(int);
@@ -276,23 +277,6 @@ void cls (HANDLE hConsole)
 }
 #endif
 
-// Check if there is a white piece at row,col
-// ----------------------------------------
-bool cell_has_white_piece (int row , int col )
-{
-    switch( ga_board_position[row][col] )
-    {
-        case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
-        case 'p':              // intentional fall-through
-        case 'r':              // intentional fall-through
-        case 'h':              // intentional fall-through
-        case 'c':              // intentional fall-through
-        case 'k':              // intentional fall-through
-        case 'q': return true; // intentional fall-through
-        default : return false;
-    }
-}
-
 // Test if there is a black piece at row,col
 // ----------------------------------------
 bool cell_has_black_piece ( int row , int col )
@@ -310,12 +294,30 @@ bool cell_has_black_piece ( int row , int col )
     }
 }
 
-bool is_cell_occupied (int row, int col, int player)
+// ----------------------------------------
+bool cell_has_player ( int row, int col, int player )
 {
     if (player == PLAYER_WHITE)
         return cell_has_white_piece( row, col );
     else
         return cell_has_black_piece( row, col );
+}
+
+// Check if there is a white piece at row,col
+// ----------------------------------------
+bool cell_has_white_piece ( int row , int col )
+{
+    switch( ga_board_position[row][col] )
+    {
+        case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
+        case 'p':              // intentional fall-through
+        case 'r':              // intentional fall-through
+        case 'h':              // intentional fall-through
+        case 'c':              // intentional fall-through
+        case 'k':              // intentional fall-through
+        case 'q': return true; // intentional fall-through
+        default : return false;
+    }
 }
 
 // ----------------------------------------
