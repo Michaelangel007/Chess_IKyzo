@@ -124,7 +124,7 @@ Also see
     void rook(int , int, int);
     void showcase_board(char, char, char, char, int);
     void showcase_game();
-    void update_possible_moves();
+    void update_possible_moves( int row, int col );
     bool verify_possible_move (int position);
 
 // Utility
@@ -274,20 +274,6 @@ void bishop ( int r1 , int c1, int player)
             b++ ;
         }
     }
-
-    wprintf( L"Possible moves %lc: \n", display_convert(board[r1][c1]) );
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf( L" %d :", ga_possible_moves[i] );
-        }
-    }
-    else
-    {
-        wprintf( L"No possible moves -> " );
-    }
-
 }
 
 #ifdef _WIN32
@@ -815,19 +801,6 @@ void king ( int r1 , int c1, int player )
             }
         }
     }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
-    }
 }
 
 // ----------------------------------------
@@ -970,19 +943,6 @@ void knight ( int r1 , int c1, int player )
             }
         }
     }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
-    }
 }
 
 // ----------------------------------------
@@ -1056,19 +1016,6 @@ void pawn ( int r1 , int c1 )
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
         }
-    }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
     }
 }
 
@@ -1144,19 +1091,6 @@ void pawnb ( int r1 , int c1 )
             }
         }
     }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
-    }
 }
 
 // ----------------------------------------
@@ -1201,12 +1135,7 @@ again2:
     if (gn_possible_moves)
     {
         clear_screen();
-        update_possible_moves();
-        wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
+        update_possible_moves( r1, c1 );
 
         do
         {
@@ -1269,12 +1198,7 @@ again1:
     if (gn_possible_moves)
     {
         clear_screen();
-        update_possible_moves();
-        wprintf( L"Possible moves %lc: \n", display_convert(board[r1][c1]) );
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
+        update_possible_moves( r1, c1 );
 
         do
         {
@@ -1527,19 +1451,6 @@ void queen ( int r1 , int c1, int player )
             }
         }
     }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
-    }
 }
 
 // ----------------------------------------
@@ -1666,19 +1577,6 @@ void rook ( int r1 , int c1, int player)
             }
         }
     }
-
-    wprintf(L"Possible moves %lc: \n", display_convert(board[r1][c1]));
-    if (gn_possible_moves)
-    {
-        for (int i = 0; i < gn_possible_moves; i++)
-        {
-            wprintf(L" %d :", ga_possible_moves[i]);
-        }
-    }
-    else
-    {
-        wprintf(L"No possible moves -> ");
-    }
 }
 
 // ----------------------------------------
@@ -1787,7 +1685,7 @@ void showcase_game ()
 }
 
 // ----------------------------------------
-void update_possible_moves ()
+void update_possible_moves ( int row, int col )
 {
     int x,y;
 
@@ -1798,8 +1696,23 @@ void update_possible_moves ()
             possible_board[y][x] = 'x';
     }
     display_possible_board();
+
+    wprintf( L"Possible moves %lc: \n", display_convert(board[row][col]) );
+    if (gn_possible_moves)
+    {
+        for (int i = 0; i < gn_possible_moves; i++)
+        {
+            wprintf( L" %d :", ga_possible_moves[i] );
+        }
+    }
+    else
+    {
+        wprintf( L"No possible moves -> " );
+    }
+
 }
 
+// is_move_possible()
 // ----------------------------------------
 bool verify_possible_move (int position)
 {
