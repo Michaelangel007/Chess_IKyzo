@@ -526,6 +526,7 @@ int display_convert (char symbol)
         case 'K': return 0x2654; //       king
         case 'Q': return 0x2655; //       queen
         case 'x': return 0x2716; // Possible move
+        case '!': return 0x26A0; // /!\ Warning Sign
         default : return 0x0020; // Empty
     }
 }
@@ -1178,9 +1179,9 @@ again2:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf(L"\x26A0 Invalid row. Must be 0..7\n");
+                wprintf( L"%c Invalid row. Must be 0..7\n", display_convert( '!' ) );
             else
-                wprintf(L"\x26A0 Invalid column. Must be 0..7\n");
+                wprintf( L"%c Invalid column. Must be 0..7\n", display_convert( '!' ) );
         }
     } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
 
@@ -1194,7 +1195,7 @@ again2:
         case 'k': king  ( r1 , c1, player ); break ;
         case 'q': queen ( r1 , c1, player ); break ;
         default:
-            wprintf(L"\x26A0 Invalid Position! " );
+            wprintf( L"%c Invalid Position! ", display_convert( '!' ) );
             goto again2 ;
     }
 
@@ -1252,9 +1253,9 @@ again1:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf(L"\x26A0 Invalid row. Must be 0..7\n");
+                wprintf( L"%c Invalid row. Must be 0..7\n", display_convert( '!' ) );
             else
-                wprintf(L"\x26A0 Invalid column. Must be 0..7\n");
+                wprintf( L"%c Invalid column. Must be 0..7\n", display_convert( '!') );
         }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
 
@@ -1267,7 +1268,7 @@ again1:
         case 'K': king  ( r1 , c1, player ); break;
         case 'Q': queen ( r1 , c1, player ); break;
         default:
-            wprintf(L"\x26A0 Invalid Position! ");
+            wprintf( L"%c Invalid Position! ", display_convert( '!' ) );
             goto again1 ;
     }
 
