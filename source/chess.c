@@ -510,6 +510,7 @@ void display_eliminated( int player )
     wprintf( L"\n" );
 }
 
+// ----------------------------------------
 void display_possible_board()
 {
     int x , y;
