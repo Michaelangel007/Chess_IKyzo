@@ -1,6 +1,13 @@
 Final Project -- version 2.0 by Kahouli Wajd 
 Bugfixes, cleanup, and QoL by Michaelangel007.
 
+# Features
+
+* Unicode display of chess pieces.
+* Algebraic notation (input and display.)
+* WIP Castling (doesn't check if King passes through check.)
+* Save game replay.
+
 # UNICODE Symbols
 
 * ♔ black-king   : \x2654
