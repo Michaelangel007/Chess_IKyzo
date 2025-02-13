@@ -97,7 +97,6 @@ const char BOARD_INIT[8][8] = // array 8x8 representing the board.
     void player_black();
     void player_white();
     void queen( int , int , int );
-    void remove_possible_moves();
     void rook(int , int, int);
     void showcase_board(char, char, char, char, int);
     void showcase_game();
@@ -1603,26 +1602,6 @@ void queen ( int r1 , int c1, int player )
     else
     {
         wprintf(L"No possible moves -> ");
-    }
-}
-
-// ----------------------------------------
-void remove_possible_moves ()
-{
-    int x = -1, y;
-    for (int i=0; i < possible_moves_index; i++)
-    {
-        x = possible_moves[i]/10; // row
-        y = possible_moves[i]%10; // column
-        if (((x*10+y) != new_position) || (new_position == -1))
-        {
-            board[x][y] = ' ';
-        }
-    }
-
-    if (x != -1)
-    {
-        board[previous_position/10][previous_position%10]=' ';
     }
 }
 
