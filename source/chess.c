@@ -1,3 +1,8 @@
+// Shutup stupid MSVC crap
+#ifdef _WIN32
+    #define _CRT_SECURE_NO_WARNINGS 1
+#endif
+
 // Includes
     #include <stdio.h>
     #include <stdlib.h>
@@ -8,6 +13,7 @@
     #include <time.h>
 #ifdef _WIN32
     #include <conio.h>
+    #include <io.h>    // _setmode()
     #include <fcntl.h> // _O_U16TEXT = 0x00020000
     #include <windows.h>
 #else
@@ -521,7 +527,9 @@ void display_possible_moves (char board[8][8])
     for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
 }
 
-#ifndef _WIN32
+#ifdef _WIN32
+    #define getch _getch
+#else
 // Reads a single character, including arrow keys
 // ----------------------------------------
 char getch ()
