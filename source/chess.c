@@ -924,7 +924,7 @@ void moves_pawn_b ( int r1 , int c1 )
             }
         }
 
-        if (ga_board_position[r1+2][c1] == ' ')
+        if ((ga_board_position[r1+2][c1] == ' ') && (ga_board_position[r1+1][c1] == ' '))
         {
             //wprintf(L"%d%d , " , r1+2 , c1 );
             if ((r1+2 <= 7) && (c1 <= 7))
@@ -1005,7 +1005,7 @@ void moves_pawn_w ( int r1 , int c1 )
             }
         }
 
-        if (ga_board_position[r1-2][c1] == ' ')
+        if ((ga_board_position[r1-2][c1] == ' ') && (ga_board_position[r1-1][c1] == ' '))
         {
             //wprintf(L"%d%d , " , r1-2 , c1 ) ;
             if( r1-2 >= 0 && c1 >= 0 )
