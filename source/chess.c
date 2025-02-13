@@ -1590,7 +1590,7 @@ void queen ( int r1 , int c1, int player )
     }
     else
     {
-        wprintf(L"Error : Bishop ");
+        wprintf(L"Error : Queen ");
     }
 
     //display_possible_moves(board_possible_moves);
