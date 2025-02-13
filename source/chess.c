@@ -50,6 +50,18 @@ Also see:
         NUM_PLAYERS
     };
 
+    enum pieces_e
+    {
+        PIECE_NONE,
+        PIECE_PAWN,
+        PIECE_ROOK,
+        PIECE_BISHOP,
+        PIECE_KNIGHT,
+        PIECE_QUEEN,
+        PIECE_KING,
+        NUM_PIECES
+    };
+
 // Globals
 
 #if VERIFY_SAFE_BOARD_ARRAY
