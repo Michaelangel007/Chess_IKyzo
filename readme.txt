@@ -1,23 +1,23 @@
 Final Project -- version 2.0 by Kahouli Wajd 
 
+# UNICODE Symbols
 
+* ♔ black-king   : \x2654
+* ♕ black-queen  : \x2655
+* ♖ black-rook   : \x2656
+* ♗ black-bishop : \x2657
+* ♘ black-knight : \x2658
+* ♙ black-pawn   : \x2659
+* ♚ white-king   : \x265A
+* ♛ white-queen  : \x265B
+* ♜ white-rook   : \x265C
+* ♝ white-bishop : \x265D
+* ♞ white-knight : \x265E
+* ♟ white-pawn   : \x265F
 
-Ascii Symbols :
--♔ black-king : \x2654 
--♕ black-queen : \x2655 
--♖ black-rook : \x2656 
--♗ black-bishop : \x2657 
--♘ black-knight : \x2658
--♙ black-pawn : \x2659 
--♚ white-king : \x265A
--♛ white-queen : \x265B 
--♜ white-rook : \x265C
--♝ white-bishop : \x265D 
--♞ white-knight : \x265E
--♟ white-pawn : \x265F
+---
 
------------------------------------------------------------------------------------------------------
-Game Manager Architecture: 
+# Game Manager Architecture
 
 Game Manage();
 -> display_board();
