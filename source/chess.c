@@ -1609,7 +1609,7 @@ void queen ( int r1 , int c1, int player )
 // ----------------------------------------
 void remove_possible_moves ()
 {
-    int x,y;
+    int x = -1, y;
     for (int i=0; i < possible_moves_index; i++)
     {
         x = possible_moves[i]/10; // row
@@ -1620,7 +1620,7 @@ void remove_possible_moves ()
         }
     }
 
-    if (x != 0)
+    if (x != -1)
     {
         board[previous_position/10][previous_position%10]=' ';
     }
