@@ -1227,12 +1227,17 @@ again2:
         fflush(stdin);
         wprintf(L"Enter position of piece to move [row col]: " );
         input_control = scanf( "%d" , &p1 );
-        if(input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7)
-        wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
+
+        position_to_row_col( p1, &r1, &c1 );
+        if (is_off_board(r1, c1))
+        {
+            if (is_off_board(r1, 0))
+                wprintf(L"\x26A0 Invalid row. Must be 0..\n7");
+            else
+                wprintf(L"\x26A0 Invalid column. Must be 0..7\n");
+        }
     } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
 
-    c1 = p1 % 10 ;
-    r1 = p1 / 10 ;
 
     switch( board[r1][c1] )
     {
@@ -1288,12 +1293,15 @@ again1:
         wprintf(L"\nEnter position of piece to move [row column]: " );
         input_control = scanf( "%d" , &p1 );
 
-        if ((input_control == 0) || (p1!=0 && p1>7 && p1 < 10) || p1 > 77 || p1%10 > 7)
-            wprintf(L"\x26A0 Input incorrect : [row.index column.index] - index 0->7");
+        position_to_row_col( p1, &r1, &c1 );
+        if (is_off_board(r1, c1))
+        {
+            if (is_off_board(r1, 0))
+                wprintf(L"\x26A0 Invalid row. Must be 0..7\n");
+            else
+                wprintf(L"\x26A0 Invalid column. Must be 0..7\n");
+        }
     } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
-
-    c1 = p1 % 10;
-    r1 = p1 / 10;
 
     switch( board[r1][c1] ) // Select only player's pieces.
     {
