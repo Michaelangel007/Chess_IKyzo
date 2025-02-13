@@ -1044,68 +1044,10 @@ void pawn_w ( int r1 , int c1 )
 }
 
 // ----------------------------------------
-void player_white ()
-{
-    int player = PLAYER_WHITE;
-    int p1 , p2 , c1 , r1 , c2 , r2, input_control;
-
-    wprintf( L"%lc White to move ...\n", display_convert( 'W' ) ) ;
-
-again2:
-    do
-    {
-        fflush(stdin);
-        wprintf(L"Enter position of piece to move [row col]: " );
-        input_control = scanf( "%d" , &p1 );
-
-        position_to_row_col( p1, &r1, &c1 );
-        if (is_off_board(r1, c1))
-        {
-            if (is_off_board(r1, 0))
-                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
-            else
-                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!' ) );
-        }
-    } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
-
-
-    switch( board[r1][c1] )
-    {
-        case 'p': pawn_w( r1 , c1         ); break ;
-        case 'r': rook  ( r1 , c1, player ); break ;
-        case 'h': knight( r1 , c1, player ); break ;
-        case 'c': bishop( r1 , c1, player ); break ;
-        case 'k': king  ( r1 , c1, player ); break ;
-        case 'q': queen ( r1 , c1, player ); break ;
-        default:
-            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
-            goto again2 ;
-    }
-
-    if (gn_possible_moves)
-    {
-        clear_screen();
-        update_possible_moves( r1, c1 );
-
-        do
-        {
-            wprintf(L"\nEnter new position of piece [row column]: " );
-            scanf( "%d" , &p2 ) ;
-        } while (verify_possible_move(p2));
-    }
-    else
-    {
-        goto again2;
-    }
-
-    position_to_row_col( p2, &r2, &c2 );
-    change(r1,c1,r2,c2, player);
-}
-
-// ----------------------------------------
 void player_black ()
 {
     int player = PLAYER_BLACK;
+    int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
     wprintf( L"%lc Black to move ...", display_convert( 'B' ) );
@@ -1114,7 +1056,7 @@ again1:
     do
     {
         fflush(stdin);
-        wprintf(L"\nEnter position of piece to move [row column]: " );
+        wprintf( L"\nEnter position of piece to move [row column]: " );
         input_control = scanf( "%d" , &p1 );
 
         position_to_row_col( p1, &r1, &c1 );
@@ -1154,6 +1096,65 @@ again1:
     else
     {
         goto again1;
+    }
+
+    position_to_row_col( p2, &r2, &c2 );
+    change(r1,c1,r2,c2, player);
+}
+
+// ----------------------------------------
+void player_white ()
+{
+    int player = PLAYER_WHITE;
+    int p1 , p2 , c1 , r1 , c2 , r2, input_control;
+
+    wprintf( L"%lc White to move ...\n", display_convert( 'W' ) ) ;
+
+again2:
+    do
+    {
+        fflush(stdin);
+        wprintf( L"Enter position of piece to move [row col]: " );
+        input_control = scanf( "%d" , &p1 );
+
+        position_to_row_col( p1, &r1, &c1 );
+        if (is_off_board(r1, c1))
+        {
+            if (is_off_board(r1, 0))
+                wprintf( L"%lc Invalid row. Must be 0..7\n", display_convert( '!' ) );
+            else
+                wprintf( L"%lc Invalid column. Must be 0..7\n", display_convert( '!' ) );
+        }
+    } while ( input_control==0 || p1 < 10 || p1 > 77 || p1%10 > 7 );
+
+
+    switch( board[r1][c1] )
+    {
+        case 'p': pawn_w( r1 , c1         ); break ;
+        case 'r': rook  ( r1 , c1, player ); break ;
+        case 'h': knight( r1 , c1, player ); break ;
+        case 'c': bishop( r1 , c1, player ); break ;
+        case 'k': king  ( r1 , c1, player ); break ;
+        case 'q': queen ( r1 , c1, player ); break ;
+        default:
+            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+            goto again2 ;
+    }
+
+    if (gn_possible_moves)
+    {
+        clear_screen();
+        update_possible_moves( r1, c1 );
+
+        do
+        {
+            wprintf( L"\nEnter new position of piece [row column]: " );
+            scanf( "%d" , &p2 ) ;
+        } while (verify_possible_move(p2));
+    }
+    else
+    {
+        goto again2;
     }
 
     position_to_row_col( p2, &r2, &c2 );
