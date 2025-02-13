@@ -36,11 +36,7 @@ piece characteristics :
     pinned : true/false
 }
 
-
-
-
-
-Display Design : 
+# Display Design
 
 ♟♟♟♝♞  !-> Chained list represents the eliminated white pieces 
     0   1   2   3   4   5   6   7      !-> Rows and Columns 
@@ -63,19 +59,10 @@ Display Design :
   ----------------------------------
 ♙♙♙♙♙♙♖♖♕ !-> Chained list represents the eliminated black pieces 
 
+# Movement Calculation
 
+* Pawn
 
-
-
-
-
-
-
-
-
-
-Movement Calculation : 
-- Pawn : 
   ----------------------------------   
 0 ||  ||  ||  ||  ||  ||  ||  ||  || 
   ----------------------------------
@@ -95,7 +82,8 @@ Movement Calculation :
   ----------------------------------
   !-> if conditions
   
-- Knight :
+* Knight
+
   ----------------------------------   
 0 ||  ||  ||  ||  ||  ||  ||  ||  || 
   ----------------------------------
@@ -115,7 +103,8 @@ Movement Calculation :
   ----------------------------------
   !-> if conditions 
 
-  - Bishop :
+* Bishop
+
   ----------------------------------   
 0 ||  ||  ||  ||  ||  ||  ||  ||✖|| 
   ----------------------------------
@@ -135,7 +124,8 @@ Movement Calculation :
   ----------------------------------
   !-> While Loops in 4 directions  
 
-  - Rook :
+* Rook
+
   ----------------------------------   
 0 ||  ||✖||  ||  ||  ||  ||  ||  || 
   ----------------------------------
@@ -155,7 +145,8 @@ Movement Calculation :
   ----------------------------------
   !-> While loops in 4 directions
 
-  - King : 
+* King
+
   ----------------------------------   
 0 ||  ||  ||  ||  ||  ||  ||  ||  || 
   ----------------------------------
@@ -175,7 +166,8 @@ Movement Calculation :
   ----------------------------------
   !-> if conditions
 
-  - Queen : 
+* Queen
+
   ----------------------------------   
 0 ||  ||  ||  ||✖||  ||  ||  ||✖|| 
   ----------------------------------
@@ -195,8 +187,8 @@ Movement Calculation :
   ----------------------------------
   !-> While loops in 8 directions.
 
+# NOTES
 
-  NOTES :: 
 - Incomplete components :
 -x Terminal display is not at a production level.
 -> Transforming the encoding to Unicode to include special symbols. [UTF-8, UTF-16 are not functional]
