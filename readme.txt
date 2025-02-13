@@ -1,4 +1,5 @@
 Final Project -- version 2.0 by Kahouli Wajd 
+Bugfixes, cleanup, and QoL by Michaelangel007.
 
 # UNICODE Symbols
 
