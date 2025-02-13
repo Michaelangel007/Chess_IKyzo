@@ -21,6 +21,11 @@ DejaVuSansMono.ttf
 chess_merida_unicode.ttf
 * https://github.com/xeyownt/chess_merida_unicode
 
+# Windows Terminal
+
+On Windows you may want to use the ConEmu terminal
+* https://conemu.github.io/
+
 # UNICODE Symbols
 
 * ♔ black-king           : \x2654
