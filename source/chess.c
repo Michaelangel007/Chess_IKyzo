@@ -1928,6 +1928,10 @@ void main (int argc, char *argv[])
             wprintf( L"%lc", glyph );
         }
         wprintf( L"\n" );
+        wprintf( L"\n\x26AB White (Win32)" );
+        wprintf( L"\n\x26AA Black (Win32)" );
+        wprintf( L"\n\x26AA White (Unix )" );
+        wprintf( L"\n\x26AB Black (Unix )" );
         return;
     }
 
