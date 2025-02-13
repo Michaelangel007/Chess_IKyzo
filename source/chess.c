@@ -1126,7 +1126,7 @@ void pawnb ( int r1 , int c1 )
 {
     possible_moves_index = 0;
 
-    if (r1 == 6)
+    if (r1 == 6) // starting white row
     {
         if (board[r1-1][c1] == ' ')
         {
@@ -1147,7 +1147,7 @@ void pawnb ( int r1 , int c1 )
                 possible_moves_index++;
             }
         }
-        if (check2(r1-1 , c1+1) == 1)
+        if (check2(r1-1 , c1+1) == 1) // en passant right
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
@@ -1157,7 +1157,7 @@ void pawnb ( int r1 , int c1 )
              }
         }
 
-        if (check2(r1-1 , c1-1) == 1)
+        if (check2(r1-1 , c1-1) == 1) // en passant left
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
