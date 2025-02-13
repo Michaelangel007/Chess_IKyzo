@@ -78,9 +78,9 @@ const char BOARD_INIT[8][8] = // array 8x8 representing the board.
 
 // Prototypes
     void bishop( int , int, int );
+    bool cell_has_black_piece( int row, int col );
     void change( int , int , int , int, int);
     bool check(int , int ); // Check if there is a piece at (x,y) => 1 else 0
-    bool check2(int , int );
     void clear_screen();
     eliminated_piece* create_piece(char value);
     void delay(int);
@@ -203,13 +203,13 @@ void bishop ( int r1 , int c1, int player)
     if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
-        while ((board[r1-a][c1+b] == ' ') || (check2(r1-a, c1+b)==1))
+        while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
         {
             if (((r1-a) == -1) || ((c1+b) == 8))
                 break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
             possible_moves_index++;
-            if (check2(r1-a, c1+b) == 1)
+            if (cell_has_black_piece(r1-a, c1+b))
                 break ;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
             a++ ;
@@ -217,13 +217,13 @@ void bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || (check2(r1+a, c1-b) == 1))
+        while ((board[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
         {
             if (((r1+a) == 8) || ((c1-b) == -1))
                 break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
             possible_moves_index++;
-            if (check2(r1+a, c1-b) == 1)
+            if (cell_has_black_piece(r1+a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
             a++ ;
@@ -231,13 +231,13 @@ void bishop ( int r1 , int c1, int player)
         }
 
         a = 1 , b = 1 ;
-        while( board[r1+a][c1+b] == ' ' || check2(r1+a, c1+b)==1 )
+        while( board[r1+a][c1+b] == ' ' || cell_has_black_piece(r1+a, c1+b))
         {
             if (((r1+a) == 8) || ((c1+b) == 8))
                 break ;
             possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
             possible_moves_index++;
-            if (check2(r1+a, c1+b) == 1)
+            if (cell_has_black_piece(r1+a, c1+b))
                 break ;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
             a++ ;
@@ -246,13 +246,13 @@ void bishop ( int r1 , int c1, int player)
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || (check2(r1-a, c1-b) == 1))
+        while ((board[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
         {
             if (((r1-a) == -1) || ((c1-b) == -1))
                 break ;
             possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
             possible_moves_index++;
-            if (check2(r1-a, c1-b) == 1)
+            if (cell_has_black_piece(r1-a, c1-b))
                 break ;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
             a++ ;
@@ -350,7 +350,7 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
     else
     if (player == PLAYER_BLACK)
     {
-        if (check2(r2, c2) == 1)
+        if (cell_has_black_piece(r2, c2))
         {
             insert_eliminated_list(board[r2][c2], &eliminated_pieces_black);
             board[r1][c1] = ' ';
@@ -386,10 +386,11 @@ bool check (int x , int y )
     }
 }
 
+// Test if cell has black piece
 // ----------------------------------------
-bool check2 (int x , int y )
+bool cell_has_black_piece ( int row , int col )
 {
-    switch( board[x][y] )
+    switch( board[row][col] )
     {
         case 'P':              // intentional fall-through
         case 'R':              // intentional fall-through
@@ -752,7 +753,7 @@ void king ( int r1 , int c1, int player )
     {
         if ((r1 >= 0) && (r1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1][c1+1] == ' ') || (check2(r1, c1+1) == 1))
+            if ((board[r1][c1+1] == ' ') || cell_has_black_piece(r1, c1+1))
             {
                 possible_moves[possible_moves_index] = r1*10+c1+1;
                 possible_moves_index++;
@@ -761,7 +762,7 @@ void king ( int r1 , int c1, int player )
         if ((r1 >= 0) && (r1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
             //wprintf(L"%d%d , " , r1 , c1+1 ) ;
-            if ((board[r1][c1-1] == ' ') || (check2(r1, c1-1) == 1))
+            if ((board[r1][c1-1] == ' ') || cell_has_black_piece(r1, c1-1))
             {
                 possible_moves[possible_moves_index] = r1*10+c1-1;
                 possible_moves_index++;
@@ -769,7 +770,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1 >= 0) && (c1 <= 7))
         {
-            if ((board[r1-1][c1] == ' ') || (check2(r1-1, c1) == 1))
+            if ((board[r1-1][c1] == ' ') || cell_has_black_piece(r1-1, c1))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1;
                 possible_moves_index++;
@@ -778,7 +779,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1-1][c1+1] == ' ') || (check2(r1-1, c1+1) == 1))
+            if ((board[r1-1][c1+1] == ' ') || cell_has_black_piece(r1-1, c1+1))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1+1;
                 possible_moves_index++;
@@ -787,7 +788,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1-1 >= 0) && (r1-1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
-            if ((board[r1-1][c1-1] == ' ') || (check2(r1-1, c1-1) == 1))
+            if ((board[r1-1][c1-1] == ' ') || cell_has_black_piece(r1-1, c1-1))
             {
                 possible_moves[possible_moves_index] = (r1-1)*10+c1-1;
                 possible_moves_index++;
@@ -795,7 +796,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1 >=0) && (c1 <= 7))
         {
-            if ((board[r1+1][c1] == ' ') || (check2(r1+1, c1) == 1))
+            if ((board[r1+1][c1] == ' ') || cell_has_black_piece(r1+1, c1))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1;
                 possible_moves_index++;
@@ -803,7 +804,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1+1 >= 0) && (c1+1 <= 7))
         {
-            if ((board[r1+1][c1+1] == ' ') || (check2(r1+1, c1+1) == 1))
+            if ((board[r1+1][c1+1] == ' ') || cell_has_black_piece(r1+1, c1+1))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1+1;
                 possible_moves_index++;
@@ -811,7 +812,7 @@ void king ( int r1 , int c1, int player )
         }
         if ((r1+1 >= 0) && (r1+1 <= 7) && (c1-1 >= 0) && (c1-1 <= 7))
         {
-            if ((board[r1+1][c1-1] == ' ') || (check2(r1+1, c1-1) == 1))
+            if ((board[r1+1][c1-1] == ' ') || cell_has_black_piece(r1+1, c1-1))
             {
                 possible_moves[possible_moves_index] = (r1+1)*10+c1-1;
                 possible_moves_index++;
@@ -920,7 +921,7 @@ void knight ( int r1 , int c1, int player )
     else
     if (player == PLAYER_BLACK)
     {
-        if ((board[r1+2][c1+1] == ' ') || (check2(r1+2, c1+1) == 1))
+        if ((board[r1+2][c1+1] == ' ') || cell_has_black_piece(r1+2, c1+1))
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -931,7 +932,7 @@ void knight ( int r1 , int c1, int player )
             //wprintf(L"%d%d, " , r1+2 ,c1+1);
         }
 
-        if ((board[r1+2][c1-1] == ' ') || (check2(r1+2, c1-1) == 1))
+        if ((board[r1+2][c1-1] == ' ') || cell_has_black_piece(r1+2, c1-1))
         {
             if ((r1+2 <= 7) && (r1+2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
@@ -940,7 +941,7 @@ void knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1+2] == ' ') || (check2(r1+1, c1+2) == 1))
+        if ((board[r1+1][c1+2] == ' ') || cell_has_black_piece(r1+1, c1+2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
@@ -948,7 +949,7 @@ void knight ( int r1 , int c1, int player )
                 possible_moves_index++;
             }
         }
-        if ((board[r1-1][c1+2] == ' ') || (check2(r1-1, c1+2) == 1))
+        if ((board[r1-1][c1+2] == ' ') || cell_has_black_piece(r1-1, c1+2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
             {
@@ -957,7 +958,7 @@ void knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1-1] == ' ') || (check2(r1-2, c1-1) == 1))
+        if ((board[r1-2][c1-1] == ' ') || cell_has_black_piece(r1-2, c1-1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
             {
@@ -966,7 +967,7 @@ void knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-2][c1+1] == ' ') || (check2(r1-2, c1+1) == 1))
+        if ((board[r1-2][c1+1] == ' ') || cell_has_black_piece(r1-2, c1+1))
         {
             if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
             {
@@ -975,7 +976,7 @@ void knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1+1][c1-2] == ' ') || (check2(r1+1, c1-2) == 1))
+        if ((board[r1+1][c1-2] == ' ') || cell_has_black_piece(r1+1, c1-2))
         {
             if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
@@ -984,7 +985,7 @@ void knight ( int r1 , int c1, int player )
             }
         }
 
-        if ((board[r1-1][c1-2] == ' ') || (check2(r1-1, c1-2) == 1))
+        if ((board[r1-1][c1-2] == ' ') || cell_has_black_piece(r1-1, c1-2))
         {
             if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
             {
@@ -1147,7 +1148,7 @@ void pawnb ( int r1 , int c1 )
                 possible_moves_index++;
             }
         }
-        if (check2(r1-1 , c1+1) == 1) // en passant right
+        if (cell_has_black_piece(r1-1 , c1+1)) // en passant right
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
@@ -1157,7 +1158,7 @@ void pawnb ( int r1 , int c1 )
              }
         }
 
-        if (check2(r1-1 , c1-1) == 1) // en passant left
+        if (cell_has_black_piece(r1-1 , c1-1)) // en passant left
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
@@ -1179,7 +1180,7 @@ void pawnb ( int r1 , int c1 )
             }
         }
 
-        if (check2(r1-1 , c1+1) == 1)
+        if (cell_has_black_piece(r1-1 , c1+1))
         {
              //wprintf(L"%d%d* , " , r1+1 , c1+1 );
              if( r1-1 >= 0 && c1+1 >= 0 )
@@ -1189,7 +1190,7 @@ void pawnb ( int r1 , int c1 )
              }
         }
 
-        if (check2(r1-1 , c1-1) == 1)
+        if (cell_has_black_piece(r1-1 , c1-1))
         {
             //wprintf(L"%d%d* , " , r1+1 , c1-1 );
             if ((r1-1 >= 0) && (c1-1 <= 7) && (c1-1 >=0)) // check for outside board
@@ -1479,13 +1480,13 @@ void queen ( int r1 , int c1, int player )
     if (player == PLAYER_BLACK)
     {
         a = 1 , b = 1 ;
-        while ((board[r1-a][c1+b] == ' ') || (check2(r1-a, c1+b) == 1))
+        while ((board[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
         {
             if ((r1-a) == -1 || (c1+b) == 8)
                 break;
             possible_moves[possible_moves_index] = (r1-a)*10+c1+b;
             possible_moves_index++;
-            if (check2(r1-a, c1+b) == 1)
+            if (cell_has_black_piece(r1-a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1+b ) ;
             a++ ;
@@ -1493,13 +1494,13 @@ void queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1-b] == ' ') || (check2(r1+a, c1-b) == 1))
+        while ((board[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
         {
             if ((r1+a) == 8 || (c1-b) == -1)
                 break;
             possible_moves[possible_moves_index] = (r1+a)*10+c1-b;
             possible_moves_index++;
-            if (check2(r1+a, c1-b) == 1)
+            if (cell_has_black_piece(r1+a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1-b ) ;
             a++ ;
@@ -1507,13 +1508,13 @@ void queen ( int r1 , int c1, int player )
         }
 
         a = 1 , b = 1 ;
-        while ((board[r1+a][c1+b] == ' ') || (check2(r1+a, c1+b) == 1))
+        while ((board[r1+a][c1+b] == ' ') || cell_has_black_piece(r1+a, c1+b))
         {
             if ((r1+a) == 8 || (c1+b) == 8)
                 break;
             possible_moves[possible_moves_index] = (r1+a)*10+c1+b;
             possible_moves_index++;
-            if (check2(r1+a, c1+b) == 1)
+            if (cell_has_black_piece(r1+a, c1+b))
                 break;
             //wprintf(L"%d%d , " , r1+a , c1+b ) ;
             a++ ;
@@ -1522,13 +1523,13 @@ void queen ( int r1 , int c1, int player )
 
         a = 1 ;
         b = 1 ;
-        while ((board[r1-a][c1-b] == ' ') || (check2(r1-a, c1-b) == 1))
+        while ((board[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
         {
             if ((r1-a) == -1 || (c1-b) == -1)
                 break;
             possible_moves[possible_moves_index] = (r1-a)*10+c1-b;
             possible_moves_index++;
-            if (check2(r1-a, c1-b) == 1)
+            if (cell_has_black_piece(r1-a, c1-b))
                 break;
             //wprintf(L"%d%d , " , r1-a , c1-b ) ;
             a++ ;
@@ -1537,13 +1538,13 @@ void queen ( int r1 , int c1, int player )
 
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || (check2(r1, n-1) == 1))
+            while ((board[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
             {
                 if (n == 0)
                     break;
                 possible_moves[possible_moves_index] = (r1)*10+n-1;
                 possible_moves_index++;
-                if (check2(r1, n-1) == 1)
+                if (cell_has_black_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n-- ;
@@ -1553,11 +1554,11 @@ void queen ( int r1 , int c1, int player )
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ') || (check2(r1, n+1)==1))
+            while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
                 possible_moves[possible_moves_index] = (r1)*10+n+1;
                 possible_moves_index++;
-                if (check2(r1, n+1) == 1)
+                if (cell_has_black_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
                 n++;
@@ -1567,13 +1568,13 @@ void queen ( int r1 , int c1, int player )
         n = r1;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || (check2(n-1, c1) == 1))
+            while ((board[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
                 possible_moves[possible_moves_index] = (n-1)*10+c1;
                 possible_moves_index++;
-                if (check2(n-1, c1) == 1)
+                if (cell_has_black_piece(n-1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n-- ;
@@ -1583,13 +1584,13 @@ void queen ( int r1 , int c1, int player )
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || (check2(n+1, c1) == 1))
+            while ((board[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
             {
                 if( n == 7 )
                     break;
                 possible_moves[possible_moves_index] = (n+1)*10+c1;
                 possible_moves_index++;
-                if (check2(n+1, c1) == 1)
+                if (cell_has_black_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n++ ;
@@ -1690,13 +1691,13 @@ void rook ( int r1 , int c1, int player)
     {
         if (n != 0)
         {
-            while ((board[r1][n-1] == ' ') || (check2(r1, n-1) == 1))
+            while ((board[r1][n-1] == ' ') || cell_has_black_piece(r1, n-1))
             {
                 if (n == 0)
                     break;
                 possible_moves[possible_moves_index] = (r1)*10+n-1;
                 possible_moves_index++;
-                if (check2(r1, n-1) == 1)
+                if (cell_has_black_piece(r1, n-1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n-- ;
@@ -1706,11 +1707,11 @@ void rook ( int r1 , int c1, int player)
         n = c1;
         if (n != 7)
         {
-            while ((board[r1][n+1] == ' ') || (check2(r1, n+1) == 1))
+            while ((board[r1][n+1] == ' ') || cell_has_black_piece(r1, n+1))
             {
                 possible_moves[possible_moves_index] = (r1)*10+n+1;
                 possible_moves_index++;
-                if (check2(r1, n+1) == 1)
+                if (cell_has_black_piece(r1, n+1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n+1 ) ;
                 n++;
@@ -1720,13 +1721,13 @@ void rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 0)
         {
-            while ((board[n-1][c1] == ' ') || (check2(n-1, c1) == 1))
+            while ((board[n-1][c1] == ' ') || cell_has_black_piece(n-1, c1))
             {
                 if (n == 0)
                     break;
                 possible_moves[possible_moves_index] = (n-1)*10+c1;
                 possible_moves_index++;
-                if (check2(n-1, c1) == 1)
+                if (cell_has_black_piece(n-1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n-- ;
@@ -1736,13 +1737,13 @@ void rook ( int r1 , int c1, int player)
         n = r1;
         if (n != 7)
         {
-            while ((board[n+1][c1] == ' ') || (check2(n+1, c1) == 1))
+            while ((board[n+1][c1] == ' ') || cell_has_black_piece(n+1, c1))
             {
                 if (n == 7)
                     break;
                 possible_moves[possible_moves_index] = (n+1)*10+c1;
                 possible_moves_index++;
-                if (check2(n+1, c1) == 1)
+                if (cell_has_black_piece(n+1, c1))
                     break;
                 //wprintf(L"%d%d , " , r1 , n-1 ) ;
                 n++ ;
