@@ -116,8 +116,8 @@ Also see
     void intro();
     void king( int , int , int);
     void knight(int , int, int );
-    void pawn(int , int );
-    void pawnb( int , int );
+    void pawn_b(int , int );
+    void pawn_w( int , int );
     void player_black();
     void player_white();
     void queen( int , int , int );
@@ -946,7 +946,7 @@ void knight ( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
-void pawn ( int r1 , int c1 )
+void pawn_b ( int r1 , int c1 )
 {
     gn_possible_moves = 0;
 
@@ -1020,7 +1020,7 @@ void pawn ( int r1 , int c1 )
 }
 
 // ----------------------------------------
-void pawnb ( int r1 , int c1 )
+void pawn_w ( int r1 , int c1 )
 {
     gn_possible_moves = 0;
 
@@ -1121,7 +1121,7 @@ again2:
 
     switch( board[r1][c1] )
     {
-        case 'p': pawnb ( r1 , c1         ); break ;
+        case 'p': pawn_w( r1 , c1         ); break ;
         case 'r': rook  ( r1 , c1, player ); break ;
         case 'h': knight( r1 , c1, player ); break ;
         case 'c': bishop( r1 , c1, player ); break ;
@@ -1184,7 +1184,7 @@ again1:
 
     switch( board[r1][c1] ) // Select only player's pieces.
     {
-        case 'P': pawn  ( r1 , c1         ); break;
+        case 'P': pawn_b( r1 , c1         ); break;
         case 'R': rook  ( r1 , c1, player ); break;
         case 'H': knight( r1 , c1, player ); break;
         case 'C': bishop( r1 , c1, player ); break;
