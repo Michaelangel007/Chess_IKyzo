@@ -1178,7 +1178,7 @@ again2:
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
-                wprintf(L"\x26A0 Invalid row. Must be 0..\n7");
+                wprintf(L"\x26A0 Invalid row. Must be 0..7\n");
             else
                 wprintf(L"\x26A0 Invalid column. Must be 0..7\n");
         }
