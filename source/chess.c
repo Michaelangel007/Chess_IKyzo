@@ -825,7 +825,7 @@ void king ( int r1 , int c1, int player )
     }
 
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
-    if(possible_moves_index >= 1)
+    if (possible_moves_index >= 1)
     {
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -994,7 +994,8 @@ void knight ( int r1 , int c1, int player )
             }
         }
     }
-    else{
+    else
+    {
         wprintf(L"Error : Knight");
     }
 
