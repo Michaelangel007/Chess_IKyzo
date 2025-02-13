@@ -53,6 +53,8 @@ Also see
     };
 
 // Globals
+    char board[8][8];
+    char possible_board[8][8];
     int possible_moves[100];
     int possible_moves_index;
     int previous_position;
@@ -62,7 +64,7 @@ Also see
     eliminated_pieces_list eliminated_pieces_black;
     char *piece;
 
-char board[8][8] = // array 8x8 representing the board.
+const char BOARD_INIT[8][8] = // array 8x8 representing the board.
 {
     { 'R' , 'H' , 'C' , 'Q' , 'K' , 'C' , 'H' , 'R' },
     { 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' , 'P' },
@@ -75,7 +77,6 @@ char board[8][8] = // array 8x8 representing the board.
 };
 
 // Prototypes
-    void append_possible_moves();
     void bishop( int , int, int );
     void change( int , int , int , int, int);
     bool check(int , int ); // Check if there is a piece at (x,y) => 1 else 0
@@ -86,7 +87,7 @@ char board[8][8] = // array 8x8 representing the board.
     void display_board();
     int  display_convert(char ); // convert array to Unicode
     void display_eliminated_list(eliminated_pieces_list l);
-    void display_possible_moves(char board[8][8]);
+    void display_possible_board();
     void insert_eliminated_list(char value, eliminated_pieces_list *l);
     void intro();
     void king( int , int , int);
@@ -100,6 +101,7 @@ char board[8][8] = // array 8x8 representing the board.
     void rook(int , int, int);
     void showcase_board(char, char, char, char, int);
     void showcase_game();
+    void update_possible_moves();
     bool verify_possible_move (int position);
 
 // Utility
@@ -132,22 +134,6 @@ char board[8][8] = // array 8x8 representing the board.
     }
 
 // Implementation
-
-// ----------------------------------------
-void append_possible_moves ()
-{
-    int x,y;
-
-    for (int i=0; i < possible_moves_index; i++)
-    {
-        x = possible_moves[i]/10; // row
-        y = possible_moves[i]%10; // column
-        if (board[x][y] == ' ')
-        {
-            board[x][y] = 'x';
-        }
-    }
-}
 
 // ----------------------------------------
 void bishop ( int r1 , int c1, int player)
@@ -279,7 +265,6 @@ void bishop ( int r1 , int c1, int player)
         wprintf(L"Error : Bishop ");
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if(possible_moves_index >= 1)
     {
@@ -541,29 +526,42 @@ void display_eliminated_list (eliminated_pieces_list l)
     wprintf(L"\n");
 }
 
-// ----------------------------------------
-void display_possible_moves (char board[8][8])
+void display_possible_board()
 {
-    int i , j , k;
+    int x , y;
 
-    wprintf(L" ");
-    for (i = 0; i < 8 ; i++)
+    //Corruption Problem ? board[0][0] = 'R';
+    if (new_position==-99)
     {
-        wprintf(L"   %d" , i );
+        board[0][0] = 'R';
+    }
+
+    display_eliminated_list(eliminated_pieces_white);
+
+    wprintf(L" ") ;
+    for (x = 0 ; x < 8; x++)
+    {
+        wprintf(L"   %d" , x );
     }
     wprintf(L"\n" ) ;
 
-    for (k = 0 ; k < 8 ; k++)
-    {
-        wprintf(L"  " ) ;
-        for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ; wprintf(L"%d " , k ) ;
+    const wchar_t *separator = L"  ----------------------------------\n";
 
-        for( j=0 ; j<8 ; j++ ) { wprintf(L"||%c " , display_convert(board[k][j]) ) ; }
+    for (y = 0; y < 8; y++)
+    {
+        wprintf( separator );
+        wprintf(L"%d " , y ) ;
+
+        for( x = 0 ; x < 8 ; x++ )
+        {
+            wprintf(L"||%lc " , display_convert( possible_board[y][x]) );
+        }
         wprintf(L"|| \n" ) ;
     }
+    wprintf( separator );
 
-    wprintf(L"  " ) ;
-    for( i=0 ; i<34 ; i++ ) { wprintf(L"-" ) ; } wprintf(L"\n" ) ;
+    display_eliminated_list(eliminated_pieces_black);
+    wprintf(L"\n");
 }
 
 #ifdef _WIN32
@@ -822,7 +820,7 @@ void king ( int r1 , int c1, int player )
     {
         wprintf(L"king : Error");
     }
-    //display_possible_moves(board_possible_moves);
+
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if(possible_moves_index >= 1)
     {
@@ -997,7 +995,6 @@ void knight ( int r1 , int c1, int player )
         wprintf(L"Error : Knight");
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
     {
@@ -1107,7 +1104,6 @@ void pawn ( int r1 , int c1 )
         }
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
     {
@@ -1201,7 +1197,6 @@ void pawnb ( int r1 , int c1 )
         }
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
     {
@@ -1250,8 +1245,7 @@ again2:
     if (possible_moves_index >= 1)
     {
         clear_screen();
-        append_possible_moves();
-        display_board();
+        update_possible_moves();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1314,8 +1308,7 @@ again1:
     if (possible_moves_index >= 1)
     {
         clear_screen();
-        append_possible_moves();
-        display_board();
+        update_possible_moves();
         wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
         for (int i = 0; i < possible_moves_index; i++)
         {
@@ -1595,7 +1588,6 @@ void queen ( int r1 , int c1, int player )
         wprintf(L"Error : Queen ");
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if (possible_moves_index >= 1)
     {
@@ -1769,7 +1761,6 @@ void rook ( int r1 , int c1, int player)
         wprintf(L"\nError : Rook ");
     }
 
-    //display_possible_moves(board_possible_moves);
     wprintf(L"Possible moves %c : \n", display_convert(board[r1][c1]));
     if(possible_moves_index >= 1)
     {
@@ -1890,6 +1881,20 @@ void showcase_game ()
 }
 
 // ----------------------------------------
+void update_possible_moves ()
+{
+    int x,y;
+
+    for (int i=0; i < possible_moves_index; i++)
+    {
+        position_to_row_col( possible_moves[i], &y, &x );
+        if (is_empty( y, x ))
+            possible_board[y][x] = 'x';
+    }
+    display_possible_board();
+}
+
+// ----------------------------------------
 bool verify_possible_move (int position)
 {
     for (int i = 0; i < possible_moves_index; i++)
@@ -1912,7 +1917,6 @@ void main (int argc, char *argv[])
     // For somereason board 0 0 got corrupted
     board[0][0] = 'R';
 
-    int  moves = 0;
     char ch;
     char showcase_option;
 
@@ -1946,9 +1950,12 @@ void main (int argc, char *argv[])
     }
     else
     {
+        int moves = 0;
+        memcpy( board, BOARD_INIT, sizeof(BOARD_INIT) );
+
         do
         {
-            remove_possible_moves();
+            memcpy( possible_board, board, sizeof(board) );
             clear_screen();
             display_board();
 
