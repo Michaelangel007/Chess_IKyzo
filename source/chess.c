@@ -450,6 +450,7 @@ void delay (int number_of_seconds)
         ; // intentional busy-waiting
 }
 
+// ----------------------------------------
 void display_board_header ()
 {
     wprintf(L" ") ;
@@ -1685,7 +1686,7 @@ void player_turn_algebraic ( int player )
         } while (!valid_from);
 
         valid_move = false;
-        enum piece_e piece = type_to_piece( attacker );
+        int piece = type_to_piece( attacker );
 
         if (gn_possible_moves)
         {
