@@ -151,7 +151,7 @@ void append_possible_moves ()
 // ----------------------------------------
 void bishop ( int r1 , int c1, int player)
 {
-    int a , b , c , d ;
+    int a , b;
     possible_moves_index = 0;
 
     if (player == PLAYER_WHITE)
@@ -1342,8 +1342,8 @@ again1:
 // ----------------------------------------
 void queen ( int r1 , int c1, int player )
 {
-    int a , b , c , d ;
-    int i , j , n ;
+    int a, b;
+    int n;
 
     n = c1;
     possible_moves_index = 0;
@@ -1632,7 +1632,7 @@ void remove_possible_moves ()
 void rook ( int r1 , int c1, int player)
 {
     possible_moves_index = 0;
-    int i , j , n ;
+    int n;
 
     n = c1;
     if (player == PLAYER_WHITE)
