@@ -128,10 +128,10 @@ Also see:
    const char ga_board_cols[] = "01234567";
 #endif
 
-    const wchar_t *ga_player_colors[NUM_PLAYERS] =
+    const char *ga_player_colors[NUM_PLAYERS] =
     {
-        L"WHITE",
-        L"BLACK"
+        "WHITE",
+        "BLACK"
     };
 
 // Prototypes
@@ -475,7 +475,7 @@ void display_position_board ()
 int display_convert (char symbol)
 {
     static const wchar_t turn[2] =
-    {
+    { // white, black
 #ifdef _WIN32
         0x26AB, 0x26AA
 #else
@@ -499,8 +499,8 @@ int display_convert (char symbol)
         case 'Q': return 0x2655; //       queen
         case 'x': return 0x2716; // Possible move
         case '!': return 0x26A0; // /!\ Warning Sign
-        case 'W': return turn[0]; // White's Turn
-        case 'B': return turn[1]; // Black's Turn
+        case PLAYER_WHITE: return turn[0]; // White's Turn
+        case PLAYER_BLACK: return turn[1]; // Black's Turn
         default : return 0x0020; // Empty
     }
 }
@@ -1548,9 +1548,10 @@ int player_input_row_col(int player, bool is_from )
         do
         {
             if (is_from)
-                wprintf( L"Enter position of %s piece to move [col row]: ", ga_player_colors[ player ] );
+                wprintf( L"Enter position of %hs piece to move [col row]: ", ga_player_colors[ player ] );
             else
-                wprintf( L"\nEnter new position of %s piece [col row]: ", ga_player_colors[ player ] );
+                wprintf( L"\nEnter new position of %hs piece [col row]: ", ga_player_colors[ player ] );
+            fflush(stdout);
 
             col = -1;
             ch = getch();
@@ -1619,10 +1620,7 @@ void player_turn_algebraic ( int player )
             valid_from = true;
             memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
 
-            if (player == PLAYER_WHITE)
-                wprintf( L"%lc White to move. ", display_convert( 'W' ) ) ;
-            else
-                wprintf( L"%lc Black to move. ", display_convert( 'B' ) ) ;
+            wprintf( L"%lc %hs to move. ", display_convert( player ), ga_player_colors[ player ] );
             pos1 = player_input_row_col( player, true );
             if (pos1 >= 0)
             {
@@ -1690,10 +1688,7 @@ void player_turn_integer ( int player )
     int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
 
-    if (player == PLAYER_BLACK)
-        wprintf( L"%lc Black to move ...", display_convert( 'B' ) );
-    else
-        wprintf( L"%lc White to move ...", display_convert( 'W' ) );
+    wprintf( L"%lc %hs to move ...", display_convert( player ), ga_player_colors[ player ] );
 
 again1:
     do
