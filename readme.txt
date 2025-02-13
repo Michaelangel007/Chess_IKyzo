@@ -11,6 +11,13 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * Compiles on Windows and Linux
 * MSVC 2022 Solution and Project
 
+# Bugs
+
+* No checkmate detection.
+* No stalemate detection.
+* Castling doesn't check if king passes through check.
+* Array out-of-bounds (currently ignored.)
+
 # Chess Fonts
 
 You can download an Unicode chess font from:
