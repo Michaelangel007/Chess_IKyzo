@@ -1,3 +1,13 @@
+/*
+You can download a .ttf Unicode chess font from
+* https://github.com/xeyownt/chess_merida_unicode
+
+Also see
+* https://stackoverflow.com/questions/27483800/displaying-unicode-chess-pieces-in-windows-console
+* https://superuser.com/questions/390933/how-to-add-a-font-to-the-cmd-window-choices-in-windows-7-64-bit/956818#956818
+
+*/
+
 // Shutup stupid MSVC crap
 #ifdef _WIN32
     #define _CRT_SECURE_NO_WARNINGS 1
