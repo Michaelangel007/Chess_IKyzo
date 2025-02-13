@@ -10,18 +10,18 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 
 # UNICODE Symbols
 
-* ♔ black-king   : \x2654
-* ♕ black-queen  : \x2655
-* ♖ black-rook   : \x2656
-* ♗ black-bishop : \x2657
-* ♘ black-knight : \x2658
-* ♙ black-pawn   : \x2659
-* ♚ white-king   : \x265A
-* ♛ white-queen  : \x265B
-* ♜ white-rook   : \x265C
-* ♝ white-bishop : \x265D
-* ♞ white-knight : \x265E
-* ♟ white-pawn   : \x265F
+* ♔ black-king           : \x2654
+* ♕ black-queen          : \x2655
+* ♖ black-rook           : \x2656
+* ♗ black-bishop         : \x2657
+* ♘ black-knight         : \x2658
+* ♙ black-pawn           : \x2659
+* ♚ white-king           : \x265A
+* ♛ white-queen          : \x265B
+* ♜ white-rook           : \x265C
+* ♝ white-bishop         : \x265D
+* ♞ white-knight         : \x265E
+* ♟ white-pawn           : \x265F
 * ⚠ Warning sign        : \x26A0
 * ⚪ medium white circle : \x26AA
 * ⚫ medium black circle : \x26AB
