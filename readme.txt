@@ -15,6 +15,9 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * ♝ white-bishop : \x265D
 * ♞ white-knight : \x265E
 * ♟ white-pawn   : \x265F
+* ⚠ Warning sign        : \x26A0
+* ⚪ medium white circle : \x26AA
+* ⚫ medium black circle : \x26AB
 
 ---
 
