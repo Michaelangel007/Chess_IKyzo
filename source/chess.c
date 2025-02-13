@@ -280,12 +280,12 @@ void bishop ( int r1 , int c1, int player)
     {
         for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf(L" %d :", ga_possible_moves[i]);
+            wprintf( L" %d :", ga_possible_moves[i] );
         }
     }
     else
     {
-        wprintf(L"No possible moves -> ");
+        wprintf( L"No possible moves -> " );
     }
 
 }
@@ -536,7 +536,7 @@ void display_eliminated_list (eliminated_pieces_list l)
         wprintf( L"%lc ", (wchar_t)converted_value );
         temp = temp->next;
     }
-    wprintf(L"\n");
+    wprintf( L"\n" );
 }
 
 void display_possible_board()
@@ -1277,7 +1277,7 @@ again1:
 
         do
         {
-            wprintf(L"\nEnter new position of piece [row column]: " );
+            wprintf( L"\nEnter new position of piece [row column]: " );
             scanf( "%d" , &p2 ) ;
         } while (verify_possible_move(p2));
     }
