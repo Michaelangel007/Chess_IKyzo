@@ -16,7 +16,7 @@ Also see:
 */
 
 #define VERIFY_SAFE_BOARD_ARRAY 0
-#define INPUT_ALGEBRAIC         0
+#define INPUT_ALGEBRAIC         1
 
 // Shutup stupid MSVC crap
 #ifdef _WIN32
