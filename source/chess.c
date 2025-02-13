@@ -263,6 +263,58 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
     char attacker   = ga_board_position[r1][c1];
     char defender   = ga_board_position[r2][c2];
 
+    // castling flags -- rook
+    if (attacker == ga_pieces[ player ][ PIECE_ROOK ])
+    {
+        if (player == PLAYER_WHITE)
+        {
+            if (!ga_rook_k_moved[ player ] && (r1 == 7) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
+            if (!ga_rook_q_moved[ player ] && (r1 == 7) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
+        }
+        else
+        {
+            if (!ga_rook_k_moved[ player ] && (r1 == 0) && (c1 == 7)) ga_rook_k_moved[ player ] = true;
+            if (!ga_rook_q_moved[ player ] && (r1 == 0) && (c1 == 0)) ga_rook_q_moved[ player ] = true;
+        }
+    }
+
+    // check for castling -- king "attacks" rook
+    // https://en.wikipedia.org/wiki/Castling
+    if (((attacker == ga_pieces[ player ][ PIECE_KING ]) && (defender == ga_pieces[ player ][ PIECE_ROOK ])))
+    {
+        int castle_row = -1; // +0 = black, +7 = white
+        int king_side  =  0; // +1 = king,  -1 = queen
+
+        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 7)) { castle_row =  0; king_side =  1; } // black king side
+        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 0)) { castle_row = -0; king_side = -1; } // black queen side
+        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 7)) { castle_row =  7; king_side =  1; } // white king side
+        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 0)) { castle_row = -7; king_side = -1; } // white queen side
+
+        if (castle_row >= 0)
+        {
+            if (king_side > 0)
+            {
+                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
+                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
+                ga_board_position[castle_row][5] = ga_pieces[ player ][ PIECE_ROOK ]; // F1 rook
+                ga_board_position[castle_row][6] = ga_pieces[ player ][ PIECE_KING ]; // G1 king (E1 + 2)
+                ga_board_position[castle_row][7] = ga_pieces[ player ][ PIECE_NONE ]; // H1 empty
+                ga_rook_k_moved[ player ] = true;
+                return;
+            }
+            else
+            {
+                // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
+                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
+                ga_board_position[castle_row][3] = ga_pieces[ player ][ PIECE_ROOK ]; // D1 rook
+                ga_board_position[castle_row][2] = ga_pieces[ player ][ PIECE_KING ]; // C1 king (E1 - 2)
+                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_ROOK ]; // A1 empty
+                ga_rook_q_moved[ player ] = true;
+                return;
+            }
+        }
+    }
+
     if (player == PLAYER_BLACK)
     {
         if (cell_has_white_piece(r2, c2)) // black captures white
@@ -663,6 +715,9 @@ void moves_bishop ( int r1 , int c1, int player)
 // ----------------------------------------
 void moves_king ( int r1 , int c1, int player )
 {
+    const int sy = (player == PLAYER_BLACK) ? +1 : -1;
+    const int oppoent = 1 - player;
+    int r;
     gn_possible_moves  = 0;
 
     if (player == PLAYER_BLACK)
@@ -796,6 +851,30 @@ void moves_king ( int r1 , int c1, int player )
             {
                 ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
             }
+        }
+    }
+
+         r    = (player == PLAYER_WHITE) ? 7 : 0;
+    char rook = (player == PLAYER_WHITE) ? 'r' : 'R';
+    if ((r1 == r) && (c1 == 4))
+    {
+        // can castle king side?
+        if (is_empty( r, 5 )
+        &&  is_empty( r, 6 )
+        && (ga_board_position[r][7] == rook) && !ga_king_moved[player] && !ga_rook_k_moved[player])
+        {
+            // TODO: Check if king passes through check
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position( r, 7 );
+        }
+
+        // castle queen side
+        if (is_empty( r, 3 )
+        &&  is_empty( r, 2 )
+        &&  is_empty( r, 1 )
+        && (ga_board_position[r][0] == rook) && !ga_king_moved[player] && !ga_rook_q_moved[player])
+        {
+            // TODO: Check if king passes through check
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position( r, 0 );
         }
     }
 }
