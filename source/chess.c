@@ -8,7 +8,8 @@ Also see
 
 */
 
-#define VERIFY_SAFE_BOARD_ARRAY 1
+#define VERIFY_SAFE_BOARD_ARRAY 0
+#define INPUT_ALGEBRAIC         0
 
 // Shutup stupid MSVC crap
 #ifdef _WIN32
@@ -87,6 +88,20 @@ Also see
     };
 #endif
 
+#if INPUT_ALGEBRAIC
+    const char ga_board_rows[] = "87654321";
+    const char ga_board_cols[] = "ABCDEFGH";
+#else
+   const char ga_board_rows[] = "01234567";
+   const char ga_board_cols[] = "01234567";
+#endif
+
+    const wchar_t *ga_player_colors[NUM_PLAYERS] =
+    {
+        L"WHITE",
+        L"BLACK"
+    };
+
 // Prototypes
     bool cell_has_black_piece( int row, int col );
     bool cell_has_white_piece( int row, int col );
@@ -108,7 +123,11 @@ Also see
     void moves_pawn_w( int , int );
     void moves_queen( int , int , int player );
     void moves_rook(int , int, int player );
+    int  player_input_row_col( int player, bool is_from );
     void player_turn( int player );
+    void player_turn_algebraic ( int player );
+    void player_turn_integer ( int player );
+    void position_to_row_col ( int position, int *row, int *col );
     void showcase_board(char, char, char, char, int);
     void showcase_game();
     void update_possible_moves( int row, int col );
@@ -128,6 +147,15 @@ Also see
         if ((row < 0) || (row > 7)) return true;
         if ((col < 0) || (col > 7)) return true;
         return false;
+    }
+
+    // ----------------------------------------
+    void position_to_labels ( int position, char *row, char *col )
+    {
+        int x, y;
+        position_to_row_col( position, &y, &x );
+        *row = ga_board_rows[ y ];
+        *col = ga_board_cols[ x ];
     }
 
     // ----------------------------------------
@@ -319,7 +347,7 @@ void display_board_header ()
     wprintf(L" ") ;
     for (int col = 0; col < 8; col++)
     {
-        wprintf( L"   %lc" , col + '0' );
+        wprintf( L"   %lc" , ga_board_cols[ col ] );
     }
     wprintf(L"\n" );
 }
@@ -337,13 +365,13 @@ void display_board(char board[BOARD_DIMENSION][BOARD_DIMENSION])
     for (y = 0; y < 8; y++)
     {
         wprintf( separator );
-        wprintf(L"%d " , y ) ;
+        wprintf(L"%lc " , ga_board_rows[ y ] );
 
         for( x = 0 ; x < 8 ; x++ )
         {
             wprintf(L"||%lc " , display_convert(board[y][x]) ) ;
         }
-        wprintf(L"|| \n" ) ;
+        wprintf(L"|| %lc\n", ga_board_rows[ y ] );
     }
     wprintf( separator );
     display_board_header();
@@ -1396,7 +1424,155 @@ void moves_rook ( int r1 , int c1, int player)
 }
 
 // ----------------------------------------
+int player_input_row_col(int player, bool is_from )
+{
+    int ch, row, col, position;
+
+    do
+    {
+        position = -1;
+        fflush(stdin);
+        do
+        {
+            if (is_from)
+                wprintf( L"Enter position of %s piece to move [col row]: ", ga_player_colors[ player ] );
+            else
+                wprintf( L"\nEnter new position of %s piece [col row]: ", ga_player_colors[ player ] );
+
+            col = -1;
+            ch = getch();
+            if (ch == 3) // Ctrl-C
+                exit( 0 );
+            if (ch == 27)
+            {
+                wprintf( L"\n" );
+                return -1;
+            }
+            wprintf( L"%lc", ch );
+
+            if ((ch >= 'a') && (ch <= 'h')) col = (ch - 'a');
+            if ((ch >= 'A') && (ch <= 'H')) col = (ch - 'A');
+            if (col < 0)
+                wprintf( L"\n%lc Invalid column. Must be A..H\n", display_convert( '!' ) );
+        } while (col < 0);
+
+        do
+        {
+            row = -1;
+            ch = getch();
+            if (ch == 3) // Ctrl-C
+                exit( 0 );
+            if (ch == 27)
+            {
+                wprintf( L"\n" );
+                return -1;
+            }
+            wprintf( L"%lc\n", ch );
+
+            if ((ch >= '1') && (ch <= '8')) row = (ch - '1');
+            if (row < 0)
+                wprintf( L"%lc Invalid row. Must be 1..8\n", display_convert( '!' ) );
+        } while (row < 0);
+        row = (7 - row); // flip y
+
+        position = row_col_to_position( row, col );
+    } while (position < 0);
+
+    return position;
+}
+
+// ----------------------------------------
 void player_turn (int player)
+{
+#if INPUT_ALGEBRAIC
+    player_turn_algebraic( player );
+#else
+    player_turn_integer( player );
+#endif
+}
+
+// ----------------------------------------
+void player_turn_algebraic ( int player )
+{
+    int pos1, pos2, row1, col1, row2, col2;
+
+    bool valid_from = true;
+    bool valid_move = true;
+
+    do
+    {
+        do
+        {
+            valid_from = true;
+            memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
+
+            if (player == PLAYER_WHITE)
+                wprintf( L"%lc White to move. ", display_convert( 'W' ) ) ;
+            else
+                wprintf( L"%lc Black to move. ", display_convert( 'B' ) ) ;
+            pos1 = player_input_row_col( player, true );
+            if (pos1 >= 0)
+            {
+                position_to_row_col( pos1, &row1, &col1 );
+                if (player == PLAYER_WHITE)
+                {
+                    switch( ga_board_position[row1][col1] )
+                    {
+                        case 'p': moves_pawn  ( row1 , col1, player ); break;
+                        case 'r': moves_rook  ( row1 , col1, player ); break;
+                        case 'h': moves_knight( row1 , col1, player ); break;
+                        case 'c': moves_bishop( row1 , col1, player ); break;
+                        case 'k': moves_king  ( row1 , col1, player ); break;
+                        case 'q': moves_queen ( row1 , col1, player ); break;
+                        default:
+                            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                            valid_from = false;
+                    }
+                }
+                else
+                {
+                    switch( ga_board_position[row1][col1] ) // Select only player's pieces.
+                    {
+                        case 'P': moves_pawn  ( row1 , col1, player ); break;
+                        case 'R': moves_rook  ( row1 , col1, player ); break;
+                        case 'H': moves_knight( row1 , col1, player ); break;
+                        case 'C': moves_bishop( row1 , col1, player ); break;
+                        case 'K': moves_king  ( row1 , col1, player ); break;
+                        case 'Q': moves_queen ( row1 , col1, player ); break;
+                        default:
+                            wprintf( L"%lc Invalid Position! ", display_convert( '!' ) );
+                            valid_from = false;
+                    }
+                }
+            }
+            else
+                valid_from = false;
+        } while (!valid_from);
+
+        valid_move = false;
+        if (gn_possible_moves)
+        {
+            clear_screen();
+            update_possible_moves( row1, col1 );
+
+            do
+            {
+                pos2 = player_input_row_col( player, false );
+                if (pos2 < 0) // allow user to re-start move
+                    break;
+            } while (verify_possible_move(pos2));
+
+            if (pos2 >= 0)
+                valid_move = true;
+        }
+    } while (!valid_move);
+
+    position_to_row_col( pos2, &row2, &col2 );
+    change(row1, col1, row2, col2, player);
+}
+
+// ----------------------------------------
+void player_turn_integer ( int player )
 {
     int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
@@ -1409,6 +1585,7 @@ void player_turn (int player)
 again1:
     do
     {
+        memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
         fflush(stdin);
         wprintf( L"\nEnter position of piece to move [row column]: " );
         input_control = scanf( "%d" , &p1 );
@@ -1595,10 +1772,17 @@ void update_possible_moves ( int row, int col )
     wprintf( L"Possible moves %lc: \n", display_convert( ga_board_position[row][col]) );
     if (gn_possible_moves)
     {
+        char row, col;
         for (int i = 0; i < gn_possible_moves; i++)
         {
-            wprintf( L" %d :", ga_possible_moves[i] );
+            position_to_labels( ga_possible_moves[i], &row, &col );
+#if INPUT_ALGEBRAIC
+            wprintf( L" %lc%lc :", col, row );
+#else
+            wprintf( L" %lc%lc :", row, col );
+#endif
         }
+        wprintf( L"\n" );
     }
     else
     {
@@ -1665,7 +1849,6 @@ void main (int argc, char *argv[])
 
         do
         {
-            memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
             clear_screen();
             display_position_board();
             player_turn( moves & 1 );
