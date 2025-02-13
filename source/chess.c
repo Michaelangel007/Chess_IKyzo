@@ -393,8 +393,17 @@ bool cell_has_black_piece ( int row , int col )
         case 'C':              // intentional fall-through
         case 'K':              // intentional fall-through
         case 'Q': return true; // intentional fall-through
+        case '?': int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0);
         default : return false;
     }
+}
+
+bool is_cell_occupied (int row, int col, int player)
+{
+    if (player == PLAYER_WHITE)
+        return cell_has_white_piece( row, col );
+    else
+        return cell_has_black_piece( row, col );
 }
 
 // ----------------------------------------
@@ -402,7 +411,7 @@ void clear_screen ()
 {
 #if _WIN32
 
-    // This is a security nightmare. DON'T DO THIS
+    // This is a security nightmare. DON'T DO THIS!!!
     //     system( "cls" );
     // See:. :-/
     // * https://learn.microsoft.com/en-us/windows/console/clearing-the-screen. :-/
@@ -417,7 +426,8 @@ void clear_screen ()
     cls(hStdout);
 #else
     // TODO: Fixme *nix
-    system( "clear" );
+    // This is a security nightmare. DON'T DO THIS!!!
+    //     system( "clear" );
 #endif // _WIN32
 }
 
