@@ -72,7 +72,6 @@ Also see
 
     eliminated_pieces_list eliminated_pieces_white;
     eliminated_pieces_list eliminated_pieces_black;
-    char *piece;
 
 #if VERIFY_SAFE_BOARD_ARRAY
     const char BOARD_INIT[9][9] = // array 9x9 representing the board with padding for OOB detection
@@ -1835,8 +1834,6 @@ void main (int argc, char *argv[])
     // Init lists
     eliminated_pieces_white.start = NULL;
     eliminated_pieces_black.start = NULL;
-
-    piece = (char *)malloc(sizeof(char));
 
     // For somereason board 0 0 got corrupted
     board[0][0] = 'R';
