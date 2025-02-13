@@ -1965,6 +1965,8 @@ void main (int argc, char *argv[])
         wprintf( L"\n\x26AA Black (Win32)" );
         wprintf( L"\n\x26AA White (Unix )" );
         wprintf( L"\n\x26AB Black (Unix )" );
+        wprintf( L"\n%lc this platform", display_convert( PLAYER_WHITE ) );
+        wprintf( L"\n%lc this platform", display_convert( PLAYER_BLACK ) );
         return;
     }
 
