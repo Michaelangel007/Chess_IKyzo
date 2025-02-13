@@ -21,6 +21,7 @@ Also see
     #include <string.h>  // memcpy()
     #include <stdbool.h> // bool
     #include <time.h>
+    #include <assert.h>
 #ifdef _WIN32
     #include <conio.h>
     #include <io.h>    // _setmode()
@@ -380,6 +381,7 @@ void change ( int r1 , int c1 , int r2 , int c2 , int player )
     }
     else
     {
+        assert( (player >= PLAYER_WHITE)  && (player <= PLAYER_BLACK) );
         wprintf(L"Error: Invalid player %d!", player);
     }
 }
