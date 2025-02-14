@@ -146,7 +146,7 @@ Also see:
     };
 
 // Prototypes
-    void add_possible_array( int positions, int *rows, int *cols, int row, int col, int player );
+    void add_possible_array( int positions, const int *rows, const int *cols, int row, int col, int player );
     void add_possible_move( int row, int col, int opponent );
     bool cell_has_black_piece( int row, int col );
     bool cell_has_player(int row, int col, int player);
@@ -184,7 +184,7 @@ Also see:
 // Utility
 
     // ----------------------------------------
-    void add_possible_array ( int positions, int *rows, int *cols, int row, int col, int player )
+    void add_possible_array ( int positions, const int *rows, const int *cols, int row, int col, int player )
     {
         int opponent = 1 - player;
         for( int position = 0; position < positions; position++ )
@@ -951,41 +951,11 @@ void moves_king ( int r1 , int c1, int player )
 // ----------------------------------------
 void moves_knight ( int r1 , int c1, int player )
 {
-    int r, c;
-    int opponent = 1 - player;
     gn_possible_moves = 0;
 
-    r = r1 + 2; c = c1 + 1; // (5)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 + 2; c = c1 - 1; // (7)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 + 1; c = c1 + 2; // (4)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 - 1; c = c1 + 2; // (3)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 - 2; c = c1 - 1; // (10)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 - 2; c = c1 + 1; // (1)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 + 1; c = c1 - 2; // (9)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1 - 1; c = c1 - 2; // (8)
-    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+    const int knight_row[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
+    const int knight_col[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
+    add_possible_array( sizeof(knight_row)/sizeof(int), knight_row, knight_col, r1, c1, player);
 }
 
 // ----------------------------------------
