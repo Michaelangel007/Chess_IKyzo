@@ -186,9 +186,7 @@ Also see:
     void moves_bishop( int , int, int player );
     void moves_king( int , int , int player );
     void moves_knight(int , int, int player );
-    void moves_pawn( int, int, int player );
-    void moves_pawn_b(int , int );
-    void moves_pawn_w( int , int );
+    void moves_pawn( int r1, int c1, int player );
     void moves_queen( int , int , int player );
     void moves_rook(int , int, int player );
     int  player_input_row_col( int player, int from_piece );
@@ -770,18 +768,9 @@ void moves_knight ( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
-void moves_pawn (int row, int col, int player)
+void moves_pawn ( int r1, int c1, int player )
 {
-    if (player == PLAYER_WHITE) moves_pawn_w( row, col );
-    else                        moves_pawn_b( row, col );
-}
-
-// ----------------------------------------
-void moves_pawn_b ( int r1 , int c1 )
-{
-    const int player = PLAYER_BLACK;
-    const int opponent = 1 - player;
-
+    const int opponent  = 1 - player;
     const int start_row = (player == PLAYER_WHITE) ?  6 :  1;
     const int dy        = (player == PLAYER_WHITE) ? -1 : +1; // forward direction for player
 
@@ -800,43 +789,11 @@ void moves_pawn_b ( int r1 , int c1 )
         ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
     r = r1+dy; c = c1+1; // attack right
-    if (!is_off_board(r,c) && cell_has_white_piece(r,c))
+    if (!is_off_board(r,c) && cell_has_player(r,c,opponent))
         ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
     r = r1+dy; c = c1-1; // attack left
-    if (!is_off_board(r,c) && cell_has_white_piece(r,c))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-}
-
-// ----------------------------------------
-void moves_pawn_w ( int r1 , int c1 )
-{
-    const int player = PLAYER_WHITE;
-    const int opponent = 1 - player;
-
-    const int start_row = (player == PLAYER_WHITE) ?  6 :  1;
-    const int dy        = (player == PLAYER_WHITE) ? -1 : +1; // forward direction for player
-
-    int r,c;
-    gn_possible_moves = 0;
-
-    if (r1 == start_row)
-    {
-        r = r1+2*dy; c = c1;
-        if (!is_off_board(r,c) && is_empty(r,c) && is_empty(r1+dy,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-    }
-
-    r = r1+dy; c = c1;
-    if (!is_off_board(r,c) && is_empty(r,c))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1+dy; c = c1+1; // attack right
-    if (!is_off_board(r,c) && cell_has_black_piece(r ,c))
-        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-    r = r1+dy; c = c1-1; // attack left
-    if (!is_off_board(r,c) && cell_has_black_piece(r,c))
+    if (!is_off_board(r,c) && cell_has_player(r,c,opponent))
         ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 }
 
