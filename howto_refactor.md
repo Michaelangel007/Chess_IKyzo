@@ -1269,7 +1269,7 @@ void knight_v8( int r1 , int c1, int player )
 }
 ```
 
-9. With the code being identical for black and white players we can simply remove the whole "then" clause:
+9. With the code being identical for black and white players we can simply remove the whole "else" clause:
 
 ```c
 void knight_v9( int r1 , int c1, int player )
@@ -1531,3 +1531,4 @@ Revision 2 Add summary
 Revision 3 Fix clock positions
 Revision 4 Fix swapped row/col for knight.
 Revision 5 Fix minor spelling mistakes. Ironically fixing a bug talking about code with a bug.
+Revision 6 Fix incorrect labeling of "else"
