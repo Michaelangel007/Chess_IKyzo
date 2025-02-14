@@ -194,8 +194,8 @@ Also see:
     int  player_input_row_col( int player, int from_piece );
     void player_turn( int player );
     void player_turn_algebraic ( int player );
-    void player_turn_integer ( int player );
-    void position_to_row_col ( int position, int *row, int *col );
+    void player_turn_integer( int player );
+    void position_to_row_col( int position, int *row, int *col );
     int row_col_to_position( int row, int col );
     void showcase_board(char, char, char, char, int);
     void showcase_game();
