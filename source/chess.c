@@ -95,6 +95,7 @@ Also see:
     bool ga_rook_q_moved[ NUM_PLAYERS ];
 
     #define MAX_POSSIBLE_MOVES 100
+    // This is a packed row,col -- see row_col_to_position() and position_to_row_col()
     int ga_possible_moves[ MAX_POSSIBLE_MOVES ];
     int gn_possible_moves;
 
