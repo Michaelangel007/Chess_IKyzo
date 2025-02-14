@@ -165,6 +165,7 @@ Also see:
 
 // Prototypes
     void add_possible_array( int positions, const int *rows, const int *cols, int row, int col, int player );
+    void add_possible_axis( int row, int col, int player, int axis );
     void add_possible_move( int row, int col, int opponent );
     bool cell_has_black_piece( int row, int col );
     bool cell_has_player(int row, int col, int player);
@@ -210,6 +211,35 @@ Also see:
             int r = row + rows[ position ];
             int c = col + cols[ position ];
             add_possible_move( r, c, opponent );
+        }
+    }
+
+    // ----------------------------------------
+    void add_possible_axis ( int row, int col, int player, int axis )
+    {
+        const int opponent = 1 - player;
+        const int dx = axis_delta_col[ axis ];
+        const int dy = axis_delta_row[ axis ];
+
+        int r = row;
+        int c = col;
+        for( int position = 0; position < 7; position++ )
+        {
+            r += dy;
+            c += dx;
+            if (is_off_board(r,c))
+                return;
+            else
+            if (cell_has_player(r, c, opponent ))
+            {
+                ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+                return;
+            }
+            else
+            if (!is_empty(r,c))
+                return; // cell must be our own color
+            else
+                ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
         }
     }
 
