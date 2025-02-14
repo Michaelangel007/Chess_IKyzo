@@ -158,6 +158,8 @@ Also see:
     void display_position_board();
     void display_possible_board();
     void intro();
+    bool is_empty( int row, int col );
+    int  is_off_board( int row, int col );
     void move_piece( int, int, int, int, int );
     void moves_bishop( int , int, int player );
     void moves_king( int , int , int player );
