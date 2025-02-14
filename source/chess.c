@@ -790,36 +790,22 @@ void moves_pawn_b ( int r1 , int c1 )
 
     if (r1 == start_row)
     {
-        r = r1+dy; c = c1;
-        if (!is_off_board(r,c) && is_empty(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
         r = r1+2*dy; c = c1;
         if (!is_off_board(r,c) && is_empty(r,c) && is_empty(r1+dy,c))
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-        r = r1+dy; c = c1+1;
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // attack right
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-        r = r1+dy; c = c1-1;
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // attack left
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
-    else
-    {
-        r = r1+dy; c = c1;
-        if (!is_off_board(r,c) && is_empty(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        r = r1+dy; c = c1+1; // attack right
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+    r = r1+dy; c = c1;
+    if (!is_off_board(r,c) && is_empty(r,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        r = r1+dy; c = c1-1; // attack left
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-    }
+    r = r1+dy; c = c1+1; // attack right
+    if (!is_off_board(r,c) && cell_has_white_piece(r,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+
+    r = r1+dy; c = c1-1; // attack left
+    if (!is_off_board(r,c) && cell_has_white_piece(r,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 }
 
 // ----------------------------------------
@@ -836,36 +822,22 @@ void moves_pawn_w ( int r1 , int c1 )
 
     if (r1 == start_row)
     {
-        r = r1+dy; c = c1;
-        if (!is_off_board(r,c) && is_empty(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
         r = r1+2*dy; c = c1;
         if (!is_off_board(r,c) && is_empty(r,c) && is_empty(r1+dy,c))
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-        r = r1+dy; c = c1+1;
-        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // attack right
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-
-        r = r1+dy; c = c1-1;
-        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // attack left
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
-    else
-    {
-        r = r1+dy; c = c1;
-        if (!is_off_board(r,c) && is_empty(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        r = r1+dy; c = c1+1; // attack right
-        if (!is_off_board(r,c) && cell_has_black_piece(r ,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+    r = r1+dy; c = c1;
+    if (!is_off_board(r,c) && is_empty(r,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        r = r1+dy; c = c1-1; // attack left
-        if (!is_off_board(r,c) && cell_has_black_piece(r,c))
-            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
-    }
+    r = r1+dy; c = c1+1; // attack right
+    if (!is_off_board(r,c) && cell_has_black_piece(r ,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
+
+    r = r1+dy; c = c1-1; // attack left
+    if (!is_off_board(r,c) && cell_has_black_piece(r,c))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 }
 
 // ----------------------------------------
