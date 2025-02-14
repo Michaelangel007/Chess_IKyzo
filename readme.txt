@@ -17,6 +17,7 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * No stalemate detection.
 * Castling doesn't check if king passes through check.
 * King can move into check.
+# En passant is not implemented.
 
 # Chess Fonts
 
