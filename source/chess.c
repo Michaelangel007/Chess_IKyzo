@@ -175,7 +175,6 @@ Also see:
     void showcase_board(char, char, char, char, int);
     void showcase_game();
     void update_possible_moves( int row, int col );
-    bool verify_possible_move (int position);
 
 // Utility
 
@@ -225,6 +224,17 @@ Also see:
     {
         if ((row < 0) || (row > 7)) return true;
         if ((col < 0) || (col > 7)) return true;
+        return false;
+    }
+
+    // ----------------------------------------
+    bool is_move_possible (int position)
+    {
+        for (int i = 0; i < gn_possible_moves; i++)
+        {
+            if (position == ga_possible_moves[i])
+                return true;
+        }
         return false;
     }
 
@@ -1703,7 +1713,7 @@ void player_turn_algebraic ( int player )
                 pos2 = player_input_row_col( player, piece );
                 if (pos2 < 0) // allow user to re-start move
                     break;
-            } while (verify_possible_move(pos2));
+            } while (!is_move_possible(pos2));
 
             if (pos2 >= 0)
                 valid_move = true;
@@ -1784,7 +1794,7 @@ again1:
         {
             wprintf( L"\nEnter new position of %hs [row column]: ", ga_piece_names[ piece ] );
             scanf( "%d" , &p2 ) ;
-        } while (verify_possible_move(p2));
+        } while (!is_move_possible(p2));
     }
     else
     {
@@ -1934,18 +1944,6 @@ void update_possible_moves ( int row, int col )
     {
         wprintf( L"No possible moves -> " );
     }
-}
-
-// is_move_possible()
-// ----------------------------------------
-bool verify_possible_move (int position)
-{
-    for (int i = 0; i < gn_possible_moves; i++)
-    {
-        if (position == ga_possible_moves[i])
-            return false;
-    }
-    return true;
 }
 
 // ========================================
