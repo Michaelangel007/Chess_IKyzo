@@ -917,146 +917,51 @@ void moves_king ( int r1 , int c1, int player )
     }
 }
 
+//  . 10  .  1  .    -2
+//  9  .  .  .  3    -1
+//  .  .  N  .  .     0
+//  8  .  .  .  4    +1
+//  .  7  .  5  .    +2
+//
+// -2 -1  0 +1 +2
 // ----------------------------------------
 void moves_knight ( int r1 , int c1, int player )
 {
+    int r, c;
+    int opponent = 1 - player;
     gn_possible_moves = 0;
 
-    if (player == PLAYER_BLACK)
-    {
-        if ((ga_board_position[r1+2][c1+1] == ' ') || cell_has_white_piece(r1+2, c1+1))
-        {
-            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1+1;
-            }
+    r = r1 + 2; c = c1 + 1; // (5)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-            //wprintf(L"%d%d, " , r1+2 ,c1+1) ;
-        }
+    r = r1 + 2; c = c1 - 1; // (7)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1+2][c1-1] == ' ') || cell_has_white_piece(r1+2, c1-1))
-        {
-            if (r1+2 <= 7 && r1+2 >= 0 && c1-1 >= 0 && c1-1 <= 7)
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1-1;
-            }
-        }
+    r = r1 + 1; c = c1 + 2; // (4)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1+1][c1+2] == ' ') || cell_has_white_piece(r1+1, c1+2))
-        {
-            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+2;
-            }
-        }
-        if ((ga_board_position[r1-1][c1+2] == ' ') || cell_has_white_piece(r1-1, c1+2))
-        {
-            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+2;
-            }
-        }
+    r = r1 - 1; c = c1 + 2; // (3)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1-2][c1-1] == ' ') || cell_has_white_piece(r1-2, c1-1))
-        {
-            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1-1;
-            }
-        }
+    r = r1 - 2; c = c1 - 1; // (10)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1-2][c1+1] == ' ') || cell_has_white_piece(r1-2, c1+1))
-        {
-            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1+1;
-            }
-        }
+    r = r1 - 2; c = c1 + 1; // (1)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1+1][c1-2] == ' ') || cell_has_white_piece(r1+1, c1-2))
-        {
-            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <=7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-2;
-            }
-        }
+    r = r1 + 1; c = c1 - 2; // (9)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1-1][c1-2] == ' ') || cell_has_white_piece(r1-1, c1-2))
-        {
-            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-2;
-            }
-        }
-    }
-    else
-    {
-        if ((ga_board_position[r1+2][c1+1] == ' ') || cell_has_black_piece(r1+2, c1+1))
-        {
-            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1+1;
-            }
-
-            //wprintf(L"%d%d, " , r1+2 ,c1+1);
-        }
-
-        if ((ga_board_position[r1+2][c1-1] == ' ') || cell_has_black_piece(r1+2, c1-1))
-        {
-            if ((r1+2 <= 7) && (r1+2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1-1;
-            }
-        }
-
-        if ((ga_board_position[r1+1][c1+2] == ' ') || cell_has_black_piece(r1+1, c1+2))
-        {
-            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+2;
-            }
-        }
-
-        if ((ga_board_position[r1-1][c1+2] == ' ') || cell_has_black_piece(r1-1, c1+2))
-        {
-            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1+2 >= 0) && (c1+2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+2;
-            }
-        }
-
-        if ((ga_board_position[r1-2][c1-1] == ' ') || cell_has_black_piece(r1-2, c1-1))
-        {
-            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1-1 >= 0) && (c1-1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1-1;
-            }
-        }
-
-        if ((ga_board_position[r1-2][c1+1] == ' ') || cell_has_black_piece(r1-2, c1+1))
-        {
-            if ((r1-2 <= 7) && (r1-2 >= 0) && (c1+1 >= 0) && (c1+1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1+1;
-            }
-        }
-
-        if ((ga_board_position[r1+1][c1-2] == ' ') || cell_has_black_piece(r1+1, c1-2))
-        {
-            if ((r1+1 <= 7) && (r1+1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-2;
-            }
-        }
-
-        if ((ga_board_position[r1-1][c1-2] == ' ') || cell_has_black_piece(r1-1, c1-2))
-        {
-            if ((r1-1 <= 7) && (r1-1 >= 0) && (c1-2 >= 0) && (c1-2 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-2;
-            }
-        }
-    }
+    r = r1 - 1; c = c1 - 2; // (8)
+    if (!is_off_board(r,c) && (is_empty(r,c) || cell_has_player(r,c,opponent)))
+        ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 }
 
 // ----------------------------------------
