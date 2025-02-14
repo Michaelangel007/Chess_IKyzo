@@ -770,6 +770,13 @@ void moves_knight ( int r1 , int c1, int player )
 }
 
 // ----------------------------------------
+void moves_pawn (int row, int col, int player)
+{
+    if (player == PLAYER_WHITE) moves_pawn_w( row, col );
+    else                        moves_pawn_b( row, col );
+}
+
+// ----------------------------------------
 void moves_pawn_b ( int r1 , int c1 )
 {
     int player = PLAYER_BLACK;
@@ -809,13 +816,6 @@ void moves_pawn_b ( int r1 , int c1 )
         if (!is_off_board(r,c) && cell_has_white_piece(r,c))
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
-}
-
-// ----------------------------------------
-void moves_pawn (int row, int col, int player)
-{
-    if (player == PLAYER_WHITE) moves_pawn_w( row, col );
-    else                        moves_pawn_b( row, col );
 }
 
 // ----------------------------------------
