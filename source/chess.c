@@ -722,6 +722,8 @@ void moves_king ( int r1 , int c1, int player )
 {
     int r;
     gn_possible_moves  = 0;
+
+    // TODO: This doesn't check if the king moves into check, need to add a flag.
     add_possible_array( NUM_AXIS, axis_delta_row, axis_delta_col, r1, c1, player );
 
          r    = (player == PLAYER_WHITE) ? 7 : 0;
