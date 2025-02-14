@@ -643,9 +643,9 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
         int king_side  =  0; // +1 = king,  -1 = queen
 
         if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 7)) { castle_row =  0; king_side =  1; } // black king side
-        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 0)) { castle_row = -0; king_side = -1; } // black queen side
+        if ((r1 == 0) && (c1 == 4) && (r2 == 0) && (c2 == 0)) { castle_row =  0; king_side = -1; } // black queen side
         if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 7)) { castle_row =  7; king_side =  1; } // white king side
-        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 0)) { castle_row = -7; king_side = -1; } // white queen side
+        if ((r1 == 7) && (c1 == 4) && (r2 == 7) && (c2 == 0)) { castle_row =  7; king_side = -1; } // white queen side
 
         if (castle_row >= 0)
         {
@@ -665,7 +665,7 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
                 ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
                 ga_board_position[castle_row][3] = ga_pieces[ player ][ PIECE_ROOK ]; // D1 rook
                 ga_board_position[castle_row][2] = ga_pieces[ player ][ PIECE_KING ]; // C1 king (E1 - 2)
-                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_ROOK ]; // A1 empty
+                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_NONE ]; // A1 empty
                 ga_rook_q_moved[ player ] = true;
                 return;
             }
