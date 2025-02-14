@@ -1402,8 +1402,8 @@ void knight_v12( int r1 , int c1, int player )
 {
     possible_moves_index = 0;
 
-    int knight_row[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
-    int knight_col[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
+    int knight_col[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
+    int knight_row[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
     add_possible_array( sizeof(knight_row)/sizeof(int), knight_row, knight_col, r1, c1, player );
 }
 ```
