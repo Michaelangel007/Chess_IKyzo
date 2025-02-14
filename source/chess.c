@@ -65,7 +65,7 @@ Also see:
 // Globals
 
 #if VERIFY_SAFE_BOARD_ARRAY
-    #define BOARD_DIMENSION 9
+    #define BOARD_DIMENSION 10
 #else
     #define BOARD_DIMENSION 8
 #endif
@@ -104,17 +104,18 @@ Also see:
     int  gn_eliminated_pieces[ NUM_PLAYERS ];
 
 #if VERIFY_SAFE_BOARD_ARRAY
-    const char BOARD_INIT[9][9] = // array 9x9 representing the board with padding for OOB detection
+    const char BOARD_INIT[BOARD_DIMENSION][BOARD_DIMENSION] = // array + padding for array OOB detection
     {
-        { 'R', 'H', 'C', 'Q', 'K', 'C', 'H', 'R', '?' },
-        { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', '?' },
-        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
-        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
-        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
-        { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
-        { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', '?' },
-        { 'r', 'h', 'c', 'q', 'k', 'c', 'h', 'r', '?' },
-        { '?', '?', '?', '?', '?', '?', '?', '?', '?' }
+        { '?', '?', '?', '?', '?', '?', '?', '?', '?', '?' },
+        { '?', 'R', 'H', 'C', 'Q', 'K', 'C', 'H', 'R', '?' },
+        { '?', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', '?' },
+        { '?', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { '?', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { '?', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { '?', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '?' },
+        { '?', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', '?' },
+        { '?', 'r', 'h', 'c', 'q', 'k', 'c', 'h', 'r', '?' },
+        { '?', '?', '?', '?', '?', '?', '?', '?', '?', '?' }
     };
 #else
     const char BOARD_INIT[8][8] = // array 8x8 representing the board.
@@ -168,6 +169,7 @@ Also see:
     void add_possible_array( int positions, const int *rows, const int *cols, int row, int col, int player );
     void add_possible_axis( int row, int col, int player, int axis );
     void add_possible_move( int row, int col, int opponent );
+    int  cell_get_piece( int row, int col );
     bool cell_has_black_piece( int row, int col );
     bool cell_has_player(int row, int col, int player);
     bool cell_has_white_piece( int row, int col );
@@ -250,6 +252,26 @@ Also see:
     }
 
     // ----------------------------------------
+    int cell_get_piece ( int row, int col )
+    {
+#if VERIFY_SAFE_BOARD_ARRAY
+        row++;
+        col++;
+#endif
+        return ga_board_position[row][col];
+    }
+
+    // ----------------------------------------
+    void cell_set_piece ( int row, int col, int piece )
+    {
+#if VERIFY_SAFE_BOARD_ARRAY
+        row++;
+        col++;
+#endif
+        ga_board_position[row][col] = piece;
+    }
+
+    // ----------------------------------------
     int get_glyph (char symbol)
     {
         static const wchar_t turn[2] =
@@ -287,7 +309,11 @@ Also see:
     // ----------------------------------------
     bool is_empty (int row, int col)
     {
+#if VERIFY_SAFE_BOARD_ARRAY
+        return (ga_board_position[row+1][col+1] == ' ');
+#else
         return (ga_board_position[row][col] == ' ');
+#endif
     }
 
     // ----------------------------------------
@@ -399,7 +425,8 @@ void cls (HANDLE hConsole)
 // ----------------------------------------
 bool cell_has_black_piece ( int row , int col )
 {
-    switch( ga_board_position[row][col] )
+    int piece = cell_get_piece(row,col);
+    switch( piece )
     {
         case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'P':              // intentional fall-through
@@ -425,7 +452,8 @@ bool cell_has_player ( int row, int col, int player )
 // ----------------------------------------
 bool cell_has_white_piece ( int row , int col )
 {
-    switch( ga_board_position[row][col] )
+    int piece = cell_get_piece(row,col);
+    switch( piece )
     {
         case '?': { int OUT_OF_ARRAY_BOUNDS = 0; assert( OUT_OF_ARRAY_BOUNDS ); exit(0); }
         case 'p':              // intentional fall-through
@@ -489,7 +517,7 @@ void display_board_header ()
 }
 
 // ----------------------------------------
-void display_board(char board[BOARD_DIMENSION][BOARD_DIMENSION])
+void display_board (char board[BOARD_DIMENSION][BOARD_DIMENSION])
 {
     int x , y;
 
@@ -505,7 +533,11 @@ void display_board(char board[BOARD_DIMENSION][BOARD_DIMENSION])
 
         for( x = 0 ; x < 8 ; x++ )
         {
-            wprintf(L"||%lc " , get_glyph(board[y][x]) ) ;
+#if VERIFY_SAFE_BOARD_ARRAY
+            wprintf(L"||%lc " , get_glyph( board[y+1][x+1] ));
+#else
+            wprintf(L"||%lc " , get_glyph( board[y][x] ));
+#endif
         }
         wprintf(L"|| %lc\n", ga_board_rows[ y ] );
     }
@@ -618,8 +650,8 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
     int  opponent   = 1 - player;
     int  eliminated = gn_eliminated_pieces[ opponent ];
 
-    char attacker   = ga_board_position[r1][c1];
-    char defender   = ga_board_position[r2][c2];
+    char attacker   = cell_get_piece(r1,c1);
+    char defender   = cell_get_piece(r2,c2);
 
     // castling flags -- rook
     if (attacker == ga_pieces[ player ][ PIECE_ROOK ])
@@ -653,20 +685,20 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
             if (king_side > 0)
             {
                 // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
-                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
-                ga_board_position[castle_row][5] = ga_pieces[ player ][ PIECE_ROOK ]; // F1 rook
-                ga_board_position[castle_row][6] = ga_pieces[ player ][ PIECE_KING ]; // G1 king (E1 + 2)
-                ga_board_position[castle_row][7] = ga_pieces[ player ][ PIECE_NONE ]; // H1 empty
+                cell_set_piece( castle_row, 4, ga_pieces[ player ][ PIECE_NONE ] ); // E1 empty
+                cell_set_piece( castle_row, 5, ga_pieces[ player ][ PIECE_ROOK ] ); // F1 rook
+                cell_set_piece( castle_row, 6, ga_pieces[ player ][ PIECE_KING ] ); // G1 king (E1 + 2)
+                cell_set_piece( castle_row, 7, ga_pieces[ player ][ PIECE_NONE ] ); // H1 empty
                 ga_rook_k_moved[ player ] = true;
                 return;
             }
             else
             {
                 // We don't need to check if king passes through check, that should already have been done in moves_king or moves_rook
-                ga_board_position[castle_row][4] = ga_pieces[ player ][ PIECE_NONE ]; // E1 empty
-                ga_board_position[castle_row][3] = ga_pieces[ player ][ PIECE_ROOK ]; // D1 rook
-                ga_board_position[castle_row][2] = ga_pieces[ player ][ PIECE_KING ]; // C1 king (E1 - 2)
-                ga_board_position[castle_row][0] = ga_pieces[ player ][ PIECE_NONE ]; // A1 empty
+                cell_set_piece(castle_row, 4, ga_pieces[ player ][ PIECE_NONE ] ); // E1 empty
+                cell_set_piece(castle_row, 3, ga_pieces[ player ][ PIECE_ROOK ] ); // D1 rook
+                cell_set_piece(castle_row, 2, ga_pieces[ player ][ PIECE_KING ] ); // C1 king (E1 - 2)
+                cell_set_piece(castle_row, 0, ga_pieces[ player ][ PIECE_NONE ] ); // A1 empty
                 ga_rook_q_moved[ player ] = true;
                 return;
             }
@@ -677,31 +709,21 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
     {
         if (cell_has_white_piece(r2, c2)) // black captures white
         {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
+            ga_eliminated_pieces[ opponent ][ eliminated ] = defender;
             gn_eliminated_pieces[ opponent ]++;
-            ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = attacker;
         }
-        else
-        {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2];
-            ga_board_position[r2][c2] = attacker;
-        }
+        cell_set_piece( r1, c1, ga_pieces[ player ][ PIECE_NONE ] );
+        cell_set_piece( r2, c2, attacker );
     }
     else
     {
         if (cell_has_black_piece(r2, c2)) // white captures black
         {
-            ga_eliminated_pieces[ opponent ][ eliminated ] = ga_board_position[r2][c2];
+            ga_eliminated_pieces[ opponent ][ eliminated ] = defender;
             gn_eliminated_pieces[ opponent ]++;
-            ga_board_position[r1][c1] = ' ';
-            ga_board_position[r2][c2] = attacker;
         }
-        else
-        {
-            ga_board_position[r1][c1] = ga_board_position[r2][c2];
-            ga_board_position[r2][c2] = attacker;
-        }
+        cell_set_piece( r1, c1, ga_pieces[ player ][ PIECE_NONE ] );
+        cell_set_piece( r2, c2, attacker );
     }
 }
 
@@ -732,7 +754,7 @@ void moves_king ( int r1 , int c1, int player )
         // can castle king side?
         if (is_empty( r, 5 )
         &&  is_empty( r, 6 )
-        && (ga_board_position[r][7] == rook) && !ga_king_moved[player] && !ga_rook_k_moved[player])
+        && (cell_get_piece(r,7) == rook) && !ga_king_moved[player] && !ga_rook_k_moved[player])
         {
             // TODO: Check if king passes through check
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position( r, 7 );
@@ -742,7 +764,7 @@ void moves_king ( int r1 , int c1, int player )
         if (is_empty( r, 3 )
         &&  is_empty( r, 2 )
         &&  is_empty( r, 1 )
-        && (ga_board_position[r][0] == rook) && !ga_king_moved[player] && !ga_rook_q_moved[player])
+        && (cell_get_piece(r,0) == rook) && !ga_king_moved[player] && !ga_rook_q_moved[player])
         {
             // TODO: Check if king passes through check
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position( r, 0 );
@@ -906,7 +928,7 @@ void player_turn_algebraic ( int player )
             if (pos1 >= 0)
             {
                 position_to_row_col( pos1, &row1, &col1 );
-                attacker = ga_board_position[row1][col1];
+                attacker = cell_get_piece( row1, col1 );
 
                 if (player == PLAYER_WHITE)
                 {
@@ -999,7 +1021,7 @@ again1:
         }
     } while ((input_control == 0) && is_off_board(r1,c1));
 
-    attacker = ga_board_position[r1][c1];
+    attacker = cell_get_piece( r1, c1 );
     if (player == PLAYER_BLACK)
     {
         switch( attacker ) // Select only player's pieces.
@@ -1171,11 +1193,15 @@ void update_possible_moves ( int row, int col )
     {
         position_to_row_col( ga_possible_moves[i], &y, &x );
         if (is_empty( y, x ))
+#if VERIFY_SAFE_BOARD_ARRAY
+            ga_board_possible[y+1][x+1] = 'x';
+#else
             ga_board_possible[y][x] = 'x';
+#endif
     }
     display_board( ga_board_possible );
 
-    wprintf( L"Possible moves %lc: \n", get_glyph( ga_board_position[row][col]) );
+    wprintf( L"Possible moves %lc: \n", get_glyph( cell_get_piece(row,col) ));
     if (gn_possible_moves)
     {
         char row, col;
