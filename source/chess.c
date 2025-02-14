@@ -707,119 +707,12 @@ void move_piece ( int r1, int c1, int r2, int c2, int player )
 // ----------------------------------------
 void moves_bishop ( int r1 , int c1, int player)
 {
-    int a , b;
     gn_possible_moves = 0;
 
-    if (player == PLAYER_BLACK)
-    {
-        a = 1 , b = 1;
-        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_white_piece(r1-a, c1+b))
-        {
-            if (((r1-a) == -1) || ((c1+b) == 8) )
-                break;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
-            if (cell_has_white_piece(r1-a, c1+b))
-                break;
-            //wprintf(L"%d%d , " , r1-a , c1+b );
-            a++;
-            b++;
-        }
-
-        a = 1 , b = 1 ;
-        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_white_piece(r1+a, c1-b))
-        {
-            if (((r1+a) == 8) || ((c1-b) == -1))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
-            if (cell_has_white_piece(r1+a, c1-b))
-                break ;
-            //wprintf(L"%d%d , " , r1+a , c1-b ) ;
-            a++ ;
-            b++ ;
-        }
-
-        a = 1 , b = 1 ;
-        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_white_piece(r1+a, c1+b))
-        {
-            if (((r1+a) == 8) || ((c1+b) == 8))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
-            if (cell_has_white_piece(r1+a, c1+b))
-                break ;
-            //wprintf(L"%d%d , " , r1+a , c1+b ) ;
-            a++ ;
-            b++ ;
-        }
-
-        a = 1 ;
-        b = 1 ;
-        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_white_piece(r1-a, c1-b))
-        {
-            if (((r1-a) == -1) || ((c1-b) == -1))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
-            if (cell_has_white_piece(r1-a, c1-b))
-                break ;
-            //wprintf(L"%d%d , " , r1-a , c1-b ) ;
-            a++ ;
-            b++ ;
-        }
-    }
-    else
-    {
-        a = 1 , b = 1 ;
-        while ((ga_board_position[r1-a][c1+b] == ' ') || cell_has_black_piece(r1-a, c1+b))
-        {
-            if (((r1-a) == -1) || ((c1+b) == 8))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1+b;
-            if (cell_has_black_piece(r1-a, c1+b))
-                break ;
-            //wprintf(L"%d%d , " , r1-a , c1+b ) ;
-            a++ ;
-            b++ ;
-        }
-
-        a = 1 , b = 1 ;
-        while ((ga_board_position[r1+a][c1-b] == ' ') || cell_has_black_piece(r1+a, c1-b))
-        {
-            if (((r1+a) == 8) || ((c1-b) == -1))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1-b;
-            if (cell_has_black_piece(r1+a, c1-b))
-                break ;
-            //wprintf(L"%d%d , " , r1+a , c1-b ) ;
-            a++ ;
-            b++ ;
-        }
-
-        a = 1 , b = 1 ;
-        while ((ga_board_position[r1+a][c1+b] == ' ') || cell_has_black_piece(r1+a, c1+b))
-        {
-            if (((r1+a) == 8) || ((c1+b) == 8))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1+a)*10+c1+b;
-            if (cell_has_black_piece(r1+a, c1+b))
-                break ;
-            //wprintf(L"%d%d , " , r1+a , c1+b ) ;
-            a++ ;
-            b++ ;
-        }
-
-        a = 1 ;
-        b = 1 ;
-        while ((ga_board_position[r1-a][c1-b] == ' ') || cell_has_black_piece(r1-a, c1-b))
-        {
-            if (((r1-a) == -1) || ((c1-b) == -1))
-                break ;
-            ga_possible_moves[ gn_possible_moves++ ] = (r1-a)*10+c1-b;
-            if (cell_has_black_piece(r1-a, c1-b))
-                break ;
-            //wprintf(L"%d%d , " , r1-a , c1-b ) ;
-            a++ ;
-            b++ ;
-        }
-    }
+    add_possible_axis( r1, c1, player, AXIS_NE );
+    add_possible_axis( r1, c1, player, AXIS_NW );
+    add_possible_axis( r1, c1, player, AXIS_SW );
+    add_possible_axis( r1, c1, player, AXIS_SE );
 }
 
 // ----------------------------------------
