@@ -205,7 +205,7 @@ Also see:
     // ----------------------------------------
     void add_possible_array ( int positions, const int *rows, const int *cols, int row, int col, int player )
     {
-        int opponent = 1 - player;
+        const int opponent = 1 - player;
         for( int position = 0; position < positions; position++ )
         {
             int r = row + rows[ position ];
