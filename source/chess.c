@@ -788,11 +788,11 @@ void moves_pawn_b ( int r1 , int c1 )
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
         r = r1+1; c = c1+1;
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // en passant right
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // attack right
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
         r = r1+1; c = c1-1;
-        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // en passant left
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // attack left
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
     else
@@ -837,11 +837,11 @@ void moves_pawn_w ( int r1 , int c1 )
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
         r = r1-1; c = c1+1;
-        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // en passant right
+        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // attack right
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
         r = r1-1; c = c1-1;
-        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // en passant left
+        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // attack left
             ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
     else
