@@ -771,74 +771,42 @@ void moves_knight ( int r1 , int c1, int player )
 // ----------------------------------------
 void moves_pawn_b ( int r1 , int c1 )
 {
+    int player = PLAYER_BLACK;
+    int opponent = 1 - player;
+    int r,c;
     gn_possible_moves = 0;
 
     if (r1 == 1) // starting black row
     {
-        if (ga_board_position[r1+1][c1] == ' ')
-        {
-            //wprintf(L"%d%d , " , r1+1 , c1 );
-            if ((r1+1 <= 7) && (c1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
-            }
-        }
+        r = r1+1; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1+2][c1] == ' ') && (ga_board_position[r1+1][c1] == ' '))
-        {
-            //wprintf(L"%d%d , " , r1+2 , c1 );
-            if ((r1+2 <= 7) && (c1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+2)*10+c1;
-            }
-        }
+        r = r1+2; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c) && is_empty(r1+1,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_white_piece(r1+1 , c1+1)) // en passant right
-        {
-             //wprintf(L"%d%d* , " , r1+1 , c1+1 );
-             if ((r1+1 <= 7) && (c1+1 <= 7))
-             {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
-             }
-        }
+        r = r1+1; c = c1+1;
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // en passant right
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_white_piece(r1+1 , c1-1)) // en passant left
-        {
-            //wprintf(L"%d%d* , " , r1+1 , c1-1 );
-            if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
-            }
-        }
+        r = r1+1; c = c1-1;
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c)) // en passant left
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
     else
     {
-        if (ga_board_position[r1+1][c1] == ' ')
-        {
-            //wprintf(L"%d%d , " , r1+1 , c1 ) ;
-            if ((r1+1 <= 7) && (c1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1;
-            }
-        }
+        r = r1+1; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_white_piece(r1+1 , c1+1))
-        {
-            //wprintf(L"%d%d* , " , r1+1 , c1+1 ) ;
-            if ((r1+1 <= 7) && (c1+1 <= 7))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1+1;
-            }
-        }
+        r = r1+1; c = c1+1; // attack right
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_white_piece(r1+1 , c1-1))
-        {
-            //wprintf(L"%d%d* , " , r1+1 , c1-1 ) ;
-            if ((r1+1 <= 7) && (c1-1 <= 7) && (c1-1 >=0))
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1+1)*10+c1-1;
-            }
-        }
+        r = r1+1; c = c1-1; // attack left
+        if (!is_off_board(r,c) && cell_has_white_piece(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
 }
 
@@ -852,74 +820,42 @@ void moves_pawn (int row, int col, int player)
 // ----------------------------------------
 void moves_pawn_w ( int r1 , int c1 )
 {
+    int player = PLAYER_BLACK;
+    int opponent = 1 - player;
+    int r,c;
     gn_possible_moves = 0;
 
     if (r1 == 6) // starting white row
     {
-        if (ga_board_position[r1-1][c1] == ' ')
-        {
-            //wprintf(L"%d%d , " , r1-2 , c1 ) ;
-            if( r1-1 >= 0 && c1 >= 0 )
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
-            }
-        }
+        r = r1-1; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if ((ga_board_position[r1-2][c1] == ' ') && (ga_board_position[r1-1][c1] == ' '))
-        {
-            //wprintf(L"%d%d , " , r1-2 , c1 ) ;
-            if( r1-2 >= 0 && c1 >= 0 )
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-2)*10+c1;
-            }
-        }
+        r = r1-2; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c) && is_empty(r1-1,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_black_piece(r1-1 , c1+1)) // en passant right
-        {
-             //wprintf(L"%d%d* , " , r1+1 , c1+1 );
-             if( r1-1 >= 0 && c1+1 >= 0 )
-             {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
-             }
-        }
+        r = r1-1; c = c1+1;
+        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // en passant right
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_black_piece(r1-1 , c1-1)) // en passant left
-        {
-            //wprintf(L"%d%d* , " , r1+1 , c1-1 );
-            if( r1-1 >= 0 && c1-1 <= 7 && c1-1 >=0) // check for outside board
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
-            }
-        }
+        r = r1-1; c = c1-1;
+        if (!is_off_board(r,c) && cell_has_black_piece(r,c)) // en passant left
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
     else
     {
-        if (ga_board_position[r1-1][c1] == ' ')
-        {
-            //wprintf(L"%d%d , " , r1-1 , c1 ) ;
-            if( r1-1 >= 0 && c1 >= 0 )
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1;
-            }
-        }
+        r = r1-1; c = c1;
+        if (!is_off_board(r,c) && is_empty(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_black_piece(r1-1 , c1+1))
-        {
-             //wprintf(L"%d%d* , " , r1+1 , c1+1 );
-             if( r1-1 >= 0 && c1+1 >= 0 )
-             {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1+1;
-             }
-        }
+        r = r1-1; c = c1+1; // attack right
+        if (!is_off_board(r,c) && cell_has_black_piece(r ,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
 
-        if (cell_has_black_piece(r1-1 , c1-1))
-        {
-            //wprintf(L"%d%d* , " , r1+1 , c1-1 );
-            if ((r1-1 >= 0) && (c1-1 <= 7) && (c1-1 >=0)) // check for outside board
-            {
-                ga_possible_moves[ gn_possible_moves++ ] = (r1-1)*10+c1-1;
-            }
-        }
+        r = r1-1; c = c1-1; // attack left
+        if (!is_off_board(r,c) && cell_has_black_piece(r,c))
+            ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(r,c);
     }
 }
 
