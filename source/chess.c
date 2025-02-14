@@ -145,6 +145,24 @@ Also see:
         "BLACK"
     };
 
+// Movement Axes
+    enum axis_e
+    {
+        AXIS_E , // +x
+        AXIS_NE, // +x -y
+        AXIS_N , //    -y
+        AXIS_NW, // -x -y
+        AXIS_W , // -x
+        AXIS_SW, // -x +y
+        AXIS_S , //    +y
+        AXIS_SE, // +x +y
+        NUM_AXIS
+    };
+
+    //                                        E  NE   N  NW   W  SW   S  SE
+    const int axis_delta_col[ NUM_AXIS ] = { +1, +1,  0, -1, -1, -1,  0, +1 };
+    const int axis_delta_row[ NUM_AXIS ] = {  0, -1, -1, -1,  0, +1, +1, +1 };
+
 // Prototypes
     void add_possible_array( int positions, const int *rows, const int *cols, int row, int col, int player );
     void add_possible_move( int row, int col, int opponent );
