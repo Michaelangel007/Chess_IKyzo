@@ -1350,12 +1350,12 @@ void knight_v10( int r1 , int c1, int player )
     int knight_col[8] = { +1, -1, +2, +2, -1, +1, -2, -2 };
 ```
  
-We can re-arrange the table so the pair <row,col> is sorted -- first by row, then col -- for bottom, left, top, right order:
+We can re-arrange the table so the pair <row,col> is sorted -- first by column then row -- for left, bottom, right, top order:
 
 ```
-    //  clock positions =  8   9   7  10   5   1   4   3
-    int knight_row[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
-    int knight_col[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
+    //   clock positions:  8   A   7   B   5   1   4   3
+    int knight_col[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
+    int knight_row[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
 ```
 
 We end up with:
@@ -1367,8 +1367,8 @@ void knight_v11( int r1 , int c1, int player )
     int opponent = 1 - player;
     possible_moves_index = 0;
 
-    int knight_row[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
-    int knight_col[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
+    int knight_col[8] = { -2, -2, -1, -1, +1, +1, +2, +2 };
+    int knight_row[8] = { -1, +1, -2, +2, -2, +2, +1, -1 };
 
     for( i = 0; i < 8; i++ )
     {
@@ -1525,3 +1525,8 @@ Not too shabby!
 You may also enjoy reading Casey's article on [Semantic Compression](https://caseymuratori.com/blog_0015)
 
 m007.
+
+
+Revision 2 Add summary
+Revision 3 Fix clock positions
+Revision 4 Fix swapped row/col for knight.
