@@ -7,13 +7,13 @@ Let's look at how a knight moves, given some starting row and column position, r
 We can label the destination locations by using a clock.
 
 ```
-    . 10  .  1  .    -2
-    9  .  .  .  3    -1
-    .  .  N  .  .     0
-    8  .  .  .  4    +1
-    .  7  .  5  .    +2
-
-   -2 -1  0 +1 +2
+     .  B  .  1  .    -2
+     A  .  .  .  3    -1
+     .  .  N  .  .     0
+     8  .  .  .  4    +1
+     .  7  .  5  .    +2
+    
+    -2 -1  0 +1 +2
 ```
 
 1. Original code
