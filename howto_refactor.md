@@ -1,6 +1,6 @@
 # HOWTO: Refactor - A Tutorial on Semantic Compression
 
-This example will work through refactoring naive code to beautiful code.
+This example will work through refactoring naive code to beautiful code, converting a procedural problem into a data-driven solution, and exploring "semantic compression."
 
 Let's look at how a knight moves, given some starting row and column position, r1 and c1 respectively:
 
