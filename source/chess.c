@@ -919,7 +919,7 @@ void player_turn_algebraic ( int player )
                         case 'k': moves_king  ( row1 , col1, player ); break;
                         case 'q': moves_queen ( row1 , col1, player ); break;
                         default:
-                            wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
+                            wprintf( L"%lc Invalid Position!\n", get_glyph( '!' ) );
                             valid_from = false;
                     }
                 }
@@ -934,7 +934,7 @@ void player_turn_algebraic ( int player )
                         case 'K': moves_king  ( row1 , col1, player ); break;
                         case 'Q': moves_queen ( row1 , col1, player ); break;
                         default:
-                            wprintf( L"%lc Invalid Position! ", get_glyph( '!' ) );
+                            wprintf( L"%lc Invalid Position!\n", get_glyph( '!' ) );
                             valid_from = false;
                     }
                 }
