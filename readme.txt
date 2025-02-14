@@ -8,8 +8,8 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * Selected piece shows possible moves.
 * WIP Castling (doesn't check if King passes through check.)
 * Save game replay.
-* Compiles on Windows and Linux
-* MSVC 2022 Solution and Project
+* Compiles on Windows and Linux.
+* MSVC 2022 Solution and Project.
 
 # Bugs
 
@@ -18,6 +18,15 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * Castling doesn't check if king passes through check.
 * King can move into check.
 # En passant is not implemented.
+
+# Potential Future Work
+
+* Replace board representation with an enum intead of using ASCII characters.
+* Use bit-boards.
+* Add AI and learning. See Sebastian's excellent videos:
+
+  * [Coding Adventure: Chess](https://www.youtube.com/watch?v=U4ogK0MIzqk)
+  * [Coding Adventure: Making a Better Chess Bot](https://www.youtube.com/watch?v=_vqlIPDR2TU)
 
 # Chess Fonts
 
