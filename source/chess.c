@@ -395,6 +395,8 @@ void cls (HANDLE hConsole)
 #endif
 
 // Test if there is a black piece at row,col
+// NOTE: This is horribly inefficient; ga_board_position should be storing
+// PIECE_* not ASCII characters then a simple bit comparison can be used.
 // ----------------------------------------
 bool cell_has_black_piece ( int row , int col )
 {
