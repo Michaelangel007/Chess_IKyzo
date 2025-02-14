@@ -225,7 +225,7 @@ Unfortunately there are lots of problems and bugs with this code.
 The functions:
 
 * `check()` really should be called `cell_has_white()`
-* `check2()` reallly should be called `cell_has_black()`
+* `check2()` really should be called `cell_has_black()`
 
 We also don't need to manually check if they return true.
 
@@ -561,7 +561,7 @@ void knight_v3( int r1 , int c1, int player )
 }
 ```
 
-4. It may not be obvious as it looks like we aren't making much progress but we are -- we are slowly removing "cruft" that is letting us see the bigger picutre.
+4. It may not be obvious as it looks like we aren't making much progress but we are -- we are slowly removing "cruft" that is letting us see the bigger picture.
 
 The next thing to do simply factor out all the redundant row and column calculations:
 
@@ -929,9 +929,9 @@ void knight_v5( int r1 , int c1, int player )
 }
 ```
 
-6. This code actually as bug where it checks an out-of-bounds array THEN checks if the coordinates are in bounds.  Reversing the test will fix this buggy code.
+6. This code actually has a bug where it checks an out-of-bounds array THEN checks if the coordinates are in bounds.  Reversing the test will fix this buggy code.
 
-This simplies to:
+This simplifies to:
 
 ```c
 void knight_v6( int r1 , int c1, int player )
@@ -1343,14 +1343,14 @@ void knight_v10( int r1 , int c1, int player )
 }
 ```
 
-11. All those row and calculations are begging to be simplied. We can store each of the knights destination in a table of relative offsets. This table is "transposed" from the vertical code into a horizontal one.
+11. All those row and column calculations are begging to be simplified. We can store each of the knight's destinations in a table of relative offsets. This table is "transposed" from the vertical code into a horizontal one.
 
 ```
     int knight_row[8] = { +2, +2, +1, -1, -2, -2, +1, -1 };
     int knight_col[8] = { +1, -1, +2, +2, -1, +1, -2, -2 };
 ```
  
-We can re-arrange the table so the pair <row,col> is sorted -- first by column then row -- for left, bottom, right, top order:
+We can rearrange the table so the pair <row,col> is sorted -- first by column then row -- for left, bottom, right, top order:
 
 ```
     //   clock positions:  8   A   7   B   5   1   4   3
@@ -1439,7 +1439,7 @@ Next, we'll need a delta row and delta column that we use to update our cell loc
 
 The algorithm need for "tracing" how far a "ranged" piece can move is pretty straight forward:
 
-1. We only need to check 7 cells along a direction
+1. We only need to check 7 cells along a direction.
 2. For each cell we update our position.
 3. If we are off the board we stop.
 4. If we hit an opponent piece we add that to the candidate move and stop.
@@ -1530,3 +1530,4 @@ m007.
 Revision 2 Add summary
 Revision 3 Fix clock positions
 Revision 4 Fix swapped row/col for knight.
+Revision 5 Fix minor spelling mistakes. Ironically fixing a bug talking about code with a bug.
