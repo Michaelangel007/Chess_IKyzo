@@ -146,6 +146,8 @@ Also see:
     };
 
 // Prototypes
+    void add_possible_array( int positions, int *rows, int *cols, int row, int col, int player );
+    void add_possible_move( int row, int col, int opponent );
     bool cell_has_black_piece( int row, int col );
     bool cell_has_player(int row, int col, int player);
     bool cell_has_white_piece( int row, int col );
@@ -174,11 +176,31 @@ Also see:
     void player_turn_algebraic ( int player );
     void player_turn_integer ( int player );
     void position_to_row_col ( int position, int *row, int *col );
+    int row_col_to_position( int row, int col );
     void showcase_board(char, char, char, char, int);
     void showcase_game();
     void update_possible_moves( int row, int col );
 
 // Utility
+
+    // ----------------------------------------
+    void add_possible_array ( int positions, int *rows, int *cols, int row, int col, int player )
+    {
+        int opponent = 1 - player;
+        for( int position = 0; position < positions; position++ )
+        {
+            int r = row + rows[ position ];
+            int c = col + cols[ position ];
+            add_possible_move( r, c, opponent );
+        }
+    }
+
+    // ----------------------------------------
+    void add_possible_move ( int row, int col, int opponent )
+    {
+        if ( !is_off_board(row,col) && (is_empty(row,col) || cell_has_player(row,col,opponent)) )
+           ga_possible_moves[ gn_possible_moves++ ] = row_col_to_position(row,col);
+    }
 
     // ----------------------------------------
     int get_glyph (char symbol)
