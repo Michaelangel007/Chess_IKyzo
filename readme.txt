@@ -16,7 +16,7 @@ Bugfixes, cleanup, and QoL by Michaelangel007.
 * No checkmate detection.
 * No stalemate detection.
 * Castling doesn't check if king passes through check.
-* Array out-of-bounds (currently ignored.)
+* A few array out-of-bounds still remaining (currently ignored.)
 
 # Chess Fonts
 
