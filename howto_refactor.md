@@ -18,7 +18,7 @@ We can label the destination locations by using a clock.
 
 1. Original code
 
-**One of the secrets to being a greate programmer is** -- get a (slow) reference version working first, THEN optimize it (fast version).
+**One of the secrets to being a great programmer is** -- get a (slow) reference version working first, THEN optimize it (fast version).
 
 Why?
 
