@@ -322,14 +322,14 @@ Also see:
     // ----------------------------------------
     void position_to_row_col ( int position, int *row, int *col )
     {
-       *row = position / 10;
-       *col = position % 10;
+       *row = (position >> 4) & 0xF;
+       *col = (position >> 0) & 0xF;
     }
 
     // ----------------------------------------
     int row_col_to_position ( int row, int col )
     {
-        int position = (row * 10) + col;
+        int position = (row << 4) | col;
         return position;
     }
 
@@ -1034,6 +1034,7 @@ void player_turn_integer ( int player )
 {
     int opponent = 1 - player;
     int p1 , p2 , c1 , r1 , c2 , r2, input_control;
+    int position;
     char attacker;
     int  piece;
 
@@ -1045,9 +1046,12 @@ again1:
         memcpy( ga_board_possible, ga_board_position, sizeof(ga_board_position) );
         fflush(stdin);
         wprintf( L"\nEnter position of piece to move [row column]: " );
-        input_control = scanf( "%d" , &p1 );
+        input_control = scanf( "%d" , &position );
 
-        position_to_row_col( p1, &r1, &c1 );
+        // Convert legacy position to native position
+        c1 = position % 10;
+        r1 = position / 10;
+        p1 = row_col_to_position(r1,c1);
         if (is_off_board(r1, c1))
         {
             if (is_off_board(r1, 0))
@@ -1055,7 +1059,7 @@ again1:
             else
                 wprintf( L"%lc Invalid column. Must be 0..7\n", get_glyph( '!') );
         }
-    } while ((input_control == 0) || (p1!=0 && p1>7&&p1 < 10) || p1 > 77 || p1%10 > 7 );
+    } while ((input_control == 0) && is_off_board(r1,c1));
 
     attacker = ga_board_position[r1][c1];
     if (player == PLAYER_BLACK)
@@ -1098,7 +1102,12 @@ again1:
         do
         {
             wprintf( L"\nEnter new position of %hs [row column]: ", ga_piece_names[ piece ] );
-            scanf( "%d" , &p2 ) ;
+            scanf( "%d" , &position );
+
+            // Convert legacy position to native position
+            c2 = position % 10;
+            r2 = position / 10;
+            p2 = row_col_to_position(r2,c2);
         } while (!is_move_possible(p2));
     }
     else
